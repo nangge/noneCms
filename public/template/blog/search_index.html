@@ -1,0 +1,27 @@
+{include file="Public/header" /}
+<!--/header-->
+<div class="about-content">
+    <div class="container">
+        <div class="content-grids">
+            <div class="col-md-8 content-main">
+                {volist name="list" id="item" empty="暂无符合条件的文章"}
+                <div class="content-grid-info">
+                    <div class="post-info">
+                        <h4><a href="{:url('show/index',['id' => $item['id']])}">{$item.title}</a> {$item.publishtime|date='Y-m-d',###} </h4>
+
+                        <p>{$item.description}</p>
+                        <a href="{:url('show/index',['id' => $item['id']])}"><span></span>READ MORE</a>
+                    </div>
+                </div>
+                {/volist}
+                <div class="my_page">{$page}</div>
+            </div>
+
+            {include file="Public/right" /}
+        </div>
+    </div>
+</div>
+<!--footer-->
+{include file="Public/footer" /}
+
+

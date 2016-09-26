@@ -1,0 +1,56 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>自定义导航栏</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('nav/add')}" class="actionBtn">添加导航</a>自定义导航栏</h3>
+
+            <div class="navList">
+                <ul class="tab">
+                    <li><a href="nav.php" class="selected">主导航</a></li>
+                    <!--<li><a href="nav.php?type=top">顶部</a></li>
+                    <li><a href="nav.php?type=bottom">底部</a></li>-->
+                </ul>
+                <table width="100%" border="0" cellpadding="10" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <th width="113" align="center">导航名称</th>
+                        <th align="left">链接地址</th>
+                        <th width="80" align="center">显示</th>
+                        <th width="80" align="center">排序</th>
+                        <th width="120" align="center">操作</th>
+                    </tr>
+                    {volist name="all_nav" id="fnav"}
+                    <tr>
+                        <td> {$fnav.name}</td>
+                        <td><a href="{$fnav.url}">{$fnav.url}</a></td>
+                        <td align="center">{if condition="$fnav['status'] eq 0"}显示{else /}不显示{/if}</td>
+                        <td align="center">{$fnav.sort}</td>
+                        <td align="center"><a href="{:url('nav/edit',['id' => $fnav.id])}">编辑</a> | <a
+                                href="{:url('nav/dele',['id' => $fnav.id])}">删除</a></td>
+                    </tr>
+                    <!--二级栏目-->
+                    {if condition="isset($fnav.children)"}
+                    {volist name="fnav['children']" id="snav"}
+                    <tr>
+                        <td> -- {$snav.name}</td>
+                        <td><a href="{$snav.url}">{$snav.url}</a></td>
+                        <td align="center">{if condition="$snav['status'] eq 0"}显示{else /}不显示{/if}</td>
+                        <td align="center">{$snav.sort}</td>
+                        <td align="center"><a href="{:url('nav/edit',['id' => $snav.id])}">编辑</a> | <a
+                                href="{:url('nav/dele',['id' => $snav.id])}" onclick="if(!confirm('是否确认删除该栏目？操作不可撤销！')) return false;">删除</a></td>
+                    </tr>
+                    {/volist}
+                    {/if}
+                    {/volist}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+</body>
+</html>

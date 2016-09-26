@@ -1,0 +1,80 @@
+<!--上传图片-->
+{load href="__PUBLIC__/js/uploadify/jquery.uploadify.min.js,__PUBLIC__/js/uploadify/swfobject.js" /}
+{css href="__PUBLIC__/js/uploadify/uploadify.css" /}
+<td align="right">[tip]</td>
+<td>
+    <input type="file" name="upload" id="upload" size="38" class="inpFlie"/>
+    <div id="images_area"></div>
+</td>
+<script>
+    //上传图片.
+    var uploadLimit = 5;//上传数量限制
+    $('#upload').uploadify({
+        'fileObjName': 'pic_url',
+        'swf': '__PUBLIC__/js/uploadify/uploadify.swf',
+        'uploader': '{:url("product/upload")}',
+        'buttonText': '<div>选择图片</div>',
+        'onUploadStart': function (file) {
+
+        },
+        'auto': true,
+        'multi': true,
+        'method': 'post',
+        'debug': false,
+        'fileTypeDesc': '图像文件',
+        'fileTypeExts': '*.jpg;*.png;*.gif;',
+        'sizeLimit': '2MB',
+        'uploadLimit': uploadLimit,
+        'removeCompleted': false,
+        'removeTimeout': 0,
+        'formData': {},
+        'onUploadSuccess': function (file, res) {
+            var data = JSON.parse(res);
+
+            if (data.status == 1) {
+                $('div#images_area').append('<input type="hidden" name="pic_url[]" id="input_images" data-path="' + data.save_name + '" value="' + data.path + '" /><img src="' + data.path + '" style="width: 300px;margin-left:10px" />').show();
+            } else {
+                alert(data.error);
+            }
+        },
+        'onClearQueue': function (queueItemCount) {
+            alert(1);
+        }
+    });
+
+    //注册删除图片事件
+    $("upload-queue").on("click", '.uploadify-queue-item a', function () {
+        var id = $(this).parents(".uploadify-queue-item").attr('id');
+        var pos = $(this).parents(".uploadify-queue-item").index();
+        var $input = $("#images_area").find("input").eq(pos);
+        var $image = $("#images_area").find("img").eq(pos);
+        var real_path = $input.data('path');
+        //异步删除文件
+        $.ajax({
+            dataType: 'json',
+            type: "get",
+            url: '{:url("product/upload")}',
+            data: {'path': real_path},
+            success: function (res) {
+                if (res.status == 1) {
+                    //删除成功
+                    $input.remove();
+                    $image.remove();
+                    //重置上传数量
+                    $('#file_upload').uploadify('settings', 'uploadLimit', ++uploadLimit);
+                    //判断是否无图片
+                    if ($("#images_area").find("input").length < 1) {
+                        $("#images_area").hide();
+                    }
+                } else {
+                    alert('删除失败，请重新尝试！');
+                    return false;
+                }
+            },
+            error: function (data) {
+                alert('error');
+                return false;
+            }
+        });
+    });
+</script>

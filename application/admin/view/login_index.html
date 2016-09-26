@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html >
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+	{css href="__PUBLIC__/css/login.css"}
+	{js href="__PUBLIC__/js/jquery.min.js" /}
+</head>
+
+<body>
+
+<div class="login">
+	<h1>Login</h1>
+	<form method="post" action="{:url('login/login')}">
+		<input type="text" name="username" placeholder="用户名" required="required" />
+		<input type="password" name="password" placeholder="密码" required="required" />
+		<input type="text" name="captcha" placeholder="验证码" required="required" />
+		<div class="captcha"></div>
+		<button type="submit" class="btn btn-primary btn-block btn-large">登录</button>
+	</form>
+</div>
+</body>
+<script>
+	//验证码简单处理
+	$("input[name='captcha']").focus(function(){
+		$(this).val('');
+		$(".captcha").html('{:captcha_img()}').show();
+	});
+
+	$(".captcha").click(function(){
+		$("input[name='captcha']").val('').focus();
+		$(this).html('{:captcha_img()}');
+	});
+</script>
+</html>

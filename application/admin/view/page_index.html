@@ -1,0 +1,27 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <!--包含公共模版-->
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>单页面列表</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('page/add')}" class="actionBtn">添加内容</a>单页面列表</h3>
+
+            <div class="page">
+                {volist name="pages" id="page"}
+                <dl>
+                    <dt><strong>{$page.name}</strong>
+                    <p>{$page.ename}</p></dt>
+                    <dd><a href="{:url('page/edit',['id' => $page['id']])}">编辑</a> | <a onclick="if(!confirm('确定要删除该栏目吗？')) return false;" href="{:url('page/dele',['id' => $page['id']])}">删除</a></dd>
+                </dl>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+</body>
+</html>

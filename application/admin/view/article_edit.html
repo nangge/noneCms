@@ -1,0 +1,136 @@
+{include file="public/header" /}
+<style>
+    #images_area{
+        clear:both;
+    }
+    .uploadify-queue-item{
+        width:300px;
+        float:left;
+        margin-left:10px;
+    }
+</style>
+<div id="dcWrap">
+    <!--包含公共模版-->
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        {js href="__PUBLIC__/js/jquery.autoTextarea.js" /}
+        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>添加文章</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('article/index')}" class="actionBtn">文章列表</a>添加文章</h3>
+
+            <form action="{:url('article/add')}" method="post" enctype="multipart/form-data">
+                <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <td width="90" align="right">文章标题</td>
+                        <td>
+                            <input type="text" name="title" value="{$item.title}" size="80" class="inpMain" required/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">文章分类</td>
+                        <td>
+                            <select name="cid">
+                                <option value="0">未分类</option>
+                                {volist name="category" id="fcat"}
+                                <option value="{$fcat.id}" {if condition="$fcat.id eq $item.cid"}selected{/if}> {$fcat.name}</option>
+                                <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                {if condition="isset($fcat.children)"}
+                                {volist name="fcat['children']" id="scat"}
+                                <option value="{$scat.id}" {if condition="$scat.id eq $item.cid"}selected{/if}>- {$scat.name}</option>
+                                {/volist}
+                                {/if}
+                                {/volist}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">简单描述</td>
+                        <td>
+                            <textarea type="text" name="description" cols="80" rows="5" class="inpMain">{$item.description}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" valign="top">文章内容</td>
+                        <td>
+                            <!-- 富文本框 -->
+                            {include file="public/editor" content="<?php echo $item['content']?>" /}
+                        </td>
+                    </tr>
+                    <tr>
+                        <!--上传图片-->
+                        {load href="__PUBLIC__/js/uploadify/jquery.uploadify.min.js,__PUBLIC__/js/uploadify/swfobject.js" /}
+                        {css href="__PUBLIC__/js/uploadify/uploadify.css" /}
+                        <td align="right">缩略图</td>
+                        <td>
+                            <input type="file" name="upload" id="upload" size="38" class="inpFlie"/>
+                            <div id="images_area">
+                            {if condition="$item['litpic']"}
+                                <img src="{$item['litpic']}" style="width: 300px;margin-left:10px"/>
+                                <input value="{$item['litpic']}" type="hidden" name="pic_url[]"/>
+                            {/if}
+                            </div>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">关键字</td>
+                        <td>
+                            <input type="text" name="keywords" value="{$item.keywords}" size="50" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="hidden" name="id" value="{$item.id}">
+                            <input class="btn" type="submit" value="提 交"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+<script>
+    //上传图片.
+    var uploadLimit = 5;//上传数量限制
+    $('#upload').uploadify({
+        'fileObjName': 'pic_url',
+        'swf': '__PUBLIC__/js/uploadify/uploadify.swf',
+        'uploader': '{:url("product/upload")}',
+        'buttonText': '<div>选择图片</div>',
+        'onUploadStart': function (file) {
+
+        },
+        'auto': true,
+        'multi': false,
+        'checkExisting': false,
+        'method': 'post',
+        'debug': false,
+        'fileTypeDesc': '图像文件',
+        'fileTypeExts': '*.jpg;*.png;*.gif;',
+        'sizeLimit': '2MB',
+        'uploadLimit': uploadLimit,
+        'removeCompleted': true,
+        'removeTimeout': 0,
+        'formData': {},
+        'onUploadSuccess': function (file, res) {
+            var data = JSON.parse(res);
+
+            if (data.status == 1) {
+                $('div#images_area').html('<input type="hidden" name="pic_url[]" id="input_images" data-path="' + data.save_name + '" value="' + data.path + '" /><img src="' + data.path + '" style="width: 300px;margin-left:10px" />').show();
+            } else {
+                alert(data.error);
+            }
+        },
+        'onClearQueue': function (queueItemCount) {
+            alert('ClearQueue');
+        }
+    });
+
+</script>
+</body>
+</html>

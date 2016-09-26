@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>{if condition="isset($title)"}{$title}{else/}{web name='title' /}{/if}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="{if condition="isset($keywords)"}{$keywords}{else/}{web name='keywords' /}{/if}" />
+	<meta name="description" content="{if condition="isset($description)"}{$description}{else/}{web name='description' /}{/if}" />
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<!----webfonts--
+		<link href='http://fonts.googleapis.com/css?family=Oswald:100,400,300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,300italic' rel='stylesheet' type='text/css'>
+		<!----//webfonts--
+		  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<!--end slider -->
+	<!--script-->
+	<link href="__PUBLIC__/css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link href="__PUBLIC__/css/style.css" rel='stylesheet' type='text/css' />
+	<script src="__PUBLIC__/js/jquery.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/move-top.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/easing.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/prettify.js"></script>
+	<link href="__PUBLIC__/css/prettify.css" rel='stylesheet' type='text/css'/>
+	<!--/script-->
+	<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$(".scroll").click(function(event){
+				event.preventDefault();
+				$('html,body').animate({scrollTop:$(this.hash).offset().top},900);
+			});
+		});
+	</script>
+	<!---->
+
+</head>
+<body>
+<!---header---->
+<div class="header">
+	<div class="container">
+		<div class="logo">
+			<a href="{:url('index/index')}"><img src="__PUBLIC__/images/logo.png" width="270" height="169" title="{web name='title' /}" /></a>
+		</div>
+		<!---start-top-nav---->
+		<div class="top-menu">
+			<div class="search">
+				<form action="{:url('search/index')}" method="get">
+					<input type="text" name="keywords" placeholder="输入关键词" required/>
+					<input type="submit" value=""/>
+				</form>
+			</div>
+			<span class="menu"> </span>
+			<ul>
+				<li class="active"><a href="{:url('index/index')}">首 页</a></li>
+				{nav pid=''}
+				<li><a href="{$nav.url}">{$nav.name}</a></li>
+				{/nav}
+				<div class="clearfix"> </div>
+			</ul>
+		</div>
+		<div class="clearfix"></div>
+		<script>
+			$("span.menu").click(function(){
+				$(".top-menu ul").slideToggle("slow" , function(){
+				});
+			});
+		</script>
+		<!---//End-top-nav---->
+	</div>
+</div>

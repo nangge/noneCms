@@ -1,0 +1,31 @@
+{include file="Public/header" /}
+<!--/header-->
+<div class="content">
+    <div class="container">
+        <div class="content-grids">
+            <div class="col-md-8 content-main">
+                <div class="content-grid">
+                    {article orderby="publishtime DESC" pagesize='15'}
+                    <div class="content-grid-info">
+                        <img src="{$article.litpic}" alt=""/>
+
+                        <div class="post-info">
+                            <h4><a href="{$article.url}">{$article.title}</a> {$article.publishtime|date='Y-m-d',###} / {$article.click} 阅</h4>
+
+                            <p>{$article.description}</p>
+                            <a href="{$article.url}"><span></span>READ MORE</a>
+                        </div>
+                    </div>
+                    {/article}
+                </div>
+                <div class="my_page">{$page}</div>
+            </div>
+            {include file="Public/right" /}
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!--footer-->
+{include file="Public/footer" /}
+
+	

@@ -1,0 +1,58 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <!--包含公共模版-->
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>单页面列表</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('page/index')}" class="actionBtn">单页面列表</a>添加内容</h3>
+
+            <form action="{:url('page/add')}" method="post">
+                <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <td align="right">所属栏目</td>
+                        <td>
+                            <select name="cid">
+                                <option value="0">请选择</option>
+                                {volist name="page_cat" id="fcat"}
+                                <option value="{$fcat.id}"> {$fcat.name}</option>
+                                <!--二级栏目-->
+                                {if condition="isset($fcat.children)"}
+                                {volist name="fcat['children']" id="scat"}
+                                <option value="{$scat.id}">- {$scat.name}</option>
+                                {/volist}
+                                {/if}
+                                {/volist}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">简单描述</td>
+                        <td>
+                            <textarea type="text" name="description" value="" cols="125" rows="5" class="inpMain"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">单页面内容</td>
+                        <td>
+                            <!-- 富文本框 -->
+                            {include file="public/editor"}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input class="btn" type="submit" value="提交"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+</body>
+</html>

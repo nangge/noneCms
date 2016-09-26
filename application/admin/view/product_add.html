@@ -1,0 +1,185 @@
+{include file="public/header" /}
+<style>
+    #images_area{
+        height:300px;
+        display: none;
+        clear:both;
+    }
+    .uploadify-queue-item{
+        width:300px;
+        float:left;
+        margin-left:10px;
+    }
+</style>
+<div id="dcWrap">
+    <!--包含公共模版-->
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        {js href="__PUBLIC__/js/jquery.autotextarea.js" /}
+        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>添加商品</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('product/index')}" class="actionBtn">商品列表</a>添加商品</h3>
+
+            <form action="{:url('product/add')}" method="post" enctype="multipart/form-data">
+                <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <td width="90" align="right">商品名称</td>
+                        <td>
+                            <input type="text" name="title" value="" size="80" class="inpMain" required/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">商品分类</td>
+                        <td>
+                            <select name="cid">
+                                <option value="0">未分类</option>
+                                {volist name="category" id="fcat"}
+                                <option value="{$fcat.id}"> {$fcat.name}</option>
+                                <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                {if condition="isset($fcat.children)"}
+                                {volist name="fcat['children']" id="scat"}
+                                <option value="{$scat.id}">- {$scat.name}</option>
+                                {/volist}
+                                {/if}
+                                {/volist}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90" align="right">商品品牌</td>
+                        <td>
+                            <input type="text" name="brand" value="" size="50" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90" align="right">商品单位</td>
+                        <td>
+                            <input type="text" name="units" value="" size="10" placeholder="例：kg，个" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">简单描述</td>
+                        <td>
+                            <textarea type="text" name="description" value="" cols="80" rows="5" class="inpMain"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">商品价格</td>
+                        <td>
+                            <input type="text" name="price" value="" size="10" placeholder="0.00" class="inpMain" required/> <font color="#FF0000"> * 单位：元</font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" valign="top">商品内容</td>
+                        <td>
+                            <!-- 富文本框 -->
+                            {include file="public/editor"}
+                        </td>
+                    </tr>
+                    <tr>
+                        <!--上传图片-->
+                        {load href="__PUBLIC__/js/uploadify/jquery.uploadify.min.js,__PUBLIC__/js/uploadify/swfobject.js" /}
+                        {css href="__PUBLIC__/js/uploadify/uploadify.css" /}
+                        <td align="right">产品图片</td>
+                        <td>
+                            <input type="file" name="upload" id="upload" size="38" class="inpFlie"/>
+                            <div id="images_area"></div>
+                            <!--<img src="__PUBLIC__/images/icon_no.png">-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">关键字</td>
+                        <td>
+                            <input type="text" name="keywords" value="" size="50" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="hidden" name="id" value="">
+                            <input class="btn" type="submit" value="提 交"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+<script>
+    //上传图片.
+    var uploadLimit = 5;//上传数量限制
+    $('#upload').uploadify({
+        'fileObjName': 'pic_url',
+        'swf':'__PUBLIC__/js/uploadify/uploadify.swf',
+        'uploader':'{:url("product/upload")}',
+        'buttonText': '<div>选择图片</div>',
+        'onUploadStart' : function(file){
+
+        },
+        'auto':true,
+        'multi':true,
+        'method':'post',
+        'debug': false,
+        'fileTypeDesc':'图像文件',
+        'fileTypeExts':'*.jpg;*.png;*.gif;',
+        'sizeLimit': '2MB',
+        'uploadLimit': uploadLimit,
+        'removeCompleted': false,
+        'removeTimeout': 0,
+        'formData': {},
+        'onUploadSuccess' : function(file, res) {
+            var data = JSON.parse(res);
+            console.log(data);
+            if (data.status == 1) {
+                $('div#images_area').append('<input type="hidden" name="pic_url[]" id="input_images" data-path="'+ data.save_name +'" value="' + data.path + '" /><img src="' + data.path + '" style="width: 300px;margin-left:10px" />').show();
+            } else {
+              alert(data.error);
+            }
+        },
+        'onClearQueue' : function (queueItemCount) {
+            alert(1);
+        }
+    });
+
+    //注册删除图片事件
+    $("#upload-queue").on("click",'.uploadify-queue-item a',function(){
+        var id = $(this).parents(".uploadify-queue-item").attr('id');
+        var pos = $(this).parents(".uploadify-queue-item").index();
+        var $input = $("#images_area").find("input").eq(pos);
+        var $image = $("#images_area").find("img").eq(pos);
+        var real_path = $input.data('path');
+        //异步删除文件
+        $.ajax({
+            dataType : 'json',
+            type : "get",
+            url : '{:url("product/upload")}',
+            data : {'path' : real_path},
+            success : function(res){
+                if (res.status == 1) {
+                    //删除成功
+                    $input.remove();
+                    $image.remove();
+                    //重置上传数量
+                    $('#file_upload').uploadify('settings','uploadLimit', ++uploadLimit);
+                    //判断是否无图片
+                    if($("#images_area").find("input").length < 1){
+                        $("#images_area").hide();
+                    }
+                } else {
+                    alert('删除失败，请重新尝试！');
+                    return false;
+                }
+            },
+            error : function (data) {
+                alert('error');
+                return false;
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+{include file="public/header" /}
+<div id="urHere"> 管理中心</div>
+<div id="index" class="mainBox" style="padding-top:18px;height:auto!important;height:550px;min-height:550px;">
+    {if condition="$flag"}
+    <div class="warning">您还没有删除 install 文件夹，出于安全的考虑，建议您删除 install 文件夹。</div>
+    {/if}
+
+    <div id="douApi"></div>
+    <div class="indexBox">
+        <div class="boxTitle">单页面快速管理</div>
+        <ul class="ipage">
+            {volist name="single_page" id="page"}
+            <a href="{:url('page/edit',['id' => $page.id])}">{$page.name}</a>
+            {/volist}
+            <div class="clear"></div>
+        </ul>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="indexBoxTwo">
+        <tr>
+            <td width="65%" valign="top" class="pr">
+                <div class="indexBox">
+                    <div class="boxTitle">网站基本信息</div>
+                    <ul>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="7" class="tableBasic">
+                            <tr>
+                                <td width="120">单页面数：</td>
+                                <td><strong>{$page_count}</strong></td>
+                                <td width="100">文章总数：</td>
+                                <td><strong>{$article_count}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>商品总数：</td>
+                                <td><strong>{$product_count}</strong></td>
+                                <td>系统语言：</td>
+                                <td><strong>zh_cn</strong></td>
+                            </tr>
+                            <tr>
+                                <td>URL 重写：</td>
+                                <td><strong>关闭<a href="" class="cueRed ml">（点击开启）</a>
+                                </strong></td>
+                                <td>编码：</td>
+                                <td><strong>UTF-8</strong></td>
+                            </tr>
+                            <tr>
+                                <td>站点地图：</td>
+                                <td><strong>开启</strong></td>
+                                <td>站点模板：</td>
+                                <td><strong>{$theme}</strong></td>
+                            </tr>
+                            <tr>
+                                <td> 版本：</td>
+                                <td><strong>v1.0</strong></td>
+                                <td>安装日期：</td>
+                                <td><strong>2016-02-25</strong></td>
+                            </tr>
+                        </table>
+                    </ul>
+                </div>
+            </td>
+            <td valign="top" class="pl">
+                <div class="indexBox">
+                    <div class="boxTitle">管理员 登录记录</div>
+                    <ul>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="7" class="tableBasic">
+                            <tr>
+                                <th width="45%">IP地址</th>
+                                <th width="55%">操作时间</th>
+                            </tr>
+                            {volist name="login_list" id="vo"}
+                            <tr>
+                                <td align="center">{$vo.ip}</td>
+                                <td align="center">{$vo.datetime|date='Y-m-d H:i:s',###}</td>
+                            </tr>
+                            {/volist}
+
+                        </table>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="indexBox">
+        <div class="boxTitle">服务器信息</div>
+        <ul>
+            <table width="100%" border="0" cellspacing="0" cellpadding="7" class="tableBasic">
+                <tr>
+                    <td width="120" valign="top">PHP 版本：</td>
+                    <td valign="top">{$software.php}</td>
+                    <td width="100" valign="top">MySQL 版本：</td>
+                    <td valign="top">{$software.mysql}</td>
+                    <td width="100" valign="top">服务器操作系统：</td>
+                    <td valign="top">{$software.os}</td>
+                </tr>
+                <tr>
+                    <td valign="top">文件上传限制：</td>
+                    <td valign="top">2M</td>
+                    <td valign="top">GD 库支持：</td>
+                    <td valign="top">{$software.gd}</td>
+                    <td valign="top">Web 服务器：</td>
+                    <td valign="top">{$software.env}</td>
+                </tr>
+            </table>
+        </ul>
+    </div>
+    <div class="indexBox">
+        <div class="boxTitle">系统开发</div>
+        <ul>
+            <table width="100%" border="0" cellspacing="0" cellpadding="7" class="tableBasic">
+                <tr>
+                    <td width="120"> 官网：</td>
+                    <td><a href="http://www.5none.com" target="_blank">http://www.5none.com</a></td>
+                </tr>
+                <tr>
+                    <td> 意见反馈：</td>
+                    <td><a href="http://www.5none.com" target="_blank">http://www.5none.com </a><em>（安装使用
+                        模板交流 BUG反馈 意见建议）</em></td>
+                </tr>
+                <tr>
+                    <td> 开发者：</td>
+                    <td>nango</td>
+                </tr>
+                <tr>
+                    <td> 系统使用协议：</td>
+                    <td><a href="http://www.5none.com" target="_blank">http://www.5none.com</a><em>（您可以免费使用
+                        （不限商用），但必须保留相关版权信息。）</em></td>
+                </tr>
+            </table>
+        </ul>
+    </div>
+
+</div>

@@ -1,0 +1,34 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>操作记录</strong></div>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3>操作记录</h3>
+            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                <tr>
+                    <th width="30" align="center">编号</th>
+                    <th width="150" align="left">操作时间</th>
+                    <th width="100" align="center">操作者</th>
+                    <th align="left">操作记录</th>
+                    <th width="100" align="center">IP地址</th>
+                </tr>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td align="center">{$vo.id}</td>
+                    <td>{$vo.datetime|date='Y-m-d H:i:s',###}</td>
+                    <td align="center">{$vo.username}</td>
+                    <td align="left">{$vo.content}</td>
+                    <td align="center">{$vo.ip}</td>
+                </tr>
+                {/volist}
+            </table>
+            <div class="pager">{$page}</div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}<!-- dcFooter 结束 -->
+    <div class="clear"></div>
+</div>
+</body>
+</html>

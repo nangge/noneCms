@@ -1,0 +1,52 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <!--包含公共模版-->
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>添加文章</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('article/index')}" class="actionBtn">文章列表</a>添加文章</h3>
+
+            <form action="{:url('article/copy')}" method="post">
+                <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <td width="90" align="right">文章地址</td>
+                        <td>
+                            <input type="text" name="url" value="" class="inpMain" size="100" required/>
+                            <p class="cue" style="color:red;">*请输入完整url地址</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">文章分类</td>
+                        <td>
+                            <select name="cid" style="width:100px;">
+                                <option value="0">未分类</option>
+                                {volist name="category" id="fcat"}
+                                <option value="{$fcat.id}"> {$fcat.name}</option>
+                                <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                {if condition="isset($fcat.children)"}
+                                {volist name="fcat['children']" id="scat"}
+                                <option value="{$scat.id}">- {$scat.name}</option>
+                                {/volist}
+                                {/if}
+                                {/volist}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input class="btn" type="submit" value="提 交"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+</body>
+</html>

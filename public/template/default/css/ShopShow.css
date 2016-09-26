@@ -1,0 +1,18 @@
+@charset "utf-8";
+html,body,ul,li,p{margin:0px;padding:0px;}
+li{list-style:none;}
+
+/* tsShopContainer */
+#tsShopContainer li,#tsShopContainer img{vertical-align:top;}
+#tsShopContainer{width:400px;margin:0px auto 0 auto;position:relative;border:1px solid #CCC;font-size:12px;padding-bottom:5px;float:left;margin-right: 10px;}
+#tsShopContainer #tsImgS{text-align:center;width:100%;position:relative;}
+#tsShopContainer #tsImgS a{display:block;text-align:center;margin:0px auto;}
+#tsShopContainer #tsImgS img{border:0px;}
+#tsShopContainer #tsPicContainer{width:100%;height:70px;position:relative;background:url(../image/scrollPicbg.gif) repeat-x 0px 0px;}
+#tsShopContainer #tsPicContainer #tsImgSArrL{width:17px;height:100%;background:url(../image/picshopArr.gif) no-repeat left center;position:absolute;top:0px;left:8px;cursor:pointer;}
+#tsShopContainer #tsPicContainer #tsImgSArrR{width:17px;height:100%;background:url(../image/picshopArr.gif) no-repeat right center;position:absolute;top:0px;right:8px;cursor:pointer;}
+#tsShopContainer #tsPicContainer #tsImgSCon{position:absolute;top:10px;left:38px;width:1px;height:70px;overflow:hidden;}
+#tsShopContainer #tsPicContainer #tsImgSCon ul{width:100%;overflow:hidden;}
+#tsShopContainer #tsPicContainer #tsImgSCon li{width:57px;float:left;cursor:pointer;}
+#tsShopContainer #tsPicContainer #tsImgSCon li img{padding:3px;margin:1px;border:1px solid  #e4e4e4;display:block;width:42px;height:42px;}
+#tsShopContainer #tsPicContainer #tsImgSCon li.tsSelectImg img{border:2px solid #F00;margin:0px;}

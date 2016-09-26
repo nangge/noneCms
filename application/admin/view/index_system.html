@@ -1,0 +1,98 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <!--包含公共模版-->
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere"> 管理中心<b>></b><strong>系统设置</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3>系统设置</h3>
+            <!--{ js href="__PUBLIC__/js/jquery.tab.js" /}-->
+
+            <div class="idTabs">
+                <ul class="tab">
+                    <li><a id="site" class="selected">常规设置</a></li>
+                    <li><a id="display">显示设置</a></li>
+                    <li><a id="defined">自定义</a></li>
+                    <li><a id="mail">邮件服务器</a></li>
+                </ul>
+                <div class="items">
+                    <form action="{:url('index/system')}" method="post" enctype="multipart/form-data">
+                        {foreach name="slist" id="list" key="k"}
+                        <div id="{$k}" {if condition="$k eq 'site'"}style="display:block"{else}style="display:none"{/if}>
+                            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                                <tr>
+                                    <th width="131">名称</th>
+                                    <th align="left">内容</th>
+                                </tr>
+                                {volist name="$slist[$k]" id="vo"}
+                                <!--判断输入框类型-->
+                                {switch name="vo.tvalue"}
+                                {case value="radio"}
+                                <tr>
+                                    <td align="right">{$vo.title}</td>
+                                    <td>
+                                        <label for="{$vo.name}">
+                                            <input type="radio" name="{$vo.name}" id="{$vo.name}" value="0" checked="true">
+                                            否</label>
+                                        <label for="{$vo.name}">
+                                            <input type="radio" name="{$vo.name}" id="{$vo.name}" value="1">
+                                            是</label>
+                                        {if condition="$vo['remark']"}<p class="cue">{$vo.remark}</p>{/if}
+                                    </td>
+                                </tr>
+                                {/case}
+                                {case value="select"}
+                                <tr>
+                                    <td align="right">{$vo.title}</td>
+                                    <td>
+                                        <select name="{$vo.name}" >
+                                            {volist name="$vo.svalue" id='s'}
+                                            <option value="{$s}" {if condition="$s eq $vo.value"}selected{/if}>{$s}</option>
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                </tr>
+                                {/case}
+                                {default /}
+                                <tr>
+                                    <td align="right">{$vo.title}</td>
+                                    <td>
+                                        <input type="text" name="{$vo.name}" value="{$vo.value}" size="80"
+                                               class="inpMain"/>
+                                        {if condition="$vo['remark']"}<p class="cue">{$vo.remark}</p>{/if}
+                                    </td>
+                                </tr>
+                                {/switch}
+                                {/volist}
+                            </table>
+                        </div>
+                        {/foreach}
+
+                        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                            <tr>
+                                <td width="131"></td>
+                                <td>
+                                    <input class="btn" type="submit" value="提交"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+    $(".tab a").click(function(){
+        var id = $(this).attr('id');
+        $(".tab a").removeClass("selected");
+        $(this).addClass("selected");
+        $("div#" + id).show().siblings('div').hide();
+    });
+</script>
+</body>
+</html>

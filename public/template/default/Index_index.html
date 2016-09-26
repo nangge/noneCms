@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        <yang:sitename/>
+    </title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/css.css">
+    <script type="text/javascript" src="__PUBLIC__/js/jquery1.42.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.SuperSlide.2.1.1.js"></script>
+</head>
+<body>
+<!--header-->
+{include file="public/header"/}
+
+<!--main-->
+<div class="main w1212">
+    <div class="main_top">
+        <div class="m_about">
+            <div class="ban d_a"><span class="f"><font style="font-size:16px;font-weight:bolder;">关于凯信</font> <font
+                    style="font-weight:bold;color:#3b3b3b;">ABOUT US</font></span><span class="more"><a
+                    href="index.php?s=/List/index/cid/1.html">MORE</a></span></div>
+            <div class="clear"></div>
+            <div class="con">
+                <img src="__PUBLIC__/images/kaixin.jpg"/>
+                <yang:field typeid='1' name='content' infolen='180'/>
+                ... ...
+            </div>
+        </div>
+        <div class="m_f"></div>
+
+        <div class="m_news">
+            <div class="ban dashed_n"><span class="f"><font style="font-size:16px;font-weight:bolder;">新闻中心</font> <font
+                    style="font-weight:bold;color:#3b3b3b;">NEWS</font></span><span class="more"><a
+                    href="index.php?s=/List/index/cid/3.html">MORE</a></span></div>
+            <div class="con">
+                <table>
+                    <!--< yang:artlist typeid='3' limit='7'>
+                        <tr>
+                            <td width="5%"><img src="__PUBLIC__/images/lingxing.jpg"/></td>
+                            <td><a href="{ $artlist.url}">{ $artlist.title|str2sub=###,20,1}</a></td>
+                            <td width="20%">[$artlist.publishtime|date='Y-m-d',###}]</td>
+                        </tr>
+                    </yang:artlist>-->
+                </table>
+            </div>
+        </div>
+        <div class="m_f"></div>
+
+        <div class="m_contact">
+            <div class="ban d_c"><span class="f"><font style="font-size:16px;font-weight:bolder;">联系我们</font> <font
+                    style="font-weight:bold;color:#3b3b3b;">CONTACT US</font></span></div>
+            <div class="con">
+                <div class="sbx">真诚为您服务</div>
+                <table>
+                    <tr>
+                        <td width="20%">联系人:</td>
+                        <td>孙经理</td>
+                    </tr>
+                    <tr>
+                        <td>电&nbsp;话:</td>
+                        <td>0373-3021362</td>
+                    </tr>
+                    <tr>
+                        <td>手&nbsp;机:</td>
+                        <td>13937335606</td>
+                    </tr>
+                    <tr>
+                        <td>传&nbsp;真:</td>
+                        <td>0373-2678811</td>
+                    </tr>
+                    <tr>
+                        <td>地&nbsp;址:</td>
+                        <td>新乡市宏利大道西段西冀场工业园</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="clear"></div>
+    <div class="pro">
+        <div class="ban p_a"><span class="f"><font style="font-size:16px;font-weight:bolder;">  &nbsp;&nbsp;推荐产品</font> <font
+                style="font-weight:bold;color:#3b3b3b;">REDUCTS</font></span><span class="more2 fir"><a
+                href="index.php?s=/List/index/cid/6.html">振动筛分设备</a></span><span class="more2"><a
+                href="index.php?s=/List/index/cid/7.html">振动输送设备</a></span><span class="more2"><a
+                href="index.php?s=/List/index/cid/8.html">振动电机</a></span><span class="more2"><a
+                href="index.php?s=/List/index/cid/9.html">其他设备</a></span><span class="more"><a
+                href="index.php?s=/List/index/cid/2.html">MORE</a></span></div>
+        <div class="con pro_con">
+            <ul>
+
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<!--footer-->
+{include file="public:footer"/}
+</body>
+</html>

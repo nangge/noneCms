@@ -1,0 +1,88 @@
+{include file="public/header" /}
+<style>
+    #images_area{
+        height:300px;
+        display: none;
+        clear:both;
+    }
+    .uploadify-queue-item{
+        width:300px;
+        float:left;
+        margin-left:10px;
+    }
+</style>
+<div id="dcWrap">
+    <!--包含公共模版-->
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        {js href="__PUBLIC__/js/jquery.autotextarea.js" /}
+        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>添加文章</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('article/index')}" class="actionBtn">文章列表</a>添加文章</h3>
+
+            <form action="{:url('article/add')}" method="post" enctype="multipart/form-data">
+                <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <td width="90" align="right">文章标题</td>
+                        <td>
+                            <input type="text" name="title" value="" size="80" class="inpMain" required/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">文章分类</td>
+                        <td>
+                            <select name="cid">
+                                <option value="0">未分类</option>
+                                {volist name="category" id="fcat"}
+                                <option value="{$fcat.id}"> {$fcat.name}</option>
+                                <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                {if condition="isset($fcat.children)"}
+                                {volist name="fcat['children']" id="scat"}
+                                <option value="{$scat.id}">- {$scat.name}</option>
+                                {/volist}
+                                {/if}
+                                {/volist}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">简单描述</td>
+                        <td>
+                            <textarea type="text" name="description" value="" cols="80" rows="5" class="inpMain"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" valign="top">文章内容</td>
+                        <td>
+                            <!-- 富文本框 -->
+                            {include file="public/editor"}
+                        </td>
+                    </tr>
+                    <tr>
+                        <!--上传图片-->
+                        {include file="public/upload" tip="缩略图"}
+                    </tr>
+                    <tr>
+                        <td align="right">关键字</td>
+                        <td>
+                            <input type="text" name="keywords" value="" size="50" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="hidden" name="id" value="">
+                            <input class="btn" type="submit" value="提 交"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+</body>
+</html>

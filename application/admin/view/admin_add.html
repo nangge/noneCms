@@ -1,0 +1,61 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>网站管理员</strong></div>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('admin/index')}" class="actionBtn">返回列表</a>网站管理员</h3>
+
+            <form action="{:url('admin/add')}" method="post">
+                <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <td width="100" align="right">管理员名称</td>
+                        <td>
+                            <input type="text" name="user_name" size="40" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100" align="right">E-mail地址</td>
+                        <td>
+                            <input type="text" name="email" size="40" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">密码</td>
+                        <td>
+                            <input type="password" name="password" size="40" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">确认密码</td>
+                        <td>
+                            <input type="password" name="repassword" size="40" class="inpMain"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">是否锁定</td>
+                        <td>
+                            <label for="islock">
+                                <input type="radio" name="islock" id="islock" value="0" checked>
+                                否</label>
+                            <label for="islock">
+                                <input type="radio" name="islock" id="islock" value="1">
+                                是</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="submit" name="submit" class="btn" value="提交"/>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+</body>
+</html>

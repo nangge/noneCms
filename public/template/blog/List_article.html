@@ -1,0 +1,25 @@
+{include file="Public/header" /}
+<!--/header-->
+<div class="about-content">
+    <div class="container">
+        <div class="content-grids">
+            <div class="col-md-8 content-main">
+                {article cid="$cid" orderby="publishtime DESC" pagesize='15' empty="暂无数据"}
+                <div class="content-grid-info">
+                    <div class="post-info">
+                        <h4><a href="{$article.url}">{$article.title}</a> {$article.publishtime|date='Y-m-d',###} / {$article.click} 阅</h4>
+
+                        <p>{$article.description}</p>
+                        <a href="{$article.url}"><span></span>READ MORE</a>
+                    </div>
+                </div>
+                {/article}
+            </div>
+            {include file="Public/right" /}
+        </div>
+    </div>
+</div>
+<!--footer-->
+{include file="Public/footer" /}
+
+

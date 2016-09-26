@@ -1,0 +1,52 @@
+{include file="Public/header" /}
+<!--/header-->
+<div class="single">
+    <div class="container">
+        <div class="col-md-8 single-main">
+            <div class="single-grid">
+                <h3 align="center">{$content.title}</h3>
+                <hr style="width:1;border:1">
+                {if condition="$content.litpic"}
+                <img src="{$content.litpic}" alt="{$content.title}"/>
+                {/if}
+                {$content.content}
+            </div>
+            <ul class="comment-list">
+                <li>
+                    <h5 class="post-author_head">作者： <a href="#" title="Posts by admin" rel="author">admin</a></h5>
+                    <img src="__PUBLIC__/images/avatar.png" class="img-responsive" alt="">
+                    <div class="desc">
+                        <p>来源: <a title="Posts by admin" rel="author">{if condition="$content.copyfrom"}{$content.copyfrom}{else/}原创{/if}</a></p>
+                    </div>
+                    <div class="clearfix"></div>
+                </li>
+            </ul>
+            <div class="content-form">
+                <h3>just say Hi</h3>
+                <!-- 多说评论框 start -->
+                <div class="ds-thread" data-thread-key="{$content.id}" data-title="{$content.title}"
+                     data-url="{:url('show/index',['id' => $content.id])}"></div>
+                <!-- 多说评论框 end -->
+                <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+                <script type="text/javascript">
+                    var duoshuoQuery = {short_name: "5none"};
+                    (function () {
+                        var ds = document.createElement('script');
+                        ds.type = 'text/javascript';
+                        ds.async = true;
+                        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                        ds.charset = 'UTF-8';
+                        (document.getElementsByTagName('head')[0]
+                        || document.getElementsByTagName('body')[0]).appendChild(ds);
+                    })();
+                </script>
+                <!-- 多说公共JS代码 end -->
+            </div>
+        </div>
+        {include file="Public/right" /}
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<!--footer-->
+{include file="Public/footer" /}

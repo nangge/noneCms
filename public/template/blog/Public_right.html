@@ -1,0 +1,36 @@
+<div class="col-md-4 content-right">
+	<div class="recent">
+		<h3>最新文章</h3>
+		<ul>
+			{article orderby="publishtime DESC" limit='4'}
+			<li><a href="{$article.url}">{$article.title}</a></li>
+			{/article}
+		</ul>
+	</div>
+	<!--<div class="comments">
+		<h3>最近评论</h3>
+		<ul>
+			<li><a href="#">Amada Doe </a> on <a href="#">Hello World!</a></li>
+			<li><a href="#">Peter Doe </a> on <a href="#"> Photography</a></li>
+			<li><a href="#">Steve Roberts </a> on <a href="#">HTML5/CSS3</a></li>
+		</ul>
+	</div>-->
+	<div class="clearfix"></div>
+	<div class="archives">
+		<h3>归档</h3>
+		<ul>
+			{archived}
+			<li><a href="{$archived.url}">{$archived.date} ({$archived.count})</a></li>
+			{/archived}
+		</ul>
+	</div>
+	<div class="categories">
+		<h3>分类</h3>
+		<ul>
+			{volist name="rcate" id="c"}
+			<li><a href="{:url('listing/index',['cid' => $c.id])}">{$c.name}</a></li>
+			{/volist}
+		</ul>
+	</div>
+	<div class="clearfix"></div>
+</div>
