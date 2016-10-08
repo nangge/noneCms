@@ -19,11 +19,11 @@ class Show extends Common
         //获取资源内容
         $data = Db::name($cat_info['tablename'])->find($id);
         Db::name($cat_info['tablename'])->where('id',$id)->setInc('click');//点击+1
+
         //图片处理
         if(isset($data['pictureurls'])){
-            $data['pictureurls'] = implode('|',$data['pictureurls']);
+            $data['pictureurls'] = explode('|',$data['pictureurls']);
         }
-
         //获取模板文件
         $template_show = $cat_info['template_show'];
 

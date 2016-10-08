@@ -23,19 +23,19 @@
 
 <!-- class="tsSelectImg" -->
 				<div id="tsShopContainer">
-					<div id="tsImgS"><a href="{$content["pictureurls"][0]['url']}" title="Images" class="MagicZoom" id="MagicZoom"><img width="400" height="300" src="{$content["pictureurls"][0]['url']}" /></a></div>
+					<div id="tsImgS"><a href="{$content['pictureurls'][0]}" title="Images" class="MagicZoom" id="MagicZoom"><img width="400" height="300" src="{$content['pictureurls'][0]}" /></a></div>
 					<div id="tsPicContainer">
 						<div id="tsImgSArrL" onclick="tsScrollArrLeft()"></div>
 						<div id="tsImgSCon">
 							<ul>
-							<!--< foreach name='content["pictureurls"]' item='v' key='k'>
-								<li onclick="showPic({ $k})" rel="MagicZoom" ><img height="42" width="42" src="{ $v['url']}" tsImgS="{ $v['url']}" /></li>
-							</ foreach>-->
+							{foreach name='content["pictureurls"]' item='v' key='k'}
+								<li onclick="showPic({$k})" rel="MagicZoom" ><img height="42" width="42" src="{$v}" tsImgS="{$v}" /></li>
+							{/foreach}
 							</ul>
 						</div>
 						<div id="tsImgSArrR" onclick="tsScrollArrRight()"></div>
 					</div>
-					<img class="MagicZoomLoading" width="16" height="16" src="images/loading.gif" alt="Loading..." />
+					<img class="MagicZoomLoading" width="16" height="16" src="__PUBLIC__/images/loading.gif" alt="Loading..." />
 				</div>
 				<script src="__PUBLIC__/js/ShopShow.js"></script>
 				{$content.content}
