@@ -5,7 +5,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Request;
 
-class hello extends Controller
+class Hello extends Controller
 {
     /**
      * 显示资源列表
@@ -14,7 +14,11 @@ class hello extends Controller
      */
     public function index()
     {
-        //
+        if(file_exists('data/1.txt')){
+            echo '文件存在';
+        }else{
+            echo '文件不存在';
+        }
     }
 
     /**
