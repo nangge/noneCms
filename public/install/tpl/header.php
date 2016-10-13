@@ -1,4 +1,4 @@
-<?php if (!defined('XYHCMS_INSTALL')) exit('Access Denied!')?>
+<?php if (!defined('NONECMS_INSTALL')) exit('Access Denied!')?>
 <!DOCTYPE html>
 <html>
 <head>

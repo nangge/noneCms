@@ -3,7 +3,7 @@
 <body style="height: 100%;overflow: hidden;">
     <div class="head">
         <div id="head">
-            <div class="logo"><a href="./" target="main" style="color: #fff;">后台管理</a></div>
+            <div class="logo"><a target="main" style="color: #fff;font-size: 18px;line-height: 40px;margin-left: 40px;"><i>NONECMS</i></a></div>
             <div class="nav">
                 <ul>
                     <li class="M"><a href="JavaScript:void(0);" class="topAdd">新建</a>
@@ -11,7 +11,7 @@
                     </li>
                     <li><a href="{$web_site}" target="_blank">查看站点</a></li>
                     <li><a id="clear-cache" href="javascript:void(0);">清除缓存</a></li>
-                    <li><a href="javascript:void(0);" target="_blank">帮助</a></li>
+                    <li><a href="http://www.5none.com" target="_blank">帮助</a></li>
                     <li class="noRight"><a href="{:url('nav/add')}"> +</a></li>
                 </ul>
                 <ul class="navRight">
@@ -39,7 +39,7 @@
                 <li><a href="{:url('page/index')}" target="main"><i class="page"></i><em>单页面管理</em></a></li>
             </ul>
             <ul>
-                <li><a style="color:blue">栏目管理</a></li>
+                <li><a style="color:blue"><i class=""></i><em>栏目管理</em></a></li>
                 {volist name="all_nav" id="nav"}
                 {switch name="nav.modelid"}
                 {case value="1"}<!--文章模型-->

@@ -36,12 +36,12 @@
 			</tr>
 			<tr>
 				<td><font class="red">*</font>&nbsp;数据库名称：</td>
-				<td><input type="text" class="text" value="wang" name="DB_NAME" /></td>
+				<td><input type="text" class="text" value="nonecms" name="DB_NAME" /></td>
 				<td>不存在则自动创建</td>
 			</tr>
 			<tr>
 				<td><font class="red">*</font>&nbsp;数据库表前缀：</td>
-				<td><input type="text" class="text" value="wang_" name="DB_PREFIX" /></td>
+				<td><input type="text" class="text" value="none_" name="DB_PREFIX" /></td>
 				<td>不推荐使用默认表前缀</td>
 			</tr>
 			<tr>
@@ -59,11 +59,11 @@
 				<td><input type="text" class="text" value="<?php echo $weburl;?>" name="WEB_URL" /></td>
 				<td>请带上协议头http://或https://</td>
 			</tr>
-			<!--<tr>
-				<td><font class="red">*</font>&nbsp;网站风格：</td>
-				<td><input type="radio" name="WEB_STYLE" value="default" checked="checked">< ?php /*echo $lang['site_style_c']; */?><input type="radio" name="WEB_STYLE" value="blog">< ?php /*echo $lang['site_style_b']; */?></td>
+			<tr>
+				<td><font class="red">*</font>&nbsp;网站主题：</td>
+				<td><input type="radio" name="WEB_THEME" value="default" checked="checked">企业站  <input type="radio" name="WEB_THEME" value="blog">个人博客</td>
 				<td>&nbsp;</td>
-			</tr>-->
+			</tr>
 			<tr>
 				<th>网站超级管理员</th>
 				<th>&nbsp;</th>
@@ -71,7 +71,7 @@
 			</tr>
 			<tr>
 				<td><font class="red">*</font>&nbsp;用户名：</td>
-				<td><input type="text" class="text" value="wang" name="username" /></td>
+				<td><input type="text" class="text" value="nonecms" name="username" /></td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>

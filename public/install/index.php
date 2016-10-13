@@ -1,10 +1,10 @@
 <?php
 /*
-* XYHCms安装文件
+* NONECMS安装文件
 */
 @set_time_limit(1000);
 error_reporting(E_STRICT);
-define('XYHCMS_INSTALL', 1);
+define('NONECMS_INSTALL', 1);
 header('Content-Type:text/html;charset=UTF-8');
 $version = '5.4.0';
 $phpversion = phpversion();
@@ -13,7 +13,7 @@ if($phpversion < $version) exit('您的php版本过低，不能安装本软件�
 
 include 'inc/install.lang.php';
 if (file_exists('install.lock')) {
-	exit('您已经安装过本软件,如果需要重新安装，请删除 ./install/install.lock 文件！');
+	exit('您已经安装过本软件,如果需要重新安装，请删除 ./public/install/install.lock 文件！');
 }
 $step = isset($_GET['step'])? intval($_GET['step']) : 1;
 
@@ -160,7 +160,7 @@ switch ($step ) {
 	case 4:
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {			
 			$setting = include './temp.php';
-			$datafile = $setting['add_test'] == 1 ? './inc/xyhcms_data.sql' : './inc/wang.sql';
+			$datafile = $setting['add_test'] == 1 ? './inc/wang_data.sql' : './inc/wang.sql';
 
 			$content = file_get_contents($datafile);//带演示
 			if (empty($setting)) {				
@@ -173,8 +173,8 @@ switch ($step ) {
 			$content=preg_replace('/\/\*[\w\W]*?\*\//', '', $content);
        		$content=preg_replace('/-- ----------------------------[\w\W]*?-- ----------------------------/', '', $content);
 			$content = str_replace(
-					array('#wang#_','#web_url#','#web_name#','#web_style#','#web_cookie_code#',"\r"),
-					array($setting['DB_PREFIX'],$setting['WEB_URL'],$setting['WEB_NAME'],$setting['WEB_STYLE'],$cookie_code,"\n"), 
+					array('#wang#_','#web_url#','#web_name#','#web_theme#','#web_cookie_code#',"\r"),
+					array($setting['DB_PREFIX'],$setting['WEB_URL'],$setting['WEB_NAME'],$setting['WEB_THEME'],$cookie_code,"\n"), 
 					$content);
 
 
@@ -252,9 +252,6 @@ switch ($step ) {
 			}
 			$connect->close();
 		
-			/* 保存install记录,如果删除则得不到最新的更新提示 */
-			//@file_get_contents('http://www.xyhcms.com/api.php?c=Cms&a=getInstallInfo&email='.base64_encode($setting['email']).'&url='.$_SERVER["HTTP_HOST"].'&lang='.$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			
 			$status = 'success_all';
 			$info .=$lang['installation_successful'];
 

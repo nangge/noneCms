@@ -15,7 +15,7 @@
 			</tr>
 			<tr>
 				<td><?php echo $lang['operating_system']; ?></td>
-				<td>Linux&nbsp;/&nbsp;WNT</td>
+				<td>Linux&nbsp;/&nbsp;NGINX</td>
 				<td><?php echo $os_software;?></td>
 			</tr>
 			<tr>

@@ -33,11 +33,6 @@ CREATE TABLE `#wang#_admin` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of #wang#_admin
--- ----------------------------
-INSERT INTO `#wang#_admin` VALUES ('1', 'wyn', '0d3cde9ac054e95ed35d23155a2d78e9', 'tuvwxy', '', '', '0', '1472627740', '0.0.0.0', '0');
-INSERT INTO `#wang#_admin` VALUES ('2', 'wyn3', '', '4lRKTu', '', '553212320@qq.com', '0', '1472540993', '0.0.0.0', '1');
 
 -- ----------------------------
 -- Table structure for #wang#_article
@@ -68,11 +63,6 @@ CREATE TABLE `#wang#_article` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of #wang#_article
--- ----------------------------
-INSERT INTO `#wang#_article` VALUES ('1', '新网站开通上线', '', '', '', '', '新网站开通上线', '', '新网站开通上线新网站开通上线新网站开通上线新网站开通上线新网站开通上线', '新网站开通上线新网站开通上线', '1470814964', '0', '0', '7', '1', '0', '', '1', '0', '0');
-
--- ----------------------------
 -- Table structure for #wang#_category
 -- ----------------------------
 DROP TABLE IF EXISTS `#wang#_category`;
@@ -97,15 +87,6 @@ CREATE TABLE `#wang#_category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of #wang#_category
--- ----------------------------
-INSERT INTO `#wang#_category` VALUES ('1', '产品中心', 'chanpinzhongxin', '', '0', '3', '0', '', '', '', '', 'List_product.html', 'Show_product.html', null, '0', '1', '1');
-INSERT INTO `#wang#_category` VALUES ('2', '公司简介', 'about', '', '0', '2', '0', '', '', 'edi111t公司简介', '', 'List_page.html', 'Show_page.html', 'edi11t公司简介公司简介公司简介', '0', '100', '1');
-INSERT INTO `#wang#_category` VALUES ('4', '联系我们', 'contact', '', '0', '2', '0', '', '', '联系我们联系我们', '', 'List_page.html', 'Show_page.html', null, '0', '50', '1');
-INSERT INTO `#wang#_category` VALUES ('6', '电脑设备', 'computer', '', '1', '3', '0', '', '', '分类选择', '', 'List_product.html', 'Show_product.html', null, '0', '50', '1');
-INSERT INTO `#wang#_category` VALUES ('7', '新闻中心', 'news', '', '0', '1', '0', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '1', '1');
-INSERT INTO `#wang#_category` VALUES ('8', '行业新闻', 'hangyexinwen', '', '7', '1', '0', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '2', '1');
 
 -- ----------------------------
 -- Table structure for #wang#_log
@@ -179,21 +160,6 @@ CREATE TABLE `#wang#_product` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of #wang#_product
--- ----------------------------
-INSERT INTO `#wang#_product` VALUES ('3', '士大夫撒', '', '', '', null, '从SQL Server转到Oracle也许会感到不适，因为Oracle里没有文件组和数据文件的概念。但是有表空间的概念，表空间是Oracle的逻辑结构，一个Oracle数据库可以有一个或者多个表空间，一个表空间又对应着多个物理的数据库文件。其实SQL Server的文件组转到Oracle就是表空间，Oracle的表空间转到SQL Server就是文件组。这篇博文重点来讨论Oracle的表空间', '', '0.00', '0.00', '', '', '', '0', '0', '750', '1', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('5', '士大夫撒', '', '', '', null, '从SQL Server转到Oracle也许会感到不适，因为Oracle里没有文件组和数据文件的概念。但是有表空间的概念，表空间是Oracle的逻辑结构，一个Oracle数据库可以有一个或者多个表空间，一个表空间又对应着多个物理的数据库文件。其实SQL Server的文件组转到Oracle就是表空间，Oracle的表空间转到SQL Server就是文件组。这篇博文重点来讨论Oracle的表空间', '', '0.00', '0.00', '', '', '', '0', '0', '7195', '1', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('6', 'wang12', '', '', '', null, '从SQL Server转到Oracle也许会感到不适，因为Oracle里没有文件组和数据文件的概念。但是有表空间的概念，表空间是Oracle的逻辑结构，一个Oracle数据库可以有一个或者多个表空间，一个表空间又对应着多个物理的数据库文件。其实SQL Server的文件组转到Oracle就是表空间，Oracle的表空间转到SQL Server就是文件组。这篇博文重点来讨论Oracle的表空间', '', '0.00', '0.00', '', '', '', '0', '0', '2307', '1', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('7', '士大夫撒', '', '', '', null, '从SQL Server转到Oracle也许会感到不适，因为Oracle里没有文件组和数据文件的概念。但是有表空间的概念，表空间是Oracle的逻辑结构，一个Oracle数据库可以有一个或者多个表空间，一个表空间又对应着多个物理的数据库文件。其实SQL Server的文件组转到Oracle就是表空间，Oracle的表空间转到SQL Server就是文件组。这篇博文重点来讨论Oracle的表空间', '', '0.00', '0.00', '', '', '', '0', '0', '9948', '1', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('8', 'wang12', '', '', '', null, '从SQL Server转到Oracle也许会感到不适，因为Oracle里没有文件组和数据文件的概念。但是有表空间的概念，表空间是Oracle的逻辑结构，一个Oracle数据库可以有一个或者多个表空间，一个表空间又对应着多个物理的数据库文件。其实SQL Server的文件组转到Oracle就是表空间，Oracle的表空间转到SQL Server就是文件组。这篇博文重点来讨论Oracle的表空间', '', '0.00', '0.00', '', '', '', '0', '0', '2819', '1', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('9', '士大夫撒', '', '', '', null, '从SQL Server转到Oracle也许会感到不适，因为Oracle里没有文件组和数据文件的概念。但是有表空间的概念，表空间是Oracle的逻辑结构，一个Oracle数据库可以有一个或者多个表空间，一个表空间又对应着多个物理的数据库文件。其实SQL Server的文件组转到Oracle就是表空间，Oracle的表空间转到SQL Server就是文件组。这篇博文重点来讨论Oracle的表空间', '', '0.00', '0.00', '', '', '', '4294967295', '4294967295', '4250', '6', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('10', 'wang12', '', '', '', null, '从SQL Server转到Oracle也许会感到不适，因为Oracle里没有文件组和数据文件的概念。但是有表空间的概念，表空间是Oracle的逻辑结构，一个Oracle数据库可以有一个或者多个表空间，一个表空间又对应着多个物理的数据库文件。其实SQL Server的文件组转到Oracle就是表空间，Oracle的表空间转到SQL Server就是文件组。这篇博文重点来讨论Oracle的表空间', '', '0.00', '0.00', '', '', '', '4294967295', '4294967295', '2795', '6', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('11', '商品测试', '', 'test', '', null, '啊发顺丰大是大非', '测试测试', '1.00', '0.00', 'test', 'kg', '', '1470627731', '0', '0', '1', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('23', '图片测试', '', '', '', 'http://localhost/tp5/public/uploads/37\\592d01b45c742f43d75f7909f78172.jpg|http://localhost/tp5/public/uploads/c2\\10b8f4e3f8c93347d7750878a1d2cd.jpg', '图片测试图片测试图片测试图片测试图片测试', '图片测试', '1.00', '0.00', 'test', '个', '', '1470720246', '0', '0', '1', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('24', '电脑设备', '', '', '', 'http://www.mbeazy.com/uploads/20160809\\eae300067413e5a7fae9b82af0086ed3.jpg', '电脑设备电脑设备电脑设备电脑设备', '电脑设备电脑设备电脑设备', '14000.00', '0.00', 'dell', '台', '', '1470722017', '0', '0', '6', '1', '0', '', '1', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('25', '1111', '', '', '', '/uploads/20160817\\8bc17f896b1b558519fa12d93ba57daf.jpg', '[content]', '', '1.00', '0.00', '', '', '', '1471401204', '0', '0', '0', '1', '0', '', '0', '0', '0');
-INSERT INTO `#wang#_product` VALUES ('26', '缩略图测试', '', '', '/tp5/public/uploads/20160817/20160817104703-thumb.jpeg', '/uploads/20160817\\d8d98347854ad6180cfdd27df38660ec.jpg', '缩略图测试缩略图测试缩略图测试缩略图测试缩略图测试缩略图测试缩略图测试', '', '1.00', '0.00', '', '', '', '1471402023', '0', '0', '1', '1', '0', '', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for #wang#_system
@@ -215,10 +181,10 @@ CREATE TABLE `#wang#_system` (
 -- ----------------------------
 -- Records of #wang#_system
 -- ----------------------------
-INSERT INTO `#wang#_system` VALUES ('64', 'site_name', '站点名称', '', '', '0', '0', '我的网站', '0');
-INSERT INTO `#wang#_system` VALUES ('65', 'site_title', '站点标题', '', '', '0', '0', '我的网站', '0');
-INSERT INTO `#wang#_system` VALUES ('66', 'site_keywords', '站点关键字', '', '', '0', '0', '我的网站', '0');
-INSERT INTO `#wang#_system` VALUES ('67', 'site_description', '站点描述', '', '', '0', '0', '我的网站', '0');
+INSERT INTO `#wang#_system` VALUES ('64', 'site_name', '站点名称', '', '', '0', '0', '#web_name#', '0');
+INSERT INTO `#wang#_system` VALUES ('65', 'site_title', '站点标题', '', '', '0', '0', '#web_name#', '0');
+INSERT INTO `#wang#_system` VALUES ('66', 'site_keywords', '站点关键字', '', '', '0', '0', '#web_name#', '0');
+INSERT INTO `#wang#_system` VALUES ('67', 'site_description', '站点描述', '', '', '0', '0', '#web_name#', '0');
 INSERT INTO `#wang#_system` VALUES ('68', 'site_address', '公司地址', '', '', '0', '0', '浙江省杭州市', '0');
 INSERT INTO `#wang#_system` VALUES ('69', 'site_closed', '关闭网站', '', 'radio', '0', '0', '0', '0');
 INSERT INTO `#wang#_system` VALUES ('70', 'site_icp', 'ICP备案证书号', '', '', '0', '0', '', '0');
@@ -247,4 +213,4 @@ INSERT INTO `#wang#_system` VALUES ('92', 'mail_port', '服务器端口', '', ''
 INSERT INTO `#wang#_system` VALUES ('93', 'mail_ssl', '是否使用SSL安全协议', '', '', '0', '0', 'on', '0');
 INSERT INTO `#wang#_system` VALUES ('94', 'mail_username', '发件邮箱', '', '', '0', '0', '', '0');
 INSERT INTO `#wang#_system` VALUES ('95', 'mail_password', '发件邮箱密码', '', '', '0', '0', '1111', '0');
-INSERT INTO `#wang#_system` VALUES ('96', 'site_theme', '网站主题', '', 'select', '0', '0', 'default', '0');
+INSERT INTO `#wang#_system` VALUES ('96', 'site_theme', '网站主题', '', 'select', '0', '0', '#web_theme#', '0');

@@ -1,10 +1,10 @@
 <?php
-if(!defined('XYHCMS_INSTALL')) exit('Access Denied');
+if(!defined('NONECMS_INSTALL')) exit('Access Denied');
 $lang = array(
-	'install_title' => 'XYHCMS 3.0安装向导',
-	'install_license' => '行云海内容管理系统-安装用户协议',
-	'install_is_lock' => '您已成功安装XYHCMS，需重新安装请手动删除网站目录下install/install.lock文件', 
-	'install_db_error' => '数据库文件无法读取，请检查install/inc/xyhcms.sql是否存在。',	
+	'install_title' => 'NONECMS 1.0安装向导',
+	'install_license' => 'NONECMS内容管理系统-安装用户协议',
+	'install_is_lock' => '您已成功安装NONECMS，需重新安装请手动删除网站目录下public/install/install.lock文件', 
+	'install_db_error' => '数据库文件无法读取，请检查public/install/inc/wang.sql是否存在。',	
 	'agree_and_accept' => '同意并接受',	
 	'detection_environment' => '检测环境',
 	'data_create' => '创建数据',
@@ -64,7 +64,7 @@ $lang = array(
 	'visit_home' => '访问网站首页',
 	'enter_admin' => '进入后台管理',
 
-	'safe_notes' => '为了您站点的安全，安装完成后请立即删除网站根目录下的“Install”文件夹删除。',
+	'safe_notes' => '为了您站点的安全，安装完成后请立即删除网站根目录public下的“Install”文件夹删除。',
 	'system_installation_requirements_php' => '系统安装要求：PHP版本最低不能低于',
 	'install_on' => '开启',
 

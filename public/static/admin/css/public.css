@@ -319,6 +319,7 @@ select {
  float: left;
  width: 179px;
  height: 40px;
+ font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
 }
 #head .logo img {
  margin: 7px 0 0 13px;
