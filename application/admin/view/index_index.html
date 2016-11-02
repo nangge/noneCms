@@ -1,5 +1,9 @@
 {include file="public/header" /}
 {css href="__PUBLIC__/css/public.css" /}
+<script type="text/javascript">
+    var cache = "{:url('index/clear')}";
+    var logout = "{:url('login/logout')}";
+</script>
 <body style="height: 100%;overflow: hidden;">
     <div class="head">
         <div id="head">
@@ -21,7 +25,7 @@
                             <a href="{:url('admin/add')}" target="main">添加账户</a>
                         </div>
                     </li>
-                    <li class="noRight"><a href="{:url('login/logout')}">退出</a></li>
+                    <li class="noRight" id="logout"><a href="JavaScript:void(0);">退出</a></li>
                 </ul>
             </div>
         </div>

@@ -21,9 +21,10 @@ class Index extends Common
         $cyear = date('Y',time());
 
         echo $pyear.'--'.$cyear;*/
-        $a = request()->root(true);
-        str_replace('index.php/','',$a);
-        echo str_replace('/index.php','',$a);
+
+         $login_list = Db::name('log')->whereOr('content',['like','%首页'],['like','index%'])->fetchSql(true)->select();
+         print_r($login_list);
+       
         //print_r(url('index/index',['id' => 2]));
     }
 }

@@ -229,7 +229,7 @@ function fixed2(pnumber) {
 	}
 	//tips
 	var tips = function (a, time) {
-	    var h, i, c = "", d = a || "", e = '<div id="at-mask" class="at-mask"><div class="pdiv"><div class="at-alert-opt2">' + d + "</div>" +  "</div>" +  "</div>", f = '<style>.pdiv{margin:0 auto;margin-top:70%;text-align: center;} .at-mask { display: block; position: fixed; width: 100%; height: 100%; z-index: 10001; top: 0; left: 0; } .at-alert-opt2 {padding: 10px;background-color: rgba(0, 0, 0, 0.5); font-size: 0.4rem; color: #fff; margin: 0 auto;width: auto; max-width:7rem; display:inline-block; text-align: center; } </style>', g = $("head");
+	    var h, i, c = "", d = a || "", e = '<div id="at-mask" class="at-mask"><div class="pdiv"><div class="at-alert-opt2">' + d + "</div>" +  "</div>" +  "</div>", f = '<style>.pdiv{margin:0 auto;margin-top:70%;text-align: center;} .at-mask { display: block; position: fixed; width: 100%; height: 100%; z-index: 10001; top: 0; left: 0; } .at-alert-opt2 {padding: 10px;background-color: rgba(0, 0, 0, 0.5); font-size: 0.4rem; color: #fff; margin: 0 auto;width: auto; max-width:280px; display:inline-block; text-align: center; } </style>', g = $("head");
 	    0 === g.length ? (g = "<head>" + f + "</head>", $("html").append(g)) : (h = $("style").html() || "", h.indexOf("alertcheck") > -1 || g.append(f)), $("body").append(e), i = $("#at-mask"),i.on("tap",function(){
 	    	i.remove();
 	    });
