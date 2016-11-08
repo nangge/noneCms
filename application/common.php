@@ -27,7 +27,7 @@ function getAllCategory($status, $pid = '', $limit = '')
 
     //pid为空则会获取所有导航并且拼装二级，其他值则只能获取该父id下的导航
     if ($pid !== '') {
-        $nav = $nav->where(['pid' => $pid]);
+        $nav = $nav->where('pid',$pid);
     }
 
     if ($limit != '') {

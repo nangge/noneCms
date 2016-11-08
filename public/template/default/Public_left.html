@@ -4,9 +4,11 @@
 				<div class="ban l_a"><span class="f"><font style="font-size:16px;font-weight:bolder;">产品分类</font> <font style="font-weight:bold;color:#3b3b3b;">PRODUCT CATEGORY</font></span></div>
 				<div class="clear"></div>
 				<ul>
-				<!--< yang: catlist typeid='2' >
-					<li><img src="__PUBLIC__/images/sanj.png" /><a href="{ $catlist.url}">{$ catlist.name}</a></li>
-				</ yang: catlist>-->
+				{nav pid='$cid'}
+				{volist name="$nav['children']" id='cat'} 
+				<li><img src="__PUBLIC__/images/sanj.png" /><a href="{$cat.url}">{$cat.name}</a></li>
+				{/volist}
+				{/nav}
 				</ul>
 			</div>
 
