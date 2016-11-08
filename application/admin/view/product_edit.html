@@ -72,34 +72,8 @@
                     <tr>
                         <td align="right" valign="top">商品内容</td>
                         <td>
-                            <!-- KindEditor -->
-                            {load href="__PUBLIC__/js/kindeditor/themes/default/default.css,__PUBLIC__/js/kindeditor/plugins/code/prettify.css" /}
-                            {load href="__PUBLIC__/js/kindeditor/kindeditor.js,__PUBLIC__/js/kindeditor/lang/zh_CN.js,__PUBLIC__/js/kindeditor/plugins/code/prettify.js" /}
-                            <script>
-                                KindEditor.ready(function (K) {
-                                    var editor1 = K.create('textarea[name="content"]', {
-                                        cssPath: '../plugins/code/prettify.css',
-                                        uploadJson: '../php/upload_json.php',
-                                        fileManagerJson: '../php/file_manager_json.php',
-                                        allowFileManager: true,
-                                        afterCreate: function () {
-                                            var self = this;
-                                            K.ctrl(document, 13, function () {
-                                                self.sync();
-                                                K('form[name=example]')[0].submit();
-                                            });
-                                            K.ctrl(self.edit.doc, 13, function () {
-                                                self.sync();
-                                                K('form[name=example]')[0].submit();
-                                            });
-                                        }
-                                    });
-                                    prettyPrint();
-                                });
-                            </script>
-                            <!-- /KindEditor -->
-                            <textarea id="content" name="content" style="width:780px;height:400px;"
-                                      class="textArea">{$item.content}</textarea>
+                             <!-- 富文本框 -->
+                            {include file="public/editor" content="<?php echo $item['content']?>" /}
                         </td>
                     </tr>
                     <tr>

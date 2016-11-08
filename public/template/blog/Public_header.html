@@ -17,21 +17,21 @@
 	<link href="__PUBLIC__/css/bootstrap.css" rel='stylesheet' type='text/css' />
 	<link href="__PUBLIC__/css/style.css" rel='stylesheet' type='text/css' />
 	<script src="__PUBLIC__/js/jquery.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/move-top.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/easing.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/js/prettify.js"></script>
-	<link href="__PUBLIC__/css/prettify.css" rel='stylesheet' type='text/css'/>
-	<!--/script-->
+	<!-- <script type="text/javascript" src="__PUBLIC__/js/move-top.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/easing.js"></script> -->
+	<link rel="stylesheet" href="__PUBLIC__/../../static/admin/js/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css">
+	<script type="text/javascript" src="__PUBLIC__/../../static/admin/js/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+	
 	<script type="text/javascript">
-		jQuery(document).ready(function($) {
-			$(".scroll").click(function(event){
+	    $(function(){
+	    	$(".scroll").click(function(event){
 				event.preventDefault();
 				$('html,body').animate({scrollTop:$(this.hash).offset().top},900);
 			});
-		});
+	        SyntaxHighlighter.all();
+	    });
 	</script>
-	<!---->
-
+	
 </head>
 <body>
 <!---header---->
