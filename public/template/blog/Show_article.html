@@ -21,6 +21,13 @@
                     <div class="clearfix"></div>
                 </li>
             </ul>
+            {if condition="$content.copyfrom"}
+            <script type="text/javascript" src="__PUBLIC__/js/prettify.js"></script>
+            <link href="__PUBLIC__/css/prettify.css" rel='stylesheet' type='text/css'/>
+            <script type="text/javascript">
+                prettyPrint();
+            </script>
+            {/if}
             <div class="content-form">
                 <h3>just say Hi</h3>
                 <!-- 多说评论框 start -->

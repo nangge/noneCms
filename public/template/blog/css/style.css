@@ -914,3 +914,16 @@ font-size: 1.1em;
   margin: 0 auto;
   width: 50%;
 }
+/**兼容从csdn抓取代码行号错乱问题**/
+ul.pre-numbering{
+  position: absolute;
+    width: 50px;
+    background-color: #eee;
+    top: 0px;
+    left: 0;
+    margin: 0;
+    padding: 6px 0 40px 0;
+    border-right: 1px solid #ddd;
+    list-style: none;
+    text-align: right;
+}
