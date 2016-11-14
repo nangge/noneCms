@@ -51,10 +51,11 @@ class Product extends Common
     public function index($id = 0)
     {
         //$list = Db::name(self::$_table)->field('id,title,publishtime,cid')->order('id DESC');
-        $list = Db::field('p.id,p.title,p.publishtime,p.cid,c.name')
+        $list = Db::field('p.id,p.title,p.publishtime,p.cid,p.flag,p.click,c.name')
             ->table($this->prefix.'product p,'.$this->prefix.'category c')
             ->where('p.cid = c.id')
-            ->where('p.status',0);
+            ->where('p.status',0)
+            ->order('p.flag DESC,p.publishtime DESC');
         if($id == 0){
             $list = $list->paginate(10);
         }else{
@@ -89,8 +90,9 @@ class Product extends Common
         } elseif (request()->isPost()) {
             $params = input('post.');
             if (isset($params['pic_url'])) {
+                $img1 = str_replace(__ROOT__,'',$params['pic_url'][0]);
+                $realpath = str_replace(['/..\/','/../'],'/',ROOT_PATH.$img1);
 
-                $realpath = str_replace('/..\/','/',ROOT_PATH.$params['pic_url'][0]);
                 //第一张图生成缩略图
                 $image = \think\Image::open($realpath);
                 $type = $image->type();
@@ -141,6 +143,24 @@ class Product extends Common
         $data['pic_url'] = explode('|',$data['pictureurls']);
         $this->assign('item',$data);
         return $this->fetch();
+    }
+
+    /*
+     * 置顶
+     *
+     * $id 资源id
+     */
+    public function topit() {
+        $id = input('param.id');
+        $flag = input('param.flag');
+        $flag = $flag? 0:1;
+
+        $res = Db::name(self::$_table)->where('id',$id)->update(['flag' => $flag]);
+        if($res){
+            exit(json_encode(['status' => 1,'msg' => '操作成功']));
+        }else{
+           exit(json_encode(['status' => 0,'msg' => '操作失败'])); 
+        }
     }
 
     /*

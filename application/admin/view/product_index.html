@@ -22,13 +22,13 @@
                         {/if}
                         {/volist}
                     </select>
-                    <input name="keyword" type="text" class="inpMain" value="" size="20"/>
-                    <input name="submit" class="btnGray" type="submit" value="筛选"/>
+                    <!-- <input name="keyword" type="text" class="inpMain" value="" size="20"/>
+                    <input name="submit" class="btnGray" type="submit" value="筛选"/> -->
                 </form>
-    <span>
+    <!-- <span>
     <a class="btnGray" href="product.php?rec=re_thumb">更新商品缩略图</a>
         <a class="btnGray" href="product.php?rec=sort">开始筛选首页商品</a>
-        </span>
+        </span> -->
             </div>
             <div id="list">
                 <form name="action" method="post" action="">
@@ -38,18 +38,21 @@
                                                                  onclick='selectcheckbox(this.form)' value='check'></th>
                             <th width="40" align="center">编号</th>
                             <th align="left">商品名称</th>
+                            <th align="center" width="80">点击量</th>
                             <th width="150" align="center">商品分类</th>
                             <th width="80" align="center">添加日期</th>
-                            <th width="80" align="center">操作</th>
+                            <th width="150" align="center">操作</th>
                         </tr>
                         {volist name="data" id="vo" empty="$empty"}
                         <tr>
                             <td align="center"><input type="checkbox" name="checkbox[]" value="{$vo.id}"/></td>
                             <td align="center">{$vo.id}</td>
-                            <td><a href="">{$vo.title}</a></td>
+                            <td><a href="">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置顶</span>{/if}</td>
+                            <td align="center">{$vo.click}</td>
                             <td align="center"><a href="{:url('product/index',['id' => $vo.cid])}">{$vo.name}</a></td>
                             <td align="center">{$vo.publishtime|date="Y-m-d",###}</td>
                             <td align="center">
+                            <a href="javascript:;" class="topit" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="$vo.flag eq 1"}取消置顶{else/}置顶{/if}</a> |
                                 <a href="{:url('product/edit',['id' => $vo.id])}">编辑</a> | <a onclick="if(!confirm('确定要删除该条记录吗？'))return false;" href="{:url('product/dele',['id' => $vo.id])}">删除</a>
                             </td>
                         </tr>
@@ -86,6 +89,7 @@
     <div class="clear"></div>
 </div>
 <script type="text/javascript">
+var topit_url = "{:url('product/topit')}";
     function douAction() {
         var frm = document.forms['action'];
         frm.elements['new_cat_id'].style.display = frm.elements['action'].value == 'category_move' ? '' : 'none';

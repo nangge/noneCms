@@ -72,6 +72,7 @@
 
 	/**清除缓存**/
 	$("#clear-cache").click(function(){
+
 		$.ajax({
 			url:cache,
 			dataType:'json',
@@ -88,4 +89,31 @@
 			}
 		});
 	});
+
+	 /**文章置顶操作**/
+    $('.topit').on('click',function(){
+    	var id = $(this).data('id');
+    	var flag = $(this).data('flag');
+    	
+        $.ajax({
+			url:topit_url,
+			type:'post',
+			data:{
+				id: id,
+				flag: flag
+			},
+			dataType:'json',
+			success:function(res){
+				if(res.status){
+					alertw(res.msg);
+					//location.reload();
+				} else {
+					alertw(res.msg);
+				}
+			},
+			error:function(res){
+				alertw('error');
+			}
+		});
+    });
 });

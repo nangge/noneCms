@@ -27,4 +27,8 @@ class Index extends Common
        
         //print_r(url('index/index',['id' => 2]));
     }
+
+    public function chat(){
+        return $this->fetch();
+    }
 }

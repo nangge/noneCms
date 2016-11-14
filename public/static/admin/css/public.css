@@ -1374,3 +1374,14 @@ select {
 .pagination .active{
  color:red;
 }
+
+.top-it{
+        display: inline-block;
+        width: 24px;
+        height: 16px;
+        border: 1px solid red;
+        color: red;
+        border-radius: 3px;
+        line-height: 16px;
+        margin-left: 5px;
+    }

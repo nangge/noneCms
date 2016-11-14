@@ -57,11 +57,11 @@ class Article extends Common
      */
     public function index($id = 0)
     {
-        $list = Db::field('p.id,p.title,p.publishtime,p.cid,c.name')
+        $list = Db::field('p.id,p.title,p.publishtime,p.cid,p.click,p.flag,c.name')
             ->table($this->db_config['prefix'].'article p,'.$this->db_config['prefix'].'category c')
             ->where('p.cid = c.id')
             ->where('p.status',0)
-            ->order('publishtime DESC');
+            ->order('p.flag DESC,p.publishtime DESC');
         if($id == 0){
             $list = $list->paginate(10);
         }else{
@@ -134,6 +134,24 @@ class Article extends Common
         $data = Db::name(self::$_table)->where('id',$id)->find();
         $this->assign('item',$data);
         return $this->fetch();
+    }
+
+    /*
+     * 置顶文章
+     *
+     * $id 资源id
+     */
+    public function topit() {
+        $id = input('param.id');
+        $flag = input('param.flag');
+        $flag = $flag? 0:1;
+
+        $res = Db::name(self::$_table)->where('id',$id)->update(['flag' => $flag]);
+        if($res){
+            exit(json_encode(['status' => 1,'msg' => '操作成功']));
+        }else{
+           exit(json_encode(['status' => 0,'msg' => '操作失败'])); 
+        }
     }
 
     /*
