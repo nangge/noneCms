@@ -9,9 +9,10 @@ class Listing extends Common
     public function index($cid)
     {
         $cat_info = Db::name('category')->find($cid);
+
         $template_list = $cat_info['template_list'];
         if(!$template_list) {
-            $model = Db::name('model')->field('template_list')->find($cat_info['modelid']);
+            $model = Db::name('model')->field('template_list')->where('id',$cat_info['modelid'])->find();
             $template_list = $model['template_list'];
         }
         $template = 'template/'. $this->theme .'/'.$template_list;
