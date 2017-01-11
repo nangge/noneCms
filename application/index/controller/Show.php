@@ -31,12 +31,14 @@ class Show extends Common
             $model = Db::name('model')->field('template_show')->find($cat_info['modelid']);
             $template_show = $model['template_show'];
         }
-        $template = 'template/'. $this->theme .'/'.$template_show;
+        $template = 'template/index/'. $this->theme .'/'.$template_show;
         $this->assign('content',$data);
         $this->assign('title',$data['title']);
         $this->assign('keywords',$data['keywords']);
         $this->assign('description',$data['description']);
         $this->assign('cate',$cat_info);
+        $this->assign('id',$id);
+        $this->assign('cid',$cid);
         return $this->fetch($template);
     }
 

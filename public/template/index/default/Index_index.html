@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        {web name='title' /}
+    </title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="keywords" content="{if condition="isset($keywords)"}{$keywords}{else/}{web name='keywords' /}{/if}" />
+    <meta name="description" content="{if condition="isset($description)"}{$description}{else/}{web name='description' /}{/if}" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/css.css">
+    <script type="text/javascript" src="__PUBLIC__/js/jquery1.42.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.SuperSlide.2.1.1.js"></script>
+</head>
+<body>
+<!--header-->
+{include file="Public/header"/}
+
+<!--main-->
+<div class="main w1212">
+    <div class="main_top">
+        <div class="m_about">
+            <div class="ban d_a"><span class="f"><font style="font-size:16px;font-weight:bolder;">关 于</font> <font
+                    style="font-weight:bold;color:#3b3b3b;">ABOUT US</font></span><span class="more"><a
+                    href="">MORE</a></span></div>
+            <div class="clear"></div>
+            <div class="con">
+                <img src="__PUBLIC__/images/kaixin.jpg"/>
+                
+                {content id='49' field='description' length='200' /}
+            </div>
+        </div>
+        <div class="m_f"></div>
+
+        <div class="m_news">
+            <div class="ban dashed_n"><span class="f"><font style="font-size:16px;font-weight:bolder;">新闻中心</font> <font
+                    style="font-weight:bold;color:#3b3b3b;">NEWS</font></span><span class="more"><a
+                    href="">MORE</a></span></div>
+            <div class="con">
+                <table>
+                    {article limit='7'}
+                        <tr>
+                            <td width="5%"><img src="__PUBLIC__/images/lingxing.jpg"/></td>
+                            <td><a href="{$article.url}">{$article.title}</a></td>
+                            <td width="20%">[{$article.publishtime|date='Y-m-d',###}]</td>
+                        </tr>
+                    {/article}
+                </table>
+            </div>
+        </div>
+        <div class="m_f"></div>
+
+        <div class="m_contact">
+            <div class="ban d_c"><span class="f"><font style="font-size:16px;font-weight:bolder;">联系我们</font> <font
+                    style="font-weight:bold;color:#3b3b3b;">CONTACT US</font></span></div>
+            <div class="con">
+                <div class="sbx">真诚为您服务</div>
+                <table>
+                    <tr>
+                        <td width="20%">联系人:</td>
+                        <td>nango</td>
+                    </tr>
+                    <tr>
+                        <td>电&nbsp;话:</td>
+                        <td>0373-301362</td>
+                    </tr>
+                    <tr>
+                        <td>手&nbsp;机:</td>
+                        <td>1393735606</td>
+                    </tr>
+                    <tr>
+                        <td>传&nbsp;真:</td>
+                        <td>0373-278811</td>
+                    </tr>
+                    <tr>
+                        <td>地&nbsp;址:</td>
+                        <td>新乡市宏利大道西段西冀场工业园</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="clear"></div>
+    <div class="pro">
+        <div class="ban p_a"><span class="f"><font style="font-size:16px;font-weight:bolder;">  &nbsp;&nbsp;推荐产品</font> <font
+                style="font-weight:bold;color:#3b3b3b;">REDUCTS</font></span><span class="more2 fir"></div>
+        <div class="con pro_con">
+
+            <ul>
+            {product limit='10'}
+                    <li><a href="{$product.url}"><img src="{$product.litpic}" alt="{$product.title}" /><br/>{$product.title}</a></li>
+            {/product}
+            </ul>
+
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<!--footer-->
+{include file="Public/footer"/}
+</body>
+</html>

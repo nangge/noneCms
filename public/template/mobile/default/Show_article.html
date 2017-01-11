@@ -1,0 +1,51 @@
+{include file="Public/header" /}
+
+<script type="text/javascript" src="js/spin.min.js"></script><style></style>
+<style type="text/css">
+  body{word-break:break-all;}
+    /*图片尺寸修改后 必须改此尺寸  多平台时需要适配*/
+   .ylcontainer img{
+    width:300px;
+    height:298px;
+    margin:0px auto;
+    border:#f6f6f6 solid 1px;
+  }
+  .ylcontainer {
+    width:302px;
+    height:305px;
+    margin:0px auto;
+    text-align:center;
+  }
+    .pic-num2 {
+    margin: 0px auto;
+        text-align:right;
+    }
+    .pic-num2 li {
+    float: left;
+    width:60px;
+        height:5px;
+        text-align:right;
+    background-color:#fae0af;
+    }
+  .pic-num2 li.on {
+    background-color:#f9a400;
+    }
+    .t_table{
+      height:305px;
+    }
+    </style>
+<div class="index-ads w">
+  <div class="ylcontainer" id="idContainer2" ontouchmove="touchMove(event);" ontouchend="touchEnd(event);" style="text-align: center; position: relative; overflow: hidden; ">
+    
+    <ul class="pic-num2" id="idNum" style="width: 300px; ">
+   </ul>
+  </div>
+</div>
+<div class="clear" style="height:10px;"></div>
+{$content.content}
+        <div class="clear" style="height:10px;"></div>
+﻿{include file="Public/footer" /}
+
+
+</body>
+</html>

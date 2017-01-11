@@ -3,19 +3,20 @@ body {background:#fff;color:#333333;font-size:12px;}
 div, form, dl, dt, dd, ul, ol, li, h1, h2, h3, input, textarea, p,th, td {
 padding: 0;margin: 0;}
 ol, ul, li{list-style: none; margin: 0; padding: 0;}
+body{background: url('../images/1.jpg');}
+.main {background:#272525;width:730px;margin:0px auto;padding:0px 20px;}
 
-.main {background:#fff;width:730px;margin:0px auto;padding:0px 20px;}
-
-.header {width:730px;margin:0px auto;padding:0px 20px;box-shadow: 0 3px 3px #DDDDDD;color: #FFFFFF;height: 110px;background:#00B1F1;margin-top:0px;}
-.header .logo {width:500px; height:110px; float:left;background:url(../images/logo.jpg) no-repeat left center;line-height:80px;font-weight:bold;font-size:35px;text-indent:-9999px;}
-.header .version {height:35px; float:right;margin-top:45px;line-height:35px;}
+.header {width:730px;margin:0px auto;padding:0px 20px;box-shadow: 0 3px 3px #DDDDDD;color: #FFFFFF;height: 110px;background:#555;margin-top:0px;}
+.header .logo {width:500px; height:110px; float:left;line-height:86px;font-weight:bold;font-size:60px;text-indent:99px;}
+.header .motto{line-height: 12px;font-size: 12px;}
+.header .version {height:35px; float:right;margin-top:45px;line-height:35px;font-size: 20px}
 .red {color:red;}
 .action {text-align:center;margin-top:25px;}
 .license {height:300px;line-height:150%; margin:10px 20px; padding:10px;border: 1px solid #BDBCBC;box-shadow: 5px 5px 5px #F7F7F7 inset;
 overflow-x: hidden;overflow-y: scroll;}
-.btn_blue:hover {background-color: #7CFC00;}
+.btn_blue:hover {background-color: #20bdd8;}
 .btn_blue, .btn_orange, .btn_green, .btn_x {
-background: #6B8E23;height: 30px;line-height: 30;
+background: #1b7598;height: 30px;line-height: 30;
 padding: 0px 15px;margin: 2px;
 border: 0px;color: white;font-size: 14px;border-radius:3px;
 cursor: pointer;
@@ -25,17 +26,6 @@ text-align:center;
 }
 .pre{ background:#EFEFEF url(../images/loading.gif) no-repeat 0 center;}
 .btn_x{color:#999999; background-color:#EFEFEF; border:1px solid #ccc;}
-
-
-
-.step {height: 60px;background-color: #FFFFFF;border-bottom: 1px solid #DCE1E5;}
-.step li em, .step li {background: url(../images/step.png) repeat-x;}
-.step li {width: 33%;height: 60px;line-height: 60px;color: #6F7885;float: left;font-size: 14px;font-weight: 700;text-align: center;}
-.step li.current {background-position: right -106px;background-repeat: no-repeat;color: #246EA5;}
-.step li.ok {background-position: right -176px;background-repeat: no-repeat;color: #246EA5;}
-.step li em {background-position: 0 -70px;color: #FFFFFF;display: inline-block;font-family: Microsoft Yahei;font-size: 20px;height: 32px;line-height: 32px;margin-right: 10px;text-align: center;vertical-align: 0;width: 32px;}
-.step li.current em,.step li.ok em {background-position: -35px -70px;}
-
 
 .table1 {width:100%;}
 .table1 th {font-weight:bold;color:#417B9D;}
@@ -47,8 +37,71 @@ text-align:center;
 input.text {border: 1px solid #E3E9EF;padding: 3px;width: 200px;}
 .textarea1 {border: 1px solid #E3E9EF;padding: 3px;width: 200px;height:50px;}
 .install_process {line-height:180%;border: 1px solid #BDBCBC;box-shadow: 5px 5px 5px #F7F7F7 inset;display: block;font-size: 14px;height: 250px;line-height: 1.5;margin-top:20px;outline: medium none;overflow-x: hidden;overflow-y: scroll;padding: 10px;}
-.process { width:600px; height:30px; margin:10px auto; padding:2px; border: 1px solid #BDBCBC;box-shadow: 5px 5px 5px 5px #F7F7F7;border-radius:3px;}
-.process_go {background: #6B8E23;height: 30px; line-height:30px;width:5%;border-radius:3px; color:#fff; text-align:center; overflow:hidden;}
+.process { width:600px; height:30px; margin:10px auto; padding:2px; border: 1px solid #BDBCBC;border-radius:3px;}
+.process_go {background: #FF5722;height: 30px; line-height:30px;width:5%;border-radius:3px; color:#fff; text-align:center; overflow:hidden;}
 
 .complete {margin:20px auto;line-height:210%;width:600px;}
 .complete p{ padding:20px 10px; text-align:center}
+.zebra caption{
+	font-size:20px;
+	font-weight:normal;
+	background:url(../img/zebratable.png);
+	background-repeat:no-repeat;
+	background-position: 130px center;
+	padding-top: 20px;
+	height:50px;}
+
+#container{
+	padding-top:20px;
+	width:960px;
+	margin:0 auto;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+	width:100%;
+	-webkit-box-shadow:  0px 2px 1px 5px rgba(242, 242, 242, 0.1);
+    box-shadow:  0px 2px 1px 5px rgba(242, 242, 242, 0.1);
+}
+
+.zebra {
+    border: 1px solid #555;
+}
+
+.zebra td {
+    border-left: 1px solid #555;
+    border-top: 1px solid #555;
+    padding: 10px;
+    text-align: left;    
+}
+
+.zebra th, .zebra th:hover {
+    border-left: 1px solid #555;
+	border-bottom: 1px solid #828282;
+    padding: 20px;  
+    background-color:#151515 !important;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#151515), to(#404040)) !important;
+    background-image: -webkit-linear-gradient(top, #151515, #404040) !important;
+    background-image:    -moz-linear-gradient(top, #151515, #404040) !important;
+    background-image:     -ms-linear-gradient(top, #151515, #404040) !important;
+    background-image:      -o-linear-gradient(top, #151515, #404040) !important;
+    background-image:         linear-gradient(top, #151515, #404040) !important;
+	color:#fff !important;
+	font-weight:normal;
+}
+
+.zebra tbody tr:nth-child(even) {
+    background: #000 !important;
+	color:#fff;
+}
+
+.zebra tr:hover *{
+    background: #eeeeee;
+	color:#000;
+}
+
+.zebra tr {
+	background:#404040;
+	color:#fff;
+}

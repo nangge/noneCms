@@ -1,5 +1,5 @@
 <?php require 'tpl/header.php';?>
-	<div class="main">
+	<div class="main" style="background: rgba(255, 255, 255, 0.35);">
 		<div class="license">
 		<?php echo format_textarea($license)?>			
 		</div>

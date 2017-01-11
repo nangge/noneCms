@@ -13,11 +13,11 @@
                 <ul class="tab">
                     <li><a id="site" class="selected">常规设置</a></li>
                     <li><a id="display">显示设置</a></li>
-                    <li><a id="defined">自定义</a></li>
-                    <li><a id="mail">邮件服务器</a></li>
+                    <!-- <li><a id="defined">自定义</a></li>
+                    <li><a id="mail">邮件服务器</a></li> -->
                 </ul>
                 <div class="items">
-                    <form action="{:url('index/system')}" method="post" enctype="multipart/form-data">
+                    <form>
                         {foreach name="slist" id="list" key="k"}
                         <div id="{$k}" {if condition="$k eq 'site'"}style="display:block"{else}style="display:none"{/if}>
                             <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
@@ -73,7 +73,7 @@
                             <tr>
                                 <td width="131"></td>
                                 <td>
-                                    <input class="btn" type="submit" value="提交"/>
+                                    <span class="btn">提 交</span>
                                 </td>
                             </tr>
                         </table>
@@ -93,6 +93,8 @@
         $(this).addClass("selected");
         $("div#" + id).show().siblings('div').hide();
     });
+
+    var art_pro_url = "{:url('index/system')}";//form表单要提交的地址
 </script>
 </body>
 </html>

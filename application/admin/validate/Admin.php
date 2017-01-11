@@ -17,8 +17,8 @@ class Admin extends Validate {
     ];
 
     protected $message  =   [
-        'name.require' => '名称必须',
-        'name.max'     => '名称最多不能超过25个字符',
+        'username.require' => '名称必须',
+        'username.max'     => '名称最多不能超过25个字符',
         'password.require'   => '密码必须',
         'password.min'  => '密码长度至少六位',
         'email'        => '邮箱格式错误',

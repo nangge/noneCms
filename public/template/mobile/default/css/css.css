@@ -1,0 +1,45 @@
+@charset "utf-8";
+/* CSS Document */
+body{margin:0; padding:0; font-family:"微软雅黑"; background-color:#fafafa !important; font-size:14px; line-height:1.8em;}
+img{border:0;}
+a{outline:none;}
+.search input{border-radius:0px;}
+.ylhead{height:40px; overflow:hidden; clear:both; background:url(../img/topbg.jpg) repeat-x scroll 0 0;}
+.logo{float:left;}
+.search{width:168px; float:right; height:26px; margin-top:7px; padding-right:10px;}
+.ser_input{width:96px; float:left; margin:0; padding:0 28px 0 10px; float:left; border:0; height:26px; line-height:26px; background:transparent url(../img/serch.png) no-repeat scroll 0 0; color:#ccc; font-size:12px;}
+.ser_buton{width:70px; float:left; height:26px; margin:0; padding:0; border:0; background:url(../img/serch.png) no-repeat right top; cursor:pointer;}
+.english{display:block; line-height:50px; float:right; background:url(../img/sanjiao.jpg) no-repeat left center; padding-left:15px; padding-right:5px; font-family:微软雅黑, Helvetica, sans-serif; text-decoration:underline !important; color:#1c8ba0 !important; font-size:14px;}
+.english:hover{text-decoration:none;}
+.ylmenu{width:100%; clear:both; margin:0; padding:0; list-style:none; background:url(../img/menubg.png) repeat-x scroll 0 0; display:block; height:43px;}
+.ylmenu li{float:left; width:25%; height:43px; background:transparent url(../img/menulibg.png) no-repeat right top; line-height:43px;}
+.ylmenu li a{display:block; height:43px; text-align:center; color:#FFF; text-decoration:none; font-family:"微软雅黑"; font-size:16px;}
+.ylmenu li a:visited{color:#fefefe;}
+.ylmenu li a:hover{background:url(../img/menuhover.jpg) repeat-x scroll 0 0;}
+.ylmenu1 span{background:transparent url(../img/tb1.png) no-repeat scroll left center; padding:10px 0 10px 30px;}
+.ylmenu2 span{background:transparent url(../img/tb2.png) no-repeat scroll left center; padding:10px 0 10px 30px;}
+.ylmenu3 span{background:transparent url(../img/tb3.png) no-repeat scroll left center; padding:10px 0 10px 30px;}
+.ylmenu4 span{background:transparent url(../img/tb4.png) no-repeat scroll left center; padding:10px 0 10px 36px;}
+.clear{clear:both;}
+.foot{height:54px; overflow:hidden;  clear:both; width:100%; color:#666; font-size:12px; margin-top:10px;}
+.foot td{padding:0 10px;}
+.foot span{font-size:12px; color:#086a7d;}
+.foot font{color:#FFF; font-family:Arial, Helvetica, sans-serif; font-size:10px;}
+.banner{clear:both; width:100%; background-color:#000;}
+.tit_tj{clear:both; height:31px; background:#faf6ed url(../img/yltj.png) no-repeat top center; line-height:31px; color:#595959; font-size:16px; text-indent:10px;}
+a.more{float:right; background:url(tb_red.jpg) no-repeat right top; padding-right:25px; float:right; color:#b0251e;} 
+a.more:visited{color:#b1251e;}
+.tjlist{clear:both;}
+.tjlist li{clear:both; border-bottom:#e5e5e5 solid 1px;}
+.tjlist li a{clear:both; font-size:16px; height:97px; overflow:hidden; padding:0 10px; background:url(../img/images7.jpg) repeat-x scroll 0 0; line-height:97px; display:block;}
+.tjlist li a:visited{color:#353434;}
+.tjlist li a:hover{background:url(../img/images8.jpg) repeat-x scroll 0 0;}
+.tjlist li img{float:right;}
+.tjlist a .jiantou{width:33px; height:97px; float:right; background:transparent url(../img/jt_h.png) no-repeat left center;}
+.tjlist a:hover .jiantou{background:transparent url(../img/jt_b.png) no-repeat left center;}
+.img76{float:left !important; border:#CCC solid 1px; margin-right:10px; margin-top:10px;}
+.top:link,.top:visited,.top:active{background-color: #FF4545; border-radius: 4px 4px 4px 4px; color: #FFFFFF; display: block; float: right; height: 20px; line-height: 20px; margin-left: 8px; text-align: center; width:43px; font-size:14px;}
+.yltext{margin:10px; clear:both;}
+.comtit{width:110px; height:30px; background-color:#fae0af; color:#000; font-size:18px; text-align:center; border-radius:20px; clear:both; line-height:30px;}
+.comtxt{clear:both; padding:10px;}
+.slider{position:relative;width:320px;height:140px;overflow:hidden;}.slider-cont,.slider-list{float:left;width:100%;height:100%;overflow:hidden;}.slider-list>li,.slider-list img{float:left;width:320px;height:140px;}.slider-indicator{position:absolute;bottom:5px;padding:3px 2px;height:5px;background-color:rgba(255,255,255,0.7);border-radius:5px;}.slider-indicator>li{float:left;margin:0 5px;width:5px;height:5px;text-indent:99em;border-radius:5px;background:#8c8c8c;overflow:hidden;}.slider-indicator>.active{background:#fe6c9c;}

@@ -42,8 +42,8 @@ class Login extends Controller
             exit(json_encode(array('status' => 0, 'msg' => '用户名或密码错误，请重新输入')));
         }
 
-        if ($info['islock'] != 0) {
-            exit(json_encode(array('status' => 0, 'msg' => '您的账户暂时已锁定，请联系超级管理员')));
+        if ($info['islock'] == 1) {
+            exit(json_encode(array('status' => 0, 'msg' => '您的账户已被锁定，请联系超级管理员')));
         }
 
         //写入日志

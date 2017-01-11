@@ -116,4 +116,39 @@
 			}
 		});
     });
+
+    /** 文章 产品异步提交 **/
+    $("span.btn").on('click',function(){
+    	var $form = $(this).parents('form');
+        $.ajax({
+         type: "POST",
+         url:art_pro_url,
+         data:$form.serialize(),
+         dataType:'json',
+         success: function(data) {
+            if(data.status == 1){
+            	if(data.url == ''){
+            		alerts(data.msg);
+            	}else{
+            		//layer层 特殊处理
+            		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            		if(index){
+            			parent.layer.close(index); //再执行关闭
+            			parent.window.location.reload();
+            		}
+            		alertw(data.msg,data.url);
+            	}
+            	if(typeof(data.type) != 'undefined' && data.type == 'nav') parent.reload_category();
+            }else{
+                alerts(data.msg);
+            }
+            
+        },
+         error: function(data){
+            alerts('服务器出错，请稍后重新操作！');
+         }
+     });
+    });
+
+
 });

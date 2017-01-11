@@ -4,7 +4,7 @@
     {include file="public/lefter" /}
     <div id="dcMain">
         <!-- 当前位置 -->
-        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>单页面列表</strong></div>
+        <div id="urHere"><a>管理中心</a><b>></b><strong>单页面列表</strong></div>
         <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
             <h3><a href="{:url('page/add')}" class="actionBtn">添加内容</a>单页面列表</h3>
 
@@ -13,7 +13,7 @@
                 <dl>
                     <dt><strong>{$page.name}</strong>
                     <p>{$page.ename}</p></dt>
-                    <dd><a href="{:url('page/edit',['id' => $page['id']])}">编辑</a> | <a onclick="if(!confirm('确定要删除该栏目吗？')) return false;" href="{:url('page/dele',['id' => $page['id']])}">删除</a></dd>
+                    <dd><a href="{:url('page/edit',['id' => $page['id']])}">编辑</a> | <a class="del" data-id="{$page['id']}" data-name="{$page['name']}">删除</a></dd>
                 </dl>
                 {/volist}
             </div>
@@ -23,5 +23,17 @@
     {include file="public/footer" /}
     <div class="clear"></div>
 </div>
+<script type="text/javascript">
+    //删除
+   $(".del").click(function(){
+        var id= $(this).data('id');
+        var name = $(this).data('name');
+        confirms('','是否确认删除【'+ name +'】栏目？','',function(){
+            $.get("{:url('page/dele')}",{id:id},function(data){
+                alertw(data);
+            });
+        }); 
+    })
+</script>
 </body>
 </html>

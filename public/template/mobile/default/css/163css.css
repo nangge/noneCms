@@ -1,0 +1,10 @@
+/* CSS Document */
+.box03{ width:100%; clear:both; background-color:#faf6ed; overflow:hidden;}
+.box03 ul{width:100%;}
+.box03 li{width:33%; float:left; text-align:center; padding:10px 0;}
+.box03 li a:link{color:#af251b; font-size:14px;}
+.box03 li a:visited{color:#b0251b; font-size:14px;}
+.box03 li a:hover{background-color:#fadda5; color:#000; border-radius:15px; padding:5px 20px;}
+.box03 li a:active{color:#000; font-size:14px;}
+.box04{clear:both; width:100%; background:#faf6ed url(/img/images9.jpg) no-repeat top center; height:26px; text-align:center;}
+.btn01{cursor:pointer; margin:0 auto; width:70px; height:26px; padding:0; border:0; background:none;}

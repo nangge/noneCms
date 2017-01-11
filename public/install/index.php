@@ -47,6 +47,12 @@ switch ($step ) {
 		/* uploads */
 		$environment_upload = ini_get('file_uploads') ? '<span class="ok">'.ini_get('upload_max_filesize').'</span>' : '<span class="no red">&nbsp;</span>';
 		
+		/* scandir */
+		if(function_exists('scandir')){
+            $environment_scandir = '<span class="ok">'.$lang['support'].'</span>';
+        }else{
+            $environment_scandir = '<span class="no red">'. $lang['unsupport'] .'</span>';
+        }
 		/* iconv */
 		if(function_exists('iconv')){
             $environment_iconv = '<span class="ok">'.$lang['support'].'</span>';
@@ -160,7 +166,7 @@ switch ($step ) {
 	case 4:
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {			
 			$setting = include './temp.php';
-			$datafile = $setting['add_test'] == 1 ? './inc/wang_data.sql' : './inc/wang.sql';
+			$datafile = $setting['add_test'] == 1 ? './inc/nonecms_data.sql' : './inc/nonecms.sql';
 
 			$content = file_get_contents($datafile);//带演示
 			if (empty($setting)) {				
@@ -173,7 +179,7 @@ switch ($step ) {
 			$content=preg_replace('/\/\*[\w\W]*?\*\//', '', $content);
        		$content=preg_replace('/-- ----------------------------[\w\W]*?-- ----------------------------/', '', $content);
 			$content = str_replace(
-					array('#wang#_','#web_url#','#web_name#','#web_theme#','#web_cookie_code#',"\r"),
+					array('#none#_','#web_url#','#site_name#','#site_theme#','#web_cookie_code#',"\r"),
 					array($setting['DB_PREFIX'],$setting['WEB_URL'],$setting['WEB_NAME'],$setting['WEB_THEME'],$cookie_code,"\n"), 
 					$content);
 

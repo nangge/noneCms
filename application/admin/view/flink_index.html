@@ -1,0 +1,69 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>友情链接</strong></div>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+       <!--  {:url('flink/add')} -->
+            <h3><a href="javascript:;" class="actionBtn">添加友链</a>友情链接</h3>
+            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                <tr>
+                    <th width="30" align="center">编号</th>
+                    <th align="left">网站名称</th>
+                    <th align="left">网站Logo</th>
+                    <th align="center">url</th>
+                    <th align="center">创建时间</th>
+                    <th align="center">操作</th>
+                </tr>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td align="center">{$vo.id}</td>
+                    <td>{$vo.title}</td>
+                    <td align="center">{if condition="$vo['logo'] neq ''"}<img src='{$vo.logo}' width="50px" height="50px" />{/if}</td>
+                    <td align="center"><a href="{$vo.url}" target="_blank">{$vo.url}</a></td>
+                    <td align="center">{$vo.create_time|date='Y-m-d H:i:s',###}</td>
+                    <td align="center"><a data-url="{:url('flink/edit',['id' => $vo.id])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删除</a></td>
+                </tr>
+                {/volist}
+            </table>
+            <div class="pager">{$page}</div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+    $('.actionBtn').click(function(){
+        layer.open({
+          title: '添加友链',
+          type: 2,
+          area: ['700px', '530px'],
+          fixed: false, //不固定
+          maxmin: true,
+          content: 'add'
+        });
+    });
+    $('.edit-flink').click(function(){
+        var url = $(this).data('url');
+        layer.open({
+          title: '修改友链',
+          type: 2,
+          area: ['700px', '530px'],
+          fixed: false, //不固定
+          maxmin: true,
+          content: url
+        });
+    });
+    //删除
+   $(".del").click(function(){
+        var id= $(this).data('id');
+        confirms('','是否确认删除编号为【'+ id +'】的友链？','',function(){
+            $.get("{:url('flink/dele')}",{id:id},function(data){
+                alertw(data);
+            });
+        }); 
+    })
+</script>
+</body>
+</html>

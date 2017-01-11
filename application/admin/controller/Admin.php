@@ -14,7 +14,7 @@ class Admin extends Common
 
     public function index()
     {
-        $list = Db::name('admin')->field('username,logintime,id,loginip,email,islock')->select();
+        $list = Db::name('admin')->field('username,logintime,id,loginip,email,islock')->where('islock','neq',3)->select();
         $this->assign('list', $list);
         return $this->fetch();
     }
@@ -43,36 +43,45 @@ class Admin extends Common
                     $info = Db::name('admin')->field('password,encrypt')->find($params['id']);
                     $password = get_password($params['old_password'],$info['encrypt']);
                     if($info['password'] != $password){
-                        $this->error('原密码不正确');
+                        exit(json_encode(['status' => 0, 'msg' => '原密码不正确', 'url' => '']));
                     }
                 }
                 if(!$validate->scene('edit')->check($data)){
-                    $this->error($validate->getError());
+                    $error = $validate->getError();
+                    exit(json_encode(['status' => 0, 'msg' => $error, 'url' => '']));
                 }
                  $data['encrypt'] = get_randomstr();//6位hash值
                  $data['password'] = get_password($data['password'],$data['encrypt']);
 
                 unset($data['repassword']);
                 $flag = Db::name('admin')->where('id',$params['id'])->update($data);
+                if ($flag) {
+                    exit(json_encode(['status' => 1, 'msg' => '修改成功', 'url' => url('admin/index')]));
+                } else {
+                    exit(json_encode(['status' => 0, 'msg' => '修改失败,请稍后重试', 'url' => '']));
+                }
             }else{
                 //新增
                 if(!$validate->check($data)){
-                    $this->error($validate->getError());
+                    $error = $validate->getError();
+                    exit(json_encode(['status' => 0, 'msg' => $error, 'url' => '']));
                 }
                 unset($data['repassword']);
                 $data['encrypt'] = get_randomstr();//6位hash值
                 $data['password'] = get_password($data['password'],$data['encrypt']);
                 $data['logintime'] = time();
+                $data['createtime'] = time();
                 $data['loginip'] = request()->ip();
                 $data['username'] = $params['user_name'];
                 $flag=Db::name('admin')->insert($data);
+                if ($flag) {
+                    exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('admin/index')]));
+                } else {
+                    exit(json_encode(['status' => 0, 'msg' => '添加失败,请稍后重试', 'url' => '']));
+                }
             }
 
-            if ($flag) {
-                $this->success('操作成功','admin/index');
-            } else {
-                $this->error('操作失败','admin/index');
-            }
+            
         } else {
             return $this->fetch();
         }
@@ -91,13 +100,14 @@ class Admin extends Common
     /**
      * 删除用户信息
      */
-    public function dele($id)
+    public function dele()
     {
-        $flag = Db::name('admin')->delete($id);
+        $id = input('param.id/d',0);
+        $flag = Db::name('admin')->where(['id' => $id])->update(['islock' => 3]);
         if ($flag) {
-            $this->success('删除成功');
+            echo '删除成功';
         } else {
-            $this->error('删除失败');
+            echo '删除失败';
         }
     }
 }

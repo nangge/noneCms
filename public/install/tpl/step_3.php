@@ -1,14 +1,8 @@
 <?php require 'tpl/header.php';?>
 	<div class="main">
-		<div class="step">
-			<ul>
-				<li class="ok"><em>1</em><?php echo $lang['detection_environment']; ?></li>
-				<li class="current"><em>2</em><?php echo $lang['data_create']; ?></li>
-				<li><em>3</em><?php echo $lang['complete_installation']; ?></li>
-			</ul>
-		</div>
+		
 		<form action="index.php?step=3" method="post">
-		<table class="table1">
+		<table class="table1 zebra">
 			<tr>
 				<th width="10%">数据库服务器</th>
 				<th>安装后,原数据库会被清空,请做好备份</th>

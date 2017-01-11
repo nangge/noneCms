@@ -1,0 +1,12 @@
+{include file="Public/header" /}
+  <div class="tit_tj"><a href="#" class="more">全部产品</a>推荐产品</div>
+  <ul class="tjlist">
+  {product cid='3' limit='10'}
+  <li><img class="img76" src="{$product.litpic}" alt="" width="76" height="76"><a href="{$product.url}">{$product.title}<div class="jiantou"></div>
+    </a> </li>
+  {/product}
+  </ul>
+﻿{include file="Public/footer" /}
+
+</body>
+</html>

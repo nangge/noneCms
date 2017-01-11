@@ -1,0 +1,73 @@
+{include file="public/header" /}
+<style type="text/css">.adver{display: none;}</style>
+<div id="dcWrap">
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>幻灯广告</strong></div>
+        <div class="mainBox" style="height:auto!important;">
+            <div class="idTabs">
+                <div class="items">
+                    <div id="banner_add">
+                        <form method="post">
+                            <table width="100%" border="0" cellpadding="5" cellspacing="1" class="tableBasic">
+                                <tr>
+                                    <td width="80" height="35" align="right">Banner类型</td>
+                                    <td>
+                                        <select name="type">
+                                            <option value="1" title="Banner大图">Banner大图</option>
+                                            <option value="2" title="Banner广告">广告</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td width="80" height="35" align="right">标题</td>
+                                    <td>
+                                        <input type="text" id="banner_name" name="title" value="" size="19" class="inpMain"
+                                               required="required"/>
+                                    </td>
+                                </tr>
+                                <tr class="adver">
+                                    <td width="80" height="35" align="right">开始时间</td>
+                                    <td>
+                                        <input type="text" name="start_time" value="" size="19" class="inpMain date-picker" />
+                                    </td>
+                                </tr>
+                                <tr class="adver">
+                                    <td width="80" height="35" align="right">结束时间</td>
+                                    <td>
+                                        <input type="text" name="end_time" value="" size="19" class="inpMain date-picker" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <span class="btn"> 提交 </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var art_pro_url = "{:url('banner/add')}";
+    $.datetimepicker.setLocale('ch');//设置中文
+    $(".date-picker").datetimepicker({
+      format:"Y-m-d",      //格式化日期
+      timepicker:false,    //关闭时间选项
+      value:new Date()
+    });
+    $("select[name='type']").change(function(){
+        var typeid = $(this).val();
+        if(typeid == 2){
+            $('.adver').show();
+        }else{
+            $('.adver').hide();
+        }
+    });
+</script>
+</body>
+</html>

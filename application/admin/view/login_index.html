@@ -3,27 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <title>登录</title>
-	{css href="__PUBLIC__/css/login.css"}
+	{css href="__PUBLIC__/css/supersized.css,__PUBLIC__/css/login.css,__PUBLIC__/css/bootstrap.min.css"}
 	{js href="__PUBLIC__/js/jquery.min.js,__PUBLIC__/js/wang.js,__COMMON__/js/common.js" /}
 </head>
 
 <body>
-<div class="login">
-	<h1>Login</h1>
-	<form>
-		<input type="text" name="username" placeholder="用户名" required="required" />
-		<input type="password" name="password" placeholder="密码" required="required" />
-		<input type="text" name="captcha" value="" placeholder="验证码" required="required" />
-		<div class="captcha">{:captcha_img()}</div>
-	</form>
-	<button type="button" class="btn btn-primary btn-block btn-large" id="login-submit">登录</button>
+<div class="page-container">
+	<div class="main_box">
+		<div class="login_box">
+			<div class="login_logo" style="font-size: 25px;">
+				noneCMS
+			</div>
+		
+			<div class="login_form">
+				<form action="index.html" id="login_form" method="post">
+					<div class="form-group">
+						<label for="j_username" class="t">用户名：</label> 
+						<input id="email" value="" placeholder="用户名" name="username" type="text" class="form-control x319 in" 
+						autocomplete="off">
+					</div>
+					<div class="form-group">
+						<label for="j_password" class="t">密　码：</label> 
+						<input id="password" value="" name="password" type="password" 
+						class="password form-control x319 in">
+					</div>
+					<div class="form-group">
+						<label for="j_captcha" class="t">验证码：</label>
+						 <input id="j_captcha" name="captcha" type="text" class="form-control x164 in">
+						<img class="captcha" src="{:captcha_src()}">
+					</div>
+					<!-- <div class="form-group">
+						<label class="t"></label>
+						<label for="j_remember" class="m">
+						<input id="j_remember" name="remember" type="checkbox" >&nbsp;<font style="font-size: 12px;color: #333;font-weight: normal;">7天免登陆</font></label>
+					</div> -->
+					<div class="form-group space">
+						<label class="t"></label>　　　
+						<button type="button"   id="login-submit" 
+						class="btn btn-primary btn-lg">&nbsp;登&nbsp;录&nbsp </button>
+						<input type="reset" value="&nbsp;重&nbsp;置&nbsp;" class="btn btn-default btn-lg">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="bottom">Copyright &copy; 2016 - 2019 <a href="http://www.5none.com" target="_blank">noneCMS 后台管理登陆</a></div>
+	</div>
 </div>
+{js href="__PUBLIC__/js/supersized.3.2.7.min.js" /}
 </body>
 <script>
 	var login = "{:url('admin/login/login')}";
-	$(".captcha").click(function(){
-		$("input[name='captcha']").val('').focus();
-		$(this).html('{:captcha_img()}');
-	});
+	jQuery(function($){
+		
+		$(".captcha").click(function(){
+			$("input[name='captcha']").val('').focus();
+			$(this).attr('src','{:captcha_src()}');
+		});
+
+		document.onkeydown = function(e){
+			if($(".bac").length==0)
+			{
+				if(!e) e = window.event;
+				if((e.keyCode || e.which) == 13){
+					$("#at-mask").remove();
+					var obtnLogin=document.getElementById("login-submit")
+					obtnLogin.focus();
+				}
+			}
+		}
+
+	    $.supersized({
+
+	        // Functionality
+	        slide_interval     : 4000,    // Length between transitions
+	        transition         : 1,    // 0-None, 1-Fade, 2-Slide Top, 3-Slide Right, 4-Slide Bottom, 5-Slide Left, 6-Carousel Right, 7-Carousel Left
+	        transition_speed   : 1000,    // Speed of transition
+	        performance        : 1,    // 0-Normal, 1-Hybrid speed/quality, 2-Optimizes image quality, 3-Optimizes transition speed // (Only works for Firefox/IE, not Webkit)
+
+	        // Size & Position
+	        min_width          : 0,    // Min width allowed (in pixels)
+	        min_height         : 0,    // Min height allowed (in pixels)
+	        vertical_center    : 1,    // Vertically center background
+	        horizontal_center  : 1,    // Horizontally center background
+	        fit_always         : 0,    // Image will never exceed browser width or height (Ignores min. dimensions)
+	        fit_portrait       : 1,    // Portrait images will not exceed browser height
+	        fit_landscape      : 0,    // Landscape images will not exceed browser width
+
+	        // Components
+	        slide_links        : 'blank',    // Individual links for each slide (Options: false, 'num', 'name', 'blank')
+	        slides             : [    // Slideshow Images
+	                                 {image : '__PUBLIC__/images/backgrounds/0.jpg'},
+	                                 {image : '__PUBLIC__/images/backgrounds/1.jpg'},
+	                                 {image : '__PUBLIC__/images/backgrounds/2.jpg'},
+									 {image : '__PUBLIC__/images/backgrounds/3.jpg'}
+	                       ]
+
+	    });
+
+});
+
 </script>
 </html>

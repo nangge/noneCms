@@ -1,12 +1,6 @@
 <?php require 'tpl/header.php';?>
-<div class="main">
-	<div class="step">
-		<ul>
-			<li class="ok" class="ok"><em>1</em><?php echo $lang['detection_environment']; ?></li>
-			<li class="ok"><em>2</em><?php echo $lang['data_create']; ?></li>
-			<li class="current"><em>3</em><?php echo $lang['complete_installation']; ?></li>
-		</ul>
-	</div>
+<div class="main" style="background: rgba(255, 255, 255, 0.35);">
+	
 	<div class="process"><div class="process_go">0%</div></div>
 	<div class="install_process"></div>
 	<div class="action">

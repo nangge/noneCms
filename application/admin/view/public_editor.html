@@ -1,7 +1,11 @@
 {load href="__PUBLIC__/js/ueditor/ueditor.config.js,__PUBLIC__/js/ueditor/ueditor.all.min.js,__PUBLIC__/js/ueditor/lang/zh-cn/zh-cn.js" /}
 
 <!--ueditor-->
-<textarea id="editor" style="width:780px;height:500px;" name="content">[content]</textarea>
+<textarea id="editor" style="width:780px;height:500px;" name="content">
+ {if condition="isset($item['content'])" }
+	{$item['content']}
+ {/if}
+</textarea>
 <script type="text/javascript">
     var ue = UE.getEditor('editor');   
 </script>

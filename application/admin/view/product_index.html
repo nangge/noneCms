@@ -41,19 +41,19 @@
                             <th align="center" width="80">点击量</th>
                             <th width="150" align="center">商品分类</th>
                             <th width="80" align="center">添加日期</th>
-                            <th width="150" align="center">操作</th>
+                            <th width="250" align="center">操作</th>
                         </tr>
                         {volist name="data" id="vo" empty="$empty"}
                         <tr>
                             <td align="center"><input type="checkbox" name="checkbox[]" value="{$vo.id}"/></td>
                             <td align="center">{$vo.id}</td>
-                            <td><a href="">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置顶</span>{/if}</td>
+                            <td><a href="{:url('index/show/index',['cid' => $vo.cid,'id' => $vo.id])}" target="_blank">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置顶</span>{/if}</td>
                             <td align="center">{$vo.click}</td>
                             <td align="center"><a href="{:url('product/index',['id' => $vo.cid])}">{$vo.name}</a></td>
                             <td align="center">{$vo.publishtime|date="Y-m-d",###}</td>
                             <td align="center">
-                            <a href="javascript:;" class="topit" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="$vo.flag eq 1"}取消置顶{else/}置顶{/if}</a> |
-                                <a href="{:url('product/edit',['id' => $vo.id])}">编辑</a> | <a onclick="if(!confirm('确定要删除该条记录吗？'))return false;" href="{:url('product/dele',['id' => $vo.id])}">删除</a>
+                            <a href="javascript:;" class="topit btn" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="$vo.flag eq 1"}取消置顶{else/}置 顶{/if}</a> 
+                                <a href="{:url('product/edit',['id' => $vo.id])}" class="btn btn-info">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo.id}">删 除</a>
                             </td>
                         </tr>
                         {/volist}
@@ -104,20 +104,34 @@ var topit_url = "{:url('product/topit')}";
         var action = $("select[name='action']").val();
         var $form = $(this).parents('form');
         if(action == 0) {
-            alert('请先选择执行操作');
+            alerts('请先选择执行操作');
         }else if(action == 'del_all'){
-            if(!confirm('确定要批量删除所选记录吗？'))return false;
-            $form.attr('action',"{:url('product/dele')}");
-            $form.submit();
+            confirms('警告','确定要删除所选产品吗？','',function(){
+                $.get("{:url('product/dele')}",$form.serialize(),function(data){
+                    alertw(data);
+                });
+            });
         }else if(action == 'category_move'){
-            if(!confirm('确定要改变所选记录的分类吗？'))return false;
-            var id = $("select[name='new_cat_id']").val();
-            if(id == 0){alert('请选择分类');return false;}
-            $form.attr('action',"{:url('product/move')}");
-            $form.submit();
+            confirms('警告','确定要移动所选产品的分类吗？','',function(){
+                 var id = $("select[name='new_cat_id']").val();
+                if(id == 0){alert('请选择分类');return false;}
+                $.get("{:url('product/move')}",$form.serialize(),function(data){
+                    alertw(data);
+                });
+            });
         }
 
     });
+    
+    //删除单个
+    $(".del").click(function(){
+        var id= $(this).data('id');
+        confirms('警告','是否确认删除id为【'+ id +'】的产品？','',function(){
+            $.get("{:url('product/dele')}",{id:id},function(data){
+                alertw(data);
+            });
+        }); 
+    })
 </script>
 </body>
 </html>

@@ -1,0 +1,30 @@
+{include file="Public/header" /}
+
+<div class="clear"></div>
+<div class="box03" id="box2">
+<link href="__PUBLIC__/css/163css.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="__PUBLIC__/js/163css.js"></script>
+  <ul>
+        {nav pid='$cid'}
+        {volist name="$nav['children']" id='cat'} 
+        <li class="over7"><a href="{$cat.url}" ><strong>{$cat.name}</strong></a></li>
+        {/volist}
+        {/nav}
+    </ul>
+</div>
+<div class="box04"><button class="btn01" onClick="openShutManager(this,'box2',false,'&lt;img src=__PUBLIC__/img/images10.jpg /&gt;','&lt;img src=__PUBLIC__/img/images11.jpg /&gt;')"><img src="__PUBLIC__/img/images10.jpg"></button></div>
+          <ul class="tjlist">
+          {product cid='$cid' pagesize='15'}
+          <li><img class="img76" src="{$product.litpic}" alt="" width="76" height="76"><a href="{$product.url}">{$product.title}<div class="jiantou"></div>
+            </a> </li>
+          {/product}
+          </ul>
+          <div class="pagelist">
+            <ul>
+              {$page}
+            </ul>
+          </div>
+      <div class="clear"></div>
+﻿{include file="Public/footer" /}
+</body>
+</html>

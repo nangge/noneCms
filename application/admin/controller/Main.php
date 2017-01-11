@@ -42,8 +42,9 @@ class Main extends Common
         $product_count = Db::name('product')->where('status',0)->count();
         $article_count = Db::name('article')->where('status',0)->count();
         //网站主题
-        $theme = get_system_value('site_theme');
-        $this->assign('theme',$theme);
+        $pc_theme = get_system_value('site_theme');
+        $mobile_theme = get_system_value('site_mobile_theme');
+        $this->assign(['pc_theme' => $pc_theme,'mobile_theme' => $mobile_theme]);
         $this->assign('product_count',$product_count);
         $this->assign('article_count',$article_count);
         //获取单页栏目
@@ -60,7 +61,7 @@ class Main extends Common
      */
     public function upload()
     {
-        if (request()->isPost()) {
+        if (!input('?param.act')) {
             $file = request()->file('pic_url');
             $info = $file->move(ROOT_PATH . 'public/uploads');
             if ($info) {
@@ -79,14 +80,15 @@ class Main extends Common
                 // 上传失败获取错误信息
                 exit(json_encode(['status' => 1, 'error' => $file->getError()]));
             }
-        } elseif (request()->isGet()) {
+        } else {
             //删除图片
-            $real_path = request()->get('path');
-            $path = ROOT_PATH . 'public/uploads/' . $real_path;
-            if (unlink($path)) {
+            $img_dir = input('param.path');
+            $real_path = str_replace(__ROOT__,'',$img_dir);
+            $path = str_replace(['/..\/','/../'],'/',ROOT_PATH.$real_path);  
+            if (@unlink($path)) {
                 exit(json_encode(['status' => 1, 'msg' => '删除成功']));
             } else {
-                exit(json_encode(['status' => 0, 'msg' => '删除成功']));
+                exit(json_encode(['status' => 0, 'msg' => '删除失败']));
             }
         }
     }

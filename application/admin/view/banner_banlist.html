@@ -1,0 +1,68 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    {include file="public/lefter" /}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>幻灯广告</strong><b>></b><strong>{$cate['title']}</strong></div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a data-url="{:url('banner/addDetail',['id' => $cate['id']])}" href="javascript:;" class="actionBtn">添加大图</a>{$cate['title']}</h3>
+
+            <div class="navList">
+                <table width="100%" border="0" cellpadding="10" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <th width="10" align="center">ID</th>
+                        <th align="center">标题</th>
+                        <th align="center">图片</th>
+                        <th align="center">链接</th>
+                        <th width="200" align="center">操作</th>
+                    </tr>
+                    {volist name="list" id="ba"}
+                    <tr>
+                        <td> {$ba.id}</td>
+                        <td align="center"> {$ba.title}</td>
+                        <td align="center"> <img src="{$ba.img}" width="50" height="50" /></td>
+                        <td align="center"> <a href="{$ba.url}">{$ba.url}</a></td>
+                        <td align="center"><a data-url="{:url('banner/editDetail',['id' => $ba.id])}" class="btn btn-info edit-flink">编辑</a>  <a class="del btn btn-danger" style="cursor: pointer;" data-id="{$ba.id}">删除</a></td>
+                    </tr>
+                    {eq name="cate['type']" value="2"}
+                    {/eq}
+                    {/volist}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.actionBtn').click(function(){
+        var url = $(this).data('url');
+        layer.open({
+          title: '添加大图',
+          type: 2,
+          area: ['700px', '530px'],
+          fixed: false, //不固定
+          maxmin: true,
+          content: url
+        });
+    });
+    $('.edit-flink').click(function(){
+        var url = $(this).data('url');
+        layer.open({
+          title: '修改大图',
+          type: 2,
+          area: ['700px', '530px'],
+          fixed: false, //不固定
+          maxmin: true,
+          content: url
+        });
+    });
+    $(".del").click(function(){
+        var id= $(this).data('id');
+        confirms('','是否确认删除id为【'+ id +'】的大图？','',function(){
+            $.get("{:url('banner/deleDetail')}",{id:id},function(data){
+                alertw(data);
+            });
+        }); 
+    })
+</script>
+</body>
+</html>

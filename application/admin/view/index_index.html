@@ -3,8 +3,58 @@
 <script type="text/javascript">
     var cache = "{:url('index/clear')}";
     var logout = "{:url('login/logout')}";
+    
+    //无刷新重载栏目
+    var reload_category = function (){
+        var cate_html = '';
+        $.get("{:url('common/reloadCategory')}",function(data){
+            for(var k in data){
+                var nav = data[k];
+                switch(nav.modelid){
+                    case 0:
+                        var url = nav.url;
+                        var cls = 'articleCat';
+                        break;
+                    case 1:
+                        var url = "{:url('article/index')}";
+                        var cls = 'articleCat';
+                        break;
+                    case 2:
+                        var url = "{:url('page/edit')}";
+                        var cls = 'articleCat';
+                        break;
+                    case 3:
+                    case 4:
+                        var url = "{:url('product/index')}";
+                        var cls = 'productCat';
+                        break;
+                    default :
+                        var url = "{:url('comment/index')}";
+                        var cls = 'announcement';
+                }
+                //外链判断
+                if (nav.type == 1){
+                    cate_html += '<li><a href="'+ url +'" target="_blank"><i class="nav"></i><em>'+ nav.name +'</em></a></li>';
+                }else{
+                  var furl = url + '?id=' + nav.id;
+                  cate_html += '<li><a href="'+ furl +'" target="main"><i class="'+ cls +'"></i><em>'+ nav.name +'</em></a></li>';
+                }
+                //遍历子栏目
+                if (typeof(nav.children) != 'undefined'){
+                    for (var ck in nav.children){
+                        var snav = nav.children[ck];
+                        var surl = url + '?id=' + snav.id;
+                        cate_html += '<li><a href="'+ surl +'" target="main"><i class="'+ cls +'"></i><em>&nbsp;&nbsp;├&nbsp;&nbsp;'+ snav.name +'</em></a></li>';
+                    }
+                }
+            }
+            $('#second-nav').html(cate_html);
+        },'json');
+        
+    }
+    reload_category();
 </script>
-<body style="height: 100%;overflow: hidden;">
+<body style="height: 100%;overflow: hidden;background-color: #EEEEEE;">
     <div class="head">
         <div id="head">
             <div class="logo"><a target="main" style="color: #fff;font-size: 18px;line-height: 40px;margin-left: 40px;"><i>NONECMS</i></a></div>
@@ -31,6 +81,7 @@
         </div>
     </div><!-- dcHead 结束 -->
     <!--包含公共模版-->
+    <iframe src=""></iframe>
     <div class="left">
         <div id="menu">
             <ul class="top">
@@ -39,68 +90,42 @@
             <ul>
                 <li><a href="{:url('index/system')}" target="main"><i class="system" ></i><em>系统设置</em></a></li>
                 <li><a href="{:url('nav/index')}" target="main"><i class="nav"></i><em>自定义导航栏</em></a></li>
-                <!--<li><a href="javascript:void(0);"><i class="show" target="main"></i><em>首页幻灯广告</em></a></li>-->
+                <li><a href="{:url('banner/index')}" target="main"><i class="show" ></i><em>幻灯广告</em></a></li>
                 <li><a href="{:url('page/index')}" target="main"><i class="page"></i><em>单页面管理</em></a></li>
             </ul>
             <ul>
-                <li><a style="color:blue"><i class=""></i><em>栏目管理</em></a></li>
-                {volist name="all_nav" id="nav"}
-                {switch name="nav.modelid"}
-                {case value="1"}<!--文章模型-->
-                <li><a href="{:url('article/index',['id' => $nav.id])}" target="main"><i class="articleCat"></i><em>{$nav.name}</em></a></li>
-                <!--二级栏目-->
-                {if condition="isset($nav.children)"}
-                {volist name="nav['children']" id="snav"}
-                <li><a href="{:url('article/index',['id' => $snav.id])}" target="main"><i class="article"></i><em>-- {$snav.name}</em></a></li>
-                {/volist}
-                {/if}
-                {/case}
-                {case value="2"}<!--单页模型-->
-                <li><a href="{:url('page/edit',['id' => $nav.id])}" target="main"><i class="article"></i><em>{$nav.name}</em></a></li>
-                <!--二级栏目-->
-                {if condition="isset($nav.children)"}
-                {volist name="nav['children']" id="snav"}
-                <li><a href="{$snav.id}" target="main"><i class="article"></i><em>-- {$snav.name}</em></a></li>
-                {/volist}
-                {/if}
-                {/case}
-                {case value="3"}<!--产品模型-->
-                <li><a href="{:url('product/index',['id' => $nav.id])}" target="main"><i class="productCat"></i><em>{$nav.name}</em></a></li>
-                <!--二级栏目-->
-                {if condition="isset($nav.children)"}
-                {volist name="nav['children']" id="snav"}
-                <li><a href="{:url('product/index',['id' => $snav.id])}" target="main"><i class="productCat"></i><em>-- {$snav.name}</em></a></li>
-                {/volist}
-                {/if}
-                {/case}
-                {case value="4"}
-                <li><a href="{$nav.id}"><i class="productCat" target="main"></i><em>{$nav.name}</em></a></li>
-                <!--二级栏目-->
-                {if condition="isset($nav.children)"}
-                {volist name="nav['children']" id="snav"}
-                <li><a href="{$snav.id}" target="main"><i class="article"></i><em>-- {$snav.name}</em></a></li>
-                {/volist}
-                {/if}
-                {/case}
-                {/switch}
-                {/volist}
+                <li class="nav-manage top-nav"><a><i class="nav-nav"></i><em>栏目管理</em><span class="arrow"></span></a></li>
             </ul>
-            <!--<ul>
+            <ul class="second-nav" id="second-nav">
+                
+            </ul>
+            
+            <!-- <ul>
                 <li><a href="article_category.html"><i class="articleCat"></i><em>文章分类</em></a></li>
                 <li><a href="article.html"><i class="article"></i><em>文章列表</em></a></li>
-            </ul>-->
+            </ul> -->
             <ul class="bot">
                 <!--<li><a href="backup.html" target="main"><i class="backup"></i><em>数据备份</em></a></li>
                 <li><a href="mobile.html" target="main"><i class="mobile"></i><em>手机版</em></a></li>
                 <li><a href="theme.html" target="main"><i class="theme"></i><em>设置模板</em></a></li>-->
                 <li><a href="{:url('admin/index')}" target="main"><i class="manager"></i><em>网站管理员</em></a></li>
+                <li><a href="{:url('flink/index')}" target="main"><i class="flink"></i><em>友情链接</em></a></li>
+                <li><a href="{:url('flink/annindex')}" target="main"><i class=""></i><em>公告管理</em></a></li>
+                <li><a href="{:url('comment/index')}" target="main"><i class="announcement"></i><em>留言管理</em></a></li>
                 <li><a href="{:url('log/index')}" target="main"><i class="managerLog"></i><em>操作记录</em></a></li>
                 <li><a href="{:url('article/copy')}" target="main"><i class="page"></i><em>转载文章</em></a></li>
             </ul>
+
         </div>
     </div>
     <div class="right"> <!-- 当前位置 -->
         <iframe id="main" name="main" class="rightContent" frameborder="0" scrolling="yes" src="{:url('main/index')}" ></iframe>
     </div>
 </body>
+<script type="text/javascript">
+    $('.top-nav').click(function(){
+        $('.second-nav').toggle(100);
+        $('.arrow').toggleClass('active');
+    })
+</script>
 </html>

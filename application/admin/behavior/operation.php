@@ -14,7 +14,7 @@ class Operation
 {
     public function action_begin(){
         //获取可操作栏目
-        $rabc = include APP_PATH.'admin/rabc.php';
+        $rabc = include APP_PATH.'admin/rbac.php';
         //记录操作
         $module = request()->module();
         $controller = request()->controller();

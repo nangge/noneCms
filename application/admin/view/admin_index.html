@@ -4,7 +4,7 @@
         <!-- 当前位置 -->
         <div id="urHere">管理中心<b>></b><strong>网站管理员</strong></div>
         <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
-            <h3><a href="{:url('admin/add')}" class="actionBtn">添加管理员</a>网站管理员</h3>
+            <h3><a href="javascript:;" class="actionBtn">添加管理员</a>网站管理员</h3>
             <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
                 <tr>
                     <th width="30" align="center">编号</th>
@@ -21,8 +21,7 @@
                     <td align="center">{$vo.email}</td>
                     <td align="center">{if condition="$vo['islock'] eq 1"}是{else}否{/if}</td>
                     <td align="center">{$vo.logintime|date='Y-m-d H:i:s',###}</td>
-                    <td align="center"><a href="{:url('admin/edit',['id' => $vo.id])}">编辑</a> | <a
-                            href="{:url('admin/dele',['id' => $vo.id])}" onclick="if(!confirm('确认删除该用户吗？')) return false;">删除</a></td>
+                    <td align="center"><a data-url="{:url('admin/edit',['id' => $vo.id])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删除</a></td>
                 </tr>
                 {/volist}
             </table>
@@ -32,5 +31,37 @@
     {include file="public/footer" /}
     <div class="clear"></div>
 </div>
+<script type="text/javascript">
+    $('.actionBtn').click(function(){
+        layer.open({
+          title: '添加管理员',
+          type: 2,
+          area: ['700px', '530px'],
+          fixed: false, //不固定
+          maxmin: true,
+          content: 'add'
+        });
+    });
+    $('.edit-flink').click(function(){
+        var url = $(this).data('url');
+        layer.open({
+          title: '修改管理员',
+          type: 2,
+          area: ['700px', '530px'],
+          fixed: false, //不固定
+          maxmin: true,
+          content: url
+        });
+    });
+    //删除
+   $(".del").click(function(){
+        var id= $(this).data('id');
+        confirms('','是否确认删除编号为【'+ id +'】的用户？','',function(){
+            $.get("{:url('admin/dele')}",{id:id},function(data){
+                alertw(data);
+            });
+        }); 
+    })
+</script>
 </body>
 </html>

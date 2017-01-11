@@ -3,7 +3,7 @@
 /* 全局通用
 ----------------------------------------------- */
 body {
- background-color: #EEEEEE;
+ 
  font-family: Microsoft Yahei, \5FAE\8F6F\96C5\9ED1, \5B8B\4F53, Arial, Verdana, sans-serif;
  font-size: 12px;
  color: #333;
@@ -153,6 +153,27 @@ p.cue {
  text-transform: capitalize;
  cursor: pointer;
  -webkit-appearance: none;
+ border-radius: 4px;
+}
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+.btn-info {
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+.btn-warning {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+.btn-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
 }
 .btnGray {
  display: inline-block;
@@ -246,17 +267,17 @@ select {
 }
 /*- tableBasic -*/
 .tableBasic {
- background-color: #F9F9F9;
  color: #666666;
- border-left: 1px dotted #CCCCCC;
- border-top: 1px dotted #CCCCCC;
+ border-left: 1px solid #ddd;
+ border-top: 1px solid #ddd;
 }
 .tableBasic select {
  color: #8F8F8F;
+ width: 150px;
 }
 .tableBasic td, .tableBasic th {
- border-right: 1px dotted #CCCCCC;
- border-bottom: 1px dotted #CCCCCC;
+ border-right: 1px solid #ddd;
+ border-bottom: 1px solid #ddd;
 }
 .tableBasic th {
  background-color: #EEEEEE;
@@ -596,6 +617,7 @@ select {
  color: #FFFFFF;
  font-size: 13px;
  font-weight: bold;
+ border-radius: 4px;
 }
 .mainBox h3 .add {
  background: #28B779 url(../images/action_btn.gif) no-repeat 20px 50%;
@@ -619,6 +641,9 @@ select {
  background: #FFFBCC;
  padding: 10px;
  margin-bottom: 20px;
+}
+#main body{
+	background: #fff;
 }
 /* 公共样式
 ----------------------------------------------- */
@@ -692,7 +717,7 @@ select {
 }
 #index .indexBox .ipage a {
  display: block;
- background-color: #DDDDDD;
+ background-color: #c9dbf1;
  color: #555555;
  font-weight: bold;
  border: 1px dotted #CCCCCC;
@@ -1376,12 +1401,94 @@ select {
 }
 
 .top-it{
-        display: inline-block;
-        width: 24px;
-        height: 16px;
-        border: 1px solid red;
-        color: red;
-        border-radius: 3px;
-        line-height: 16px;
-        margin-left: 5px;
-    }
+    display: inline-block;
+    width: 24px;
+    height: 16px;
+    border: 1px solid red;
+    color: red;
+    border-radius: 3px;
+    line-height: 16px;
+    margin-left: 5px;
+}
+.del{
+	cursor: pointer;
+}
+.menu-dropdown-arrow{
+	width: 0px;
+    height: 0px;
+    border: 8px;
+    border-style: solid;
+    border-color:#0072C6 transparent transparent ;
+    display: inline;
+}
+.top-nav{
+	position: relative;
+}
+.second-nav{
+	display: none;
+	background: #fff;
+}
+#menu li i.nav-nav{
+	background-position: 13px -279px;
+}
+#menu li i.flink{
+    background-position: 13px -520px;
+}
+#menu li i.announcement{
+    background-position: 13px -560px;
+}
+ul#second-nav li em{
+	width: 100px;
+}
+ul.second-nav li{
+	padding-left: 20px;
+}
+/**箭头**/
+.arrow:after {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 0;
+    height: 0;
+    content: "";
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: #eee transparent;
+    -webkit-transition: all .25s;
+       -moz-transition: all .25s;
+        -ms-transition: all .25s;
+         -o-transition: all .25s;
+            transition: all .25s;
+}
+
+.arrow:before {
+    position: absolute;
+    right: 13px;
+    top: 15px;
+    width: 0;
+    height: 0;
+    content: "";
+    border-width: 8px 8px 0 8px;
+    border-style: solid;
+    border-color: #c3b9b9 transparent;
+    -webkit-transition: transform .25s;
+       -moz-transition: transform .25s;
+        -ms-transition: transform .25s;
+         -o-transition: transform .25s;
+            transition: transform .25s;
+}
+.arrow.active:after{       
+    top: 17px;
+    -webkit-transform: rotate(180deg);
+       -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+         -o-transform: rotate(180deg);
+            transform: rotate(180deg); 
+}
+.arrow.active:before{
+    -webkit-transform: rotate(180deg);
+       -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+         -o-transform: rotate(180deg);
+            transform: rotate(180deg);        
+}

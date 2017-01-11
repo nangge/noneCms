@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$title}-{web name='title' /}</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/css.css">
+	<script type="text/javascript" src="__PUBLIC__/js/jquery1.42.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/js/jquery.SuperSlide.2.1.1.js"></script>
+</head>
+<body>
+	<!--header-->
+	{include file="Public/header" /}
+	<div class="main w1212">
+		{include file="Public/left" /}
+		<div class="z_right">
+			<div class="ban z_a"><span class="f"><font style="font-size:16px;font-weight:bolder;">{$cate.name}</font> <font style="font-weight:bold;color:#3b3b3b;">{$cate.ename}</font></span><span class="more">您当前的位置：{position /}</span></div>
+			<div class="clear"></div>
+			<div class="con pro_con">
+				<ul>
+				{product cid='$cid' pagesize='10'}
+					<li><a href="{$product.url}"><img src="{$product.litpic}" alt="{$product.title}" /><br/>{$product.title}</a></li>
+				{/product}
+				</ul>
+			</div>
+			<div class="my_page">{$page}</div>
+		</div>
+	</div>
+	{include file="Public/footer" /}
+</body>
+</html>

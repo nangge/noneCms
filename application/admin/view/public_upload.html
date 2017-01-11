@@ -1,80 +1,123 @@
 <!--上传图片-->
-{load href="__PUBLIC__/js/uploadify/jquery.uploadify.min.js,__PUBLIC__/js/uploadify/swfobject.js" /}
-{css href="__PUBLIC__/js/uploadify/uploadify.css" /}
+{load href="__PUBLIC__/js/jquery.form.min.js" /}
+<script type="text/javascript">
+    var uploadUrl = "{:url('main/upload')}";
+</script>
 <td align="right">[tip]</td>
 <td>
-    <input type="file" name="upload" id="upload" size="38" class="inpFlie"/>
-    <div id="images_area"></div>
+<div class="litpic_show"> 
+    <div id="images_area">
+        <!--图片集-->
+        {if condition="isset($item) and isset($item['pictureurls']) and !isset($item['shorttitle']) and $item['pictureurls'] neq null" }
+            {volist name="item['pic_url']" id="pic"}
+                <div class="picture_item">
+                    <img src="{$pic}" width="110" height="110">
+                    <div class="upload_success"></div>
+                    <div class="index_picture">设为封面</div>
+                    <div class="layui-layer-ico picture_del"></div>
+                    <input type="hidden" name="pic_url[]" value="{$pic}" />
+                </div>
+            {/volist}
+        {/if}
+        <!--文章缩略图 shorttitle 字段判断是否来自文章模型-->
+        {if condition="isset($item) and isset($item['shorttitle']) and $item['litpic'] neq null" }
+            <div class="picture_item">
+                <img src="{$item['litpic']}" width="110" height="110">
+                <div class="upload_success"></div>
+                <div class="index_picture">设为封面</div>
+                <div class="layui-layer-ico picture_del"></div>
+                <input type="hidden" name="pic_url[]" value="{$item['litpic']}" />
+            </div>
+            <div class="clear"></div>
+        {/if}
+
+        <!--友情链接logo  logo字段判断是否来自文章模型-->
+        {if condition="isset($item['logo'])and $item['logo'] neq null" }
+            <div class="picture_item">
+                <img src="{$item['logo']}" width="110" height="110">
+                <div class="upload_success"></div>
+                <div class="index_picture">设为封面</div>
+                <div class="layui-layer-ico picture_del "></div>
+                <input type="hidden" name="pic_url[]" value="{$item['logo']}" />
+            </div>
+            <div class="clear"></div>
+        {/if}
+
+        <!--banner大图 img字段判断是否来自文章模型-->
+        {if condition="isset($item['img'])and $item['img'] neq null" }
+            <div class="picture_item">
+                <img src="{$item['img']}" width="110" height="110">
+                <div class="upload_success"></div>
+                <div class="index_picture">设为封面</div>
+                <div class="layui-layer-ico picture_del "></div>
+                <input type="hidden" name="pic_url[]" value="{$item['img']}" />
+            </div>
+            <div class="clear"></div>
+        {/if}
+    </div>                  
+
+    <div class="btn_up">
+        <a href="javascript:;" class="file">
+            <input type="file" name="pic_url" id="picture_upload">
+        </a>
+        <div class="tip"></div>
+    </div>
+</div>
 </td>
-<script>
-    //上传图片.
-    var uploadLimit = 5;//上传数量限制
-    $('#upload').uploadify({
-        'fileObjName': 'pic_url',
-        'swf': '__PUBLIC__/js/uploadify/uploadify.swf',
-        'uploader': '{:url("product/upload")}',
-        'buttonText': '<div>选择图片</div>',
-        'onUploadStart': function (file) {
-
-        },
-        'auto': true,
-        'multi': true,
-        'method': 'post',
-        'debug': false,
-        'fileTypeDesc': '图像文件',
-        'fileTypeExts': '*.jpg;*.png;*.gif;',
-        'sizeLimit': '2MB',
-        'uploadLimit': uploadLimit,
-        'removeCompleted': false,
-        'removeTimeout': 0,
-        'formData': {},
-        'onUploadSuccess': function (file, res) {
-            var data = JSON.parse(res);
-
-            if (data.status == 1) {
-                $('div#images_area').append('<input type="hidden" name="pic_url[]" id="input_images" data-path="' + data.save_name + '" value="' + data.path + '" /><img src="' + data.path + '" style="width: 300px;margin-left:10px" />').show();
-            } else {
-                alert(data.error);
-            }
-        },
-        'onClearQueue': function (queueItemCount) {
-            alert(1);
-        }
-    });
-
-    //注册删除图片事件
-    $("upload-queue").on("click", '.uploadify-queue-item a', function () {
-        var id = $(this).parents(".uploadify-queue-item").attr('id');
-        var pos = $(this).parents(".uploadify-queue-item").index();
-        var $input = $("#images_area").find("input").eq(pos);
-        var $image = $("#images_area").find("img").eq(pos);
-        var real_path = $input.data('path');
-        //异步删除文件
-        $.ajax({
-            dataType: 'json',
-            type: "get",
-            url: '{:url("product/upload")}',
-            data: {'path': real_path},
-            success: function (res) {
-                if (res.status == 1) {
-                    //删除成功
-                    $input.remove();
-                    $image.remove();
-                    //重置上传数量
-                    $('#file_upload').uploadify('settings', 'uploadLimit', ++uploadLimit);
-                    //判断是否无图片
-                    if ($("#images_area").find("input").length < 1) {
-                        $("#images_area").hide();
-                    }
-                } else {
-                    alert('删除失败，请重新尝试！');
-                    return false;
-                }
+<script type="text/javascript">
+$(function () {
+    //图片上传
+    var upload_max = typeof(upload_max) == 'undefined'?1:upload_max;
+    
+    var $imgarea = $('#images_area');
+    var $tip = $(".tip");
+    $("#picture_upload").wrap("<form id='picture_form' action='{:url('main/upload')}' method='post' enctype='multipart/form-data'></form>");
+    $("#picture_upload").change(function(){
+        if($("#picture_upload").val() == "") return;
+        if ($("#images_area>.picture_item").length >= upload_max ) {alerts('最多上传'+ upload_max +'张图片');return;}
+    
+        $("#picture_form").ajaxSubmit({
+            dataType:  'json',
+            beforeSend: function() {
+                $tip.html("上传中...").show();
             },
-            error: function (data) {
-                alert('error');
-                return false;
+            success: function(data) {
+                if(data.status == 1){    
+                    $tip.hide();                   
+                    var img = data.path;
+                    var picture_html= '<div class="picture_item"><img src="'+ img +'" width="110" height="110"><div class="upload_success"></div><div class="index_picture">设为封面</div><div class="layui-layer-ico picture_del"></div><input type="hidden" name="pic_url[]" value="'+ img +'" /></div>';
+                    $('#images_area').append(picture_html);
+                }else {
+                    $tip.html(data.status);   
+                }           
+
+            },
+            error:function(xhr){
+                alerts("上传失败"+xhr+",请重新选择上传");
             }
         });
     });
+
+    //删除图片
+    $('#images_area').on('click','.picture_del',function () {
+        var $this = $(this);
+        var img = $this.next().val();
+        $this.parent().remove();
+        /*$.post("{:url('main/upload')}",{path:img,act:'del'},function(data){
+            if(data.status == 1){
+                alerts(data.msg);
+                $this.parent().remove();
+            }else{
+                alerts(data.msg);
+            }
+        },'json');*/        
+    });
+
+    //设为封面
+    $('#images_area').on('click','.index_picture',function () {
+        var $parent = $(this).parents('.picture_item');
+        $(this).parent().remove();
+        $('#images_area').prepend($parent);
+    });
+});
 </script>

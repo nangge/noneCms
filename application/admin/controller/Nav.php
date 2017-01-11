@@ -34,36 +34,42 @@ class Nav extends Common
     function add()
     {
         if (request()->isGet()) {
+            //获取主题下的列表和展示模板
+            $theme = get_system_value('site_theme');
+            $dir = 'template/index/'. $theme. '/';
+            $list_dir=glob($dir .'List_*');
+            $list_dir2=glob($dir .'Guestbook_*');
+            $list_dir = array_merge($list_dir, $list_dir2);
+            $show_dir=glob($dir .'Show_*');
+            foreach ($list_dir as $key => $value) {
+                $list_template[] = str_replace($dir, '', $value);
+            }
+            foreach ($show_dir as $key => $value) {
+                $show_template[] = str_replace($dir, '', $value);
+            }
+            $this->assign([
+                'list_template' => $list_template,
+                'show_template' => $show_template
+                ]);
             return $this->fetch();
         } elseif (request()->isPost()) {
-            $param = input('post.');
-            $data = [
-                'name' => $param['name'],
-                'ename' => $param['ename'],
-                'modelid' => $param['model'],
-                'pid' => $param['parent_id'],
-                'keywords' => $param['keywords'],
-                'description' => $param['description'],
-                'position' => $param['position'],
-                'sort' => $param['sort'],
-                'status' => $param['status']
-            ];
+            $data = input('post.');
             //新增导航
             if(!input('?post.id')){
                 $flag = Db::name(self::$_category)->insert($data);
                 if ($flag) {
-                    $this->success('添加栏目成功', 'nav/add');
+                    exit(json_encode(['status' => 1, 'msg' => '添加栏目成功','url' => url('nav/index'),'type' => 'nav']));
                 }else{
-                    $this->error('添加栏目失败', 'nav/add');
+                    exit(json_encode(['status' => 0, 'msg' => '添加栏目失败','url' => url('nav/index'),'type' => 'nav']));
                 }
             }else{
-                $id = $param['id'];
-                unset($param['id']);
-                $flag = Db::name(self::$_category)->where('id',$id)->update($data);
+                $id = $data['id'];
+                unset($data['id']);
+                $flag = Db::name(self::$_category)->where(['id' => $id])->update($data);
                 if ($flag) {
-                    $this->success('修改栏目成功');
+                     exit(json_encode(['status' => 1, 'msg' => '修改栏目成功','url' => url('nav/index'),'type' => 'nav']));
                 }else{
-                    $this->error('修改栏目失败');
+                     exit(json_encode(['status' => 0, 'msg' => '修改栏目成功','url' => url('nav/index'),'type' => 'nav']));
                 }
             }
 
@@ -75,7 +81,22 @@ class Nav extends Common
      * 编辑导航
      */
     public function edit($id){
-        $data = Db::name(self::$_category)->where('id',$id)->find();
+        //获取主题下的列表和展示模板
+        $theme = get_system_value('site_theme');
+        $dir = 'template/'. $theme. '/';
+        $list_dir=glob($dir .'List_*');
+        $show_dir=glob($dir .'Show_*');
+        foreach ($list_dir as $key => $value) {
+            $list_template[] = str_replace($dir, '', $value);
+        }
+        foreach ($show_dir as $key => $value) {
+            $show_template[] = str_replace($dir, '', $value);
+        }
+        $this->assign([
+            'list_template' => $list_template,
+            'show_template' => $show_template
+            ]);
+        $data = Db::name(self::$_category)->where(['id' => $id])->find();
         $this->assign('data',$data);
         return $this->fetch();
     }
@@ -83,12 +104,13 @@ class Nav extends Common
     /*
      * 删除导航
      */
-    public function dele($id){
-        $flag = Db::name(self::$_category)->where('id',$id)->delete();
+    public function dele(){
+        $id = input('param.id/d',0);
+        $flag = Db::name(self::$_category)->where(['id' => $id])->delete();
         if ($flag) {
-            $this->success('删除栏目成功');
+            echo '删除成功！';
         }else{
-            $this->error('删除栏目失败');
+            echo '删除失败！';
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 //注册index模块路由规则
-return [
+/*return [
     '[Listing]'   =>[
     	':cid' => ['index/listing/index',['method' => 'get'], ['cid' => '\d+']]
     ],
@@ -12,5 +12,5 @@ return [
     ]
 
 
-];
+];*/
 

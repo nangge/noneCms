@@ -1,0 +1,72 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>留言管理</strong></div>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+       <!--  {:url('comment/add')} -->
+            <!-- <h3><a href="javascript:;" class="actionBtn">添加友链</a>留言管理</h3> -->
+            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                <tr>
+                    <th width="30" align="center">编号</th>
+                    <th align="left">标题</th>
+                    <th align="left">用户名</th>
+                    <th align="center">手机号</th>
+                    <th align="center">内容</th>
+                    <th align="center">留言时间</th>
+                    <th align="center">操作</th>
+                </tr>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td align="center">{$vo.id}</td>
+                    <td>{$vo.title}</td>
+                    <td style="color: red;">{$vo.username}</td>
+                    <td align="center">{$vo.tel}</td>
+                    <td align="center">{$vo.content}</td>
+                    <td align="center">{$vo.create_time}</td>
+                    <td align="center"><a data-url="{:url('comment/edit',['id' => $vo.id])}" class="btn btn-info edit-comment">编 辑</a> <a data-url="{:url('comment/add',['id' => $vo.id])}" class="btn reply-comment">回 复</a> <a class="del btn btn-danger" data-id="{$vo['id']}">删除</a></td>
+                </tr>
+                {/volist}
+            </table>
+            <div class="pager">{$page}</div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+    $('.reply-comment').click(function(){
+      var url = $(this).data('url');
+        layer.open({
+          title: '回复留言',
+          type: 2,
+          area: ['700px', '530px'],
+          fixed: false, //不固定
+          maxmin: true,
+          content: url
+        });
+    });
+    $('.edit-comment').click(function(){
+        var url = $(this).data('url');
+        layer.open({
+          title: '修改留言',
+          type: 2,
+          area: ['700px', '530px'],
+          fixed: false, //不固定
+          maxmin: true,
+          content: url
+        });
+    });
+    //删除
+   $(".del").click(function(){
+        var id= $(this).data('id');
+        confirms('','是否确认删除编号为【'+ id +'】的留言？','',function(){
+            $.get("{:url('comment/dele')}",{id:id},function(data){
+                alertw(data);
+            });
+        }); 
+    })
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
     {include file="public/lefter" /}
     <div id="dcMain">
         <!-- 当前位置 -->
-        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>添加文章</strong></div>
+        <div id="urHere"><a>管理中心</a><b>></b><strong>添加文章</strong></div>
         <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
             <h3><a href="{:url('article/index')}" class="actionBtn">文章列表</a>添加文章</h3>
 
@@ -13,7 +13,7 @@
                     <tr>
                         <td width="90" align="right">文章地址</td>
                         <td>
-                            <input type="text" name="url" value="" class="inpMain" size="100" required/>
+                            <input type="text" name="url" value="" class="inpMain" size="100" placeholder="请输入csdn博客文章地址" />
                             <p class="cue" style="color:red;">*请输入完整url地址</p>
                         </td>
                     </tr>
@@ -37,7 +37,7 @@
                     <tr>
                         <td></td>
                         <td>
-                            <input class="btn" type="submit" value="提 交"/>
+                            <span class="btn">提 交</span>
                         </td>
                     </tr>
                 </table>
@@ -48,5 +48,8 @@
     {include file="public/footer" /}
     <div class="clear"></div>
 </div>
+<script type="text/javascript">
+    var art_pro_url = "{:url('article/copy')}";
+</script>
 </body>
 </html>

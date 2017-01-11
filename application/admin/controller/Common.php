@@ -33,17 +33,24 @@ class Common extends Controller
         if (!Session::has('userinfo') || !$uname = Session::get('userinfo.name')) {
             $this->redirect('login/index');
         }
-        //登录是否过期 无操作.5h即为过期
+        //登录是否过期 无操作1h即为过期
         $login_time = Session::get('userinfo.login_time');
-        if (time() - $login_time > 1800) {
+        if (time() - $login_time > 3600) {
             Session::clear();
-            $this->error('登录已过期，请重新登录!','login/index','timeout',3);
+            $this->redirect('login/index');
         }
         Session::set('userinfo.login_time',time());
         $this->assign('username', $uname);
     }
 
-
+    /**
+     * 无刷新重载栏目
+     * @return json
+     */
+    function reloadCategory(){
+        $cate = getAllCategory('all');
+        exit(json_encode($cate));
+    }
     /*
      * 空操作
      */

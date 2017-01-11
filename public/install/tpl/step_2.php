@@ -1,13 +1,10 @@
 <?php require 'tpl/header.php';?>
+<style type="text/css">
+
+</style>
 	<div class="main">
-		<div class="step">
-			<ul>
-				<li class="current"><em>1</em><?php echo $lang['detection_environment']; ?></li>
-				<li><em>2</em><?php echo $lang['data_create']; ?></li>
-				<li><em>3</em><?php echo $lang['complete_installation']; ?></li>
-			</ul>
-		</div>
-		<table class="table1">
+		<h1 align="center" style="color: #fff;line-height: 50px;"> </h1>
+		<table class="zebra">
 			<tr>
 				<th><?php echo $lang['environmental_testing']; ?></th>
 				<th><?php echo $lang['recommended_configuration']; ?></th>
@@ -39,6 +36,11 @@
 				<td><?php echo $environment_session;?></td>
 			</tr>
 			<tr>
+				<td>SCANDIR</td>
+                <td><?php echo $lang['mustopen'];?></td>
+				<td><?php echo $environment_scandir;?></td>
+			</tr>
+			<tr>
 				<td>ICONV</td>
                 <td><?php echo $lang['mustopen'];?></td>
 				<td><?php echo $environment_iconv;?></td>
@@ -54,7 +56,7 @@
 				<td><?php echo $environment_mb;?></td>
 			</tr>
 		</table>
-		<table class="table1">
+		<table class="table1 zebra">
 			<tr>
 				<th><?php echo $lang['directory_permissions'];?></th>
 				<th>&nbsp;</th>

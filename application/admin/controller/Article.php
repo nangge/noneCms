@@ -55,8 +55,9 @@ class Article extends Common
      *param int $id cid
      * @return \think\Response
      */
-    public function index($id = 0)
+    public function index()
     {
+        $id = input('param.id/d',0);
         $list = Db::field('p.id,p.title,p.publishtime,p.cid,p.click,p.flag,c.name')
             ->table($this->db_config['prefix'].'article p,'.$this->db_config['prefix'].'category c')
             ->where('p.cid = c.id')
@@ -71,7 +72,7 @@ class Article extends Common
         // 获取分页显示
         $page = $list->render();
         if ($list->total() < 1) {
-            $this->assign('empty', "<tr><td colspan='6'>暂无数据</td></tr>");
+            $this->assign('empty', "<tr><td colspan='7'>暂无数据</td></tr>");
         }
         $this->assign('page',$page);
         $this->assign("id", $id);
@@ -90,9 +91,16 @@ class Article extends Common
             return $this->fetch();
         } elseif (request()->isPost()) {
             $params = input('post.');
+            
             if (isset($params['pic_url'])) {
                 $params['litpic'] = implode('|',$params['pic_url']);
                 unset($params['pic_url']);
+            }else{
+                $params['litpic'] = '';
+            }
+
+            if(!$params['cid']){
+                exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
             }
 
             if (!$params['id']) {
@@ -106,9 +114,9 @@ class Article extends Common
                 }
                 $flag = Db::name(self::$_table)->insert($params);
                 if ($flag) {
-                    $this->success('添加成功');
+                    exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('article/index',['id' => $params['cid']])]));
                 } else {
-                    $this->error('添加失败');
+                    exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
                 }
             } else {
                 //更新
@@ -117,9 +125,9 @@ class Article extends Common
                 $params['updatetime'] = strtotime("now");
                 $flag = Db::name(self::$_table)->where('id', $id)->update($params);
                 if ($flag) {
-                    $this->success('更新成功');
+                    exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => url('article/index',['id' => $params['cid']])]));
                 } else {
-                    $this->error('更新失败');
+                    exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
                 }
             }
         }
@@ -158,35 +166,34 @@ class Article extends Common
      * 删除资源
      * @param id int 资源id
      */
-    public function dele($id = 0) {
-        if(request()->isPost()){
-            $params = input('post.');
-            $ids = $params['checkbox'];
+    public function dele() {
+        if(input('?param.checkbox')){
+            $ids = input('param.checkbox/a');
         }else{
-            $ids = $id;
+            $ids = input('param.id/d',0);
         }
         //逻辑删除
         $flag = Db::name(self::$_table)->where('id','in',$ids)->update(['status' => 1]);
         if ($flag) {
-            $this->success('删除成功');
+            echo '删除成功';
         } else {
-            $this->error('删除失败');
+            echo '删除失败';
         }
     }
 
     /*
      * 移动分类
      */
-   public function moveCategory(){
-       $params = input('post.');
+   public function move(){
+       $params = input('param.');
        $cid = $params['new_cat_id'];
        $ids = $params['checkbox'];
 
-       $flag = self::$db->where('id','in',$ids)->update(['cid' => $cid]);
+       $flag = Db::name(self::$_table)->where('id','in',$ids)->update(['cid' => $cid]);
        if ($flag) {
-           $this->success('操作成功');
+            echo '操作成功';
        } else {
-           $this->error('操作失败');
+            echo '操作失败';
        }
    }
 
@@ -194,17 +201,19 @@ class Article extends Common
      * 转载文章 暂只支持csdn
      */
     public function copy(){
-        if(request()->isPost()){
+        if(request()->isAjax()){
             $url = input('post.url');
             $cid = input('post.cid');
 
-            if(!$cid){
-                $this->error('请选择分类！');
-            }
-            if(!$url){
-                $this->error('输入文章地址！');
+            if(!$url || !substr_count($url, 'csdn')){
+                exit(json_encode(['status' => 0, 'msg' => '请输入csdn博客文章地址', 'url' => '']));
             }
 
+           if(!$cid){
+                exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
+            }
+           
+           
             try {
                 \phpQuery::newDocumentFile($url);
                 $title = pq('.link_title a')->text();
@@ -214,7 +223,8 @@ class Article extends Common
                 $content = pq('#article_content')->html();
                 //如果抓取不到主内容
                 if(!$content){
-                    throw new DException('文章不存在！');
+                     throw new Exception("文章不存在或禁止爬虫");
+                     
                 }
                 $params['cid'] = $cid;
                 $params['content'] = $content;
@@ -224,13 +234,13 @@ class Article extends Common
                 $params['copyfrom'] = $url;
                 $flag = Db::name(self::$_table)->insert($params);
                 if ($flag) {
-                    $this->success('添加成功');
+                    exit(json_encode(['status' => 1, 'msg' => '转载成功', 'url' => url('article/index',['id' => $cid])]));
                 } else {
-                    $this->error('添加失败');
+                    exit(json_encode(['status' => 0, 'msg' => '转载失败', 'url' => '']));
                 }
             }
             catch (Exception $e){
-                $this->error('添加失败：'.$e->getMessage());
+                exit(json_encode(['status' => 0, 'msg' => '添加失败：'.$e->getMessage(), 'url' => '']));
             }
         }else{
             return $this->fetch();

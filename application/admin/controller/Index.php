@@ -29,18 +29,24 @@ class Index extends Common
      */
     function system()
     {
-        if (!request()->isPost()) {
+        if (!request()->isAjax()) {
             //获取系统设置项
             $list = Db::name('system')->select();
             $slist = [];
-            //获取主题
-            $theme_list=scandir('template/');
+            //获取pc端主题
+            $theme_list=scandir('template/index');
             foreach($theme_list as $k => $vo){
                 if($vo == '.' || $vo == '..'){
                     unset($theme_list[$k]);
                 }
             }
-
+            //获取pc端主题
+            $theme_mobile_list=scandir('template/mobile');
+            foreach($theme_mobile_list as $k => $vo){
+                if($vo == '.' || $vo == '..'){
+                    unset($theme_mobile_list[$k]);
+                }
+            }
             foreach ($list as $key => $item){
                 list($pk,$ck) = explode('_',$item['name']);
                 $slist[$pk][$ck] = ['name' => $item['name'],'title' => $item['title'],'tvalue' => $item['tvalue'],'value' => $item['value'],'remark' => $item['remark']];
@@ -48,6 +54,9 @@ class Index extends Common
                 switch($item['name']){
                     case 'site_theme':
                         $slist[$pk][$ck]['svalue'] = $theme_list;
+                        break;
+                    case 'site_mobile_theme':
+                        $slist[$pk][$ck]['svalue'] = $theme_mobile_list;
                         break;
                     case 'site_language':
                         $slist[$pk][$ck]['svalue'] = array('zh_cn');
@@ -64,9 +73,9 @@ class Index extends Common
                     $flag = Db::name('system')->where('name',$name)->update(['value' => $value]);
                 }
             }catch (Exception $e) {
-                exception('更新操作异常');
+                exit(json_encode(['status' => 0, 'msg' => '更新操作异常，请稍后重试', 'url' => '']));
             }
-            $this->success('更新成功');
+            exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => '']));
         }
 
     }

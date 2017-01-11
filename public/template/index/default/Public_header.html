@@ -1,0 +1,41 @@
+<div class="top_bg">
+		<!--<div class="logo w1212">
+			<div class="l_png"></div>
+		</div>-->
+	</div>
+	<div class="nav_bg">
+		<div class="menu w1212">
+		<div class="m_t5">
+			<a href="{:url('index/index')}">首页<br/><font style="color:#828282">Home</font></a>
+			{nav pid='' }
+			<img src="__PUBLIC__/images/fenge.jpg">
+			<a href="{$nav.url}">{$nav.name}<br/><font style="color:#828282">{$nav.ename}</font></a>
+			{/nav}
+		</div>
+			<a id="menu_ser">服务热线：553212320</a>
+		</div>
+	</div>
+	<div class="bigimg">
+		<!-- <img src="__PUBLIC__/images/1.jpg" width="100%" height="490px" /> -->
+		<div id="slideBox" class="slideBox">
+			<div class="hd">
+				<ul><li>1</li><li>2</li><li>3</li></ul>
+			</div>
+			<div class="bd">
+				<ul>
+					{banner id='1'}
+					<li><a href="{$banner.url}" target="_blank"><img src="{$banner.img}" /></a></li>
+					{/banner}
+				</ul>
+			</div>
+
+			
+
+		</div>
+
+		<script type="text/javascript">
+		jQuery(".slideBox").slide({mainCell:".bd ul",autoPlay:true});
+		</script>
+
+	</div>
+	<div class="blank"></div>

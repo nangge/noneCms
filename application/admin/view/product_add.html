@@ -1,23 +1,13 @@
 {include file="public/header" /}
-<style>
-    #images_area{
-        height:300px;
-        display: none;
-        clear:both;
-    }
-    .uploadify-queue-item{
-        width:300px;
-        float:left;
-        margin-left:10px;
-    }
-</style>
+<script type="text/javascript">
+    var upload_max = 7;//可上传图片最大数量
+</script>
 <div id="dcWrap">
     <!--包含公共模版-->
     {include file="public/lefter" /}
     <div id="dcMain">
         <!-- 当前位置 -->
-        {js href="__PUBLIC__/js/jquery.autotextarea.js" /}
-        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>添加商品</strong></div>
+        <div id="urHere"><a>管理中心</a><b>></b><strong>添加商品</strong></div>
         <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
             <h3><a href="{:url('product/index')}" class="actionBtn">商品列表</a>添加商品</h3>
 
@@ -79,7 +69,7 @@
                     </tr>
                     <tr>
                         <!--上传图片-->
-                        {include file="public/upload" tip="产品图片1"}
+                        {include file="public/upload" tip="产品图片"}
                     </tr>
                     <tr>
                         <td align="right">关键字</td>
@@ -88,10 +78,16 @@
                         </td>
                     </tr>
                     <tr>
+                        <td width="80" height="35" align="right">发布时间</td>
+                        <td>
+                            <input type="text" name="publishtime" value="" size="19" class="inpMain date-picker" />
+                        </td>
+                    </tr>
+                    <tr>
                         <td></td>
                         <td>
                             <input type="hidden" name="id" value="">
-                            <input class="btn" type="submit" value="提 交"/>
+                            <span class="btn">提 交</span>
                         </td>
                     </tr>
                 </table>
@@ -102,5 +98,14 @@
     {include file="public/footer" /}
     <div class="clear"></div>
 </div>
+<script type="text/javascript">
+var art_pro_url = "{:url('product/add')}";
+    $.datetimepicker.setLocale('ch');//设置中文
+    $(".date-picker").datetimepicker({
+      format:"Y-m-d H:i",      //格式化日期
+      timepicker:false,    //关闭时间选项
+      value:new Date()
+    });
+</script>
 </body>
 </html>

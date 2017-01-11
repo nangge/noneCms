@@ -1,0 +1,56 @@
+{include file="public/header" /}
+<script type="text/javascript">
+    var upload_max = 1;
+</script>
+<div id="dcWrap">
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>添加友链</strong></div>
+        <div id="manager" class="mainBox" style="height:auto!important;">
+            
+            <form>
+                <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                    <tr>
+                        <td width="100" align="right">网站名称</td>
+                        <td>
+                            <input type="text" name="title" size="40" class="inpMain" value="{$item.title}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!--上传图片-->
+                        {include file="public/upload" tip="网站Logo"}
+                    </tr>
+                    <tr>
+                        <td align="right">url</td>
+                        <td>
+                            <input type="text" name="url" size="80" class="inpMain" placeholder="请填写带协议头(http://)的完整url" value="{$item.url}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">描述</td>
+                        <td>
+                            <textarea type="text" name="description" value="" cols="80" rows="5" class="inpMain">{$item.description}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="hidden" name="type" value="1" />
+                            <input type="hidden" name="id" value="{$item.id}" />
+                            <span class="btn">提 交</span>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+    var art_pro_url = "{:url('flink/add')}";//form表单要提交的地址
+
+</script>
+</body>
+</html>

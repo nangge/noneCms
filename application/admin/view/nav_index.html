@@ -10,8 +10,6 @@
             <div class="navList">
                 <ul class="tab">
                     <li><a href="nav.php" class="selected">主导航</a></li>
-                    <!--<li><a href="nav.php?type=top">顶部</a></li>
-                    <li><a href="nav.php?type=bottom">底部</a></li>-->
                 </ul>
                 <table width="100%" border="0" cellpadding="10" cellspacing="0" class="tableBasic">
                     <tr>
@@ -23,23 +21,21 @@
                     </tr>
                     {volist name="all_nav" id="fnav"}
                     <tr>
-                        <td> {$fnav.name}</td>
-                        <td><a href="{$fnav.url}">{$fnav.url}</a></td>
+                        <td>{$fnav.name} {if condition="$fnav.type eq 1"}<span class="top-it">外链</span>{/if} </td>
+                        <td><a href="{$fnav.url}" target="_blank">{$fnav.url}</a></td>
                         <td align="center">{if condition="$fnav['status'] eq 0"}显示{else /}不显示{/if}</td>
                         <td align="center">{$fnav.sort}</td>
-                        <td align="center"><a href="{:url('nav/edit',['id' => $fnav.id])}">编辑</a> | <a
-                                href="{:url('nav/dele',['id' => $fnav.id])}">删除</a></td>
+                        <td align="center"><a href="{:url('nav/edit',['id' => $fnav.id])}" class="btn btn-info">编辑</a>  <a class="del btn btn-danger" style="cursor: pointer;" data-id="{$fnav.id}">删除</a></td>
                     </tr>
                     <!--二级栏目-->
                     {if condition="isset($fnav.children)"}
                     {volist name="fnav['children']" id="snav"}
                     <tr>
-                        <td> -- {$snav.name}</td>
-                        <td><a href="{$snav.url}">{$snav.url}</a></td>
+                        <td>&nbsp;&nbsp;├&nbsp;&nbsp;{$snav.name}</td>
+                        <td><a href="{$snav.url}" target="_blank">{$snav.url}</a></td>
                         <td align="center">{if condition="$snav['status'] eq 0"}显示{else /}不显示{/if}</td>
                         <td align="center">{$snav.sort}</td>
-                        <td align="center"><a href="{:url('nav/edit',['id' => $snav.id])}">编辑</a> | <a
-                                href="{:url('nav/dele',['id' => $snav.id])}" onclick="if(!confirm('是否确认删除该栏目？操作不可撤销！')) return false;">删除</a></td>
+                        <td align="center"><a href="{:url('nav/edit',['id' => $snav.id])}" class="btn btn-info">编 辑</a>  <a class="del btn btn-danger" data-id="{$snav.id}">删 除</a></td>
                     </tr>
                     {/volist}
                     {/if}
@@ -52,5 +48,16 @@
     {include file="public/footer" /}
     <div class="clear"></div>
 </div>
+<script type="text/javascript">
+    $(".del").click(function(){
+        var id= $(this).data('id');
+        confirms('','是否确认删除id为【'+ id +'】的栏目？','',function(){
+            $.get("{:url('nav/dele')}",{id:id},function(data){
+                alertw(data);
+                parent.reload_category();
+            });
+        }); 
+    })
+</script>
 </body>
 </html>

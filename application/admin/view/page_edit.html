@@ -16,11 +16,11 @@
                             <select name="cid">
                                 <option value="0">请选择</option>
                                 {volist name="page_cat" id="fcat"}
-                                <option value="{$fcat.id}" {if condition="$data['id'] eq $fcat['id']"}selected{/if}> {$fcat.name}</option>
-                                <!--二级分类{if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                <option value="{$fcat.id}" {if condition="$item['id'] eq $fcat['id']"}selected{/if}> {$fcat.name}</option>
+                                <!--二级分类    -->
                                 {if condition="isset($fcat.children)"}
                                 {volist name="fcat['children']" id="scat"}
-                                <option value="{$scat.id}" {if condition="$data['id'] eq $scat['id']"}selected{/if}>- {$scat.name}</option>
+                                <option value="{$scat.id}" {if condition="$item['id'] eq $scat['id']"}selected{/if}>- {$scat.name}</option>
                                 {/volist}
                                 {/if}
                                 {/volist}
@@ -30,20 +30,20 @@
                     <tr>
                         <td align="right">简单描述</td>
                         <td>
-                            <textarea type="text" name="description" cols="125" rows="5" class="inpMain">{$data['description']}</textarea>
+                            <textarea type="text" name="description" cols="125" rows="5" class="inpMain">{$item['description']}</textarea>
                         </td>
                     </tr>
                     <tr>
                         <td align="right">单页面内容</td>
                         <td>
                             <!-- 富文本框 -->
-                            {include file="public/editor" content="<?php echo $data['content']?>" /}
+                            {include file="public/editor" /}
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <input class="btn" type="submit" value="提交"/>
+                             <span class="btn"> 提交 </span>
                         </td>
                     </tr>
                 </table>
@@ -54,5 +54,8 @@
     {include file="public/footer" /}
     <div class="clear"></div>
 </div>
+<script type="text/javascript">
+    var art_pro_url = "{:url('page/add')}";
+</script>
 </body>
 </html>

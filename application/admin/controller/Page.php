@@ -35,19 +35,19 @@ class Page extends Common
     }
 
     /*
-     * 添加单页面
+     * 添加内容
      */
     public function add(){
-        if (request()->isPost()) {
+        if (request()->isAjax()) {
             //新增处理
             $params = input('post.');
             $cid = $params['cid'];
             unset($params['cid']);
             $flag = Category::where('id',$cid)->update($params);
             if ($flag) {
-                $this->success('添加成功');
+                exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('page/index')]));
             }else{
-                $this->error('添加失败');
+                exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
             }
         }else{
             return $this->fetch();
@@ -59,9 +59,8 @@ class Page extends Common
      */
     public function edit($id){
         $cat_info = Category::get($id);
-       // print_r($cat_info);die;
         $data = $cat_info->toArray();
-        $this->assign('data',$data);
+        $this->assign('item',$data);
         return $this->fetch();
     }
 

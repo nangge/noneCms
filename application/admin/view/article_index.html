@@ -17,7 +17,7 @@
                         <!--二级分类-->
                         {if condition="isset($fcat.children)"}
                         {volist name="fcat['children']" id="scat"}
-                        <option value="{$scat.id}" {if condition="$id eq $scat['id']" }selected{/if}>- {$scat.name}</option>
+                        <option value="{$scat.id}" {if condition="$id eq $scat['id']" }selected{/if}>&nbsp;&nbsp;├&nbsp;&nbsp;{$scat.name}</option>
                         {/volist}
                         {/if}
                         {/volist}
@@ -40,21 +40,19 @@
                             <th align="center" width="80">点击量</th>
                             <th width="150" align="center">文章分类</th>
                             <th width="80" align="center">添加日期</th>
-                            <th width="150" align="center">操作</th>
+                            <th width="250" align="center">操作</th>
                         </tr>
                         {volist name="data" id="vo" empty="$empty"}
                         <tr>
                             <td align="center"><input type="checkbox" name="checkbox[]" value="{$vo.id}"/></td>
                             <td align="center">{$vo.id}</td>
-                            <td><a href="">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置顶</span>{/if}</td>
+                            <td><a href="{:url('index/show/index',['cid' => $vo.cid,'id' => $vo.id])}" target="_blank">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置顶</span>{/if}</td>
                             <td align="center">{$vo.click}</td>
                             <td align="center"><a href="{:url('article/index',['id' => $vo.cid])}">{$vo.name}</a></td>
                             <td align="center">{$vo.publishtime|date="Y-m-d",###}</td>
                             <td align="center">
-                            <a href="javascript:;" class="topit" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="$vo.flag eq 1"}取消置顶{else/}置顶{/if}</a> |
-                                <a href="{:url('article/edit',['id' => $vo.id])}">编辑</a> | <a
-                                    onclick="if(!confirm('确定要删除该条记录吗？'))return false;"
-                                    href="{:url('article/dele',['id' => $vo.id])}">删除</a>
+                            <a href="javascript:;" class="topit btn" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="$vo.flag eq 1"}取消置顶{else/}置 顶{/if}</a> 
+                                <a href="{:url('article/edit',['id' => $vo.id])}" class="btn btn-info">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo.id}">删 除</a>
                             </td>
                         </tr>
                         {/volist}
@@ -72,7 +70,7 @@
                             <!--二级分类-->
                             {if condition="isset($fcat.children)"}
                             {volist name="fcat['children']" id="scat"}
-                            <option value="{$scat.id}">- {$scat.name}</option>
+                            <option value="{$scat.id}">&nbsp;&nbsp;├&nbsp;&nbsp;{$scat.name}</option>
                             {/volist}
                             {/if}
                             {/volist}
@@ -98,7 +96,8 @@ var topit_url = "{:url('article/topit')}";
     //选择分类展示列表
     $("#cat_id").change(function () {
         var id = $(this).val();
-        window.location.href = "article/index?id=" + id;
+        var url = "{:url('article/index')}" + "?id=" + id;
+        window.location.href = url;
     });
     //执行删除 移动分类
     $(".execute").click(function () {
@@ -107,22 +106,31 @@ var topit_url = "{:url('article/topit')}";
         if (action == 0) {
             alert('请先选择执行操作');
         } else if (action == 'del_all') {
-            if (!confirm('确定要批量删除所选记录吗？'))return false;
-            $form.attr('action', "{:url('article/dele')}");
-            $form.submit();
+            confirms('警告','确定要删除所选文章吗？','',function(){
+                $.get("{:url('article/dele')}",$form.serialize(),function(data){
+                    alertw(data);
+                });
+            });
         } else if (action == 'category_move') {
-            if (!confirm('确定要改变所选记录的分类吗？'))return false;
-            var id = $("select[name='new_cat_id']").val();
-            if (id == 0) {
-                alert('请选择分类');
-                return false;
-            }
-            $form.attr('action', "{:url('article/moveCategory')}");
-            $form.submit();
+            confirms('警告','确定要移动所选产品的分类吗？','',function(){
+                 var id = $("select[name='new_cat_id']").val();
+                if(id == 0){alert('请选择分类');return false;}
+                $.get("{:url('article/move')}",$form.serialize(),function(data){
+                    alertw(data);
+                });
+            });
         }
 
     });
-   
+   //删除
+   $(".del").click(function(){
+        var id= $(this).data('id');
+        confirms('','是否确认删除id为【'+ id +'】的文章？','',function(){
+            $.get("{:url('article/dele')}",{id:id},function(data){
+                alertw(data);
+            });
+        }); 
+    })
 </script>
 </body>
 </html>

@@ -106,17 +106,23 @@ class Product extends Common
 
                 $params['pictureurls'] = implode('|',$params['pic_url']);
                 unset($params['pic_url']);
+            }else{
+                $params['pictureurls'] = $params['litpic'] = '';
             }
-
+            
+            if(!$params['cid']){
+                exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
+            }
+            $params['publishtime'] = strtotime($params['publishtime']);
             if (!$params['id']) {
                 //新增
                 unset($params['id']);
-                $params['publishtime'] = strtotime("now");
                 $flag = Db::name(self::$_table)->insert($params);
                 if ($flag) {
+                    exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('product/index',['id' => $params['cid']])]));
                     $this->success('添加成功', 'product/index?id='.$params['cid']);
                 } else {
-                    $this->error('添加失败', 'product/error?id='.$params['cid']);
+                    exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
                 }
             } else {
                 //更新
@@ -125,9 +131,9 @@ class Product extends Common
                 $params['updatetime'] = strtotime("now");
                 $flag = Db::name(self::$_table)->where('id', $id)->update($params);
                 if ($flag) {
-                    $this->success('更新成功', 'product/index?id='.$params['cid']);
+                    exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => url('product/index',['id' => $params['cid']])]));
                 } else {
-                    $this->error('更新失败', 'product/error?id='.$params['cid']);
+                    exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
                 }
             }
         }
@@ -151,7 +157,7 @@ class Product extends Common
      * $id 资源id
      */
     public function topit() {
-        $id = input('param.id');
+        $id = input('param.id/d');
         $flag = input('param.flag');
         $flag = $flag? 0:1;
 
@@ -167,19 +173,18 @@ class Product extends Common
      * 删除资源
      * @param id int 资源id
      */
-    public function dele($id = 0) {
-        if(request()->isPost()){
-            $params = input('post.');
-            $ids = $params['checkbox'];
+    public function dele() {
+        if(input('?param.checkbox')){
+            $ids = input('param.checkbox/a');
         }else{
-            $ids = $id;
+            $ids = input('param.id/d',0);
         }
         //逻辑删除
-        $flag = self::$db->where('id','in',$ids)->update(['status' => 1]);
+        $flag = Db::name(self::$_table)->where('id','in',$ids)->update(['status' => 1]);
         if ($flag) {
-            $this->success('删除成功');
+            echo '删除成功';
         } else {
-            $this->error('删除失败');
+            echo '删除失败';
         }
     }
 
@@ -187,15 +192,15 @@ class Product extends Common
      * 移动分类
      */
    public function move(){
-       $params = input('post.');
+       $params = input('param.');
        $cid = $params['new_cat_id'];
        $ids = $params['checkbox'];
 
-       $flag = self::$db->where('id','in',$ids)->update(['cid' => $cid]);
+       $flag = Db::name(self::$_table)->where('id','in',$ids)->update(['cid' => $cid]);
        if ($flag) {
-           $this->success('操作成功');
+            echo '操作成功';
        } else {
-           $this->error('操作失败');
+            echo '操作失败';
        }
    }
 

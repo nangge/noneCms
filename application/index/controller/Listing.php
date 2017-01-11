@@ -15,7 +15,7 @@ class Listing extends Common
             $model = Db::name('model')->field('template_list')->where('id',$cat_info['modelid'])->find();
             $template_list = $model['template_list'];
         }
-        $template = 'template/'. $this->theme .'/'.$template_list;
+        $template = 'template/index/'. $this->theme .'/'.$template_list;
         $this->assign('cate',$cat_info);
         $this->assign('title',empty($cat_info['seotitle'])?$cat_info['name']:$cat_info['seotitle']);
         $this->assign('keywords',$cat_info['keywords']);
