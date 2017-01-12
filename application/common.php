@@ -30,18 +30,22 @@ function getAllCategory($status, $pid = '', $limit = '')
         //生成url，前端
         if ($val['type'] == 1){
             $val['url'] = $val['outurl'];
-        }elseif($val['modelid'] == 6){
+        } elseif ($val['modelid'] == 6){
             $val['url'] = url($module.'/guestbook/index', ['cid' => $val['id']]);
-        }
-        else{
+        } else {
           $val['url'] = url($module.'/listing/index', ['cid' => $val['id']]);  
         }
-        
-        if ($val['pid'] == 0) {
-            $all_nav[$val['id']] = $val;
+        //pid 不为空则只取该pid下的栏目
+        if ($pid !== '') {
+            $all_nav[] = $val;
         } else {
-            $all_nav[$val['pid']]['children'][] = $val;
+             if ($val['pid'] == 0) {
+                $all_nav[$val['id']] = $val;
+            } else {
+                $all_nav[$val['pid']]['children'][] = $val;
+            }   
         }
+        
     }
 
     return $all_nav;

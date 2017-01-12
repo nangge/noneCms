@@ -1,8 +1,8 @@
 <?php
 /**
  * Created by nango
- * User: nango
- * Date: 2016-11-11
+ * User: WANG
+ * Date: 2016-08-11
  * Time: 9:58
  */
 
@@ -19,7 +19,7 @@ class Tag extends TagLib
     protected $tags = [
         // 标签定义： attr 属性列表 close 是否闭合（0 或者1 默认1） alias 标签别名 level 嵌套层次
         'web' => ['attr' => 'name', 'close' => 0],
-        'nav' => ['attr' => 'pid,limit,orderby'],
+        'nav' => ['attr' => 'pid,limit,orderby,type'],
         'product' => ['attr' => 'cid,field,orderby,limit,pagesize'],
         'article' => ['attr' => 'cid,field,orderby,limit,pagesize,empty'],
         'archived' => ['close' => 1],
@@ -140,10 +140,10 @@ EOF;
     {
         $pid = $tag['pid'];
         $limit = isset($tag['limit']) ? $tag['limit'] : 0;
-
+        $type = isset($tag['type']) ? $tag['type'] : 0;
         $parse = <<<EOF
         <?php
-               \$__LIST__ = getAllCategory(0,"$pid","$limit");
+               \$__LIST__ = getAllCategory("$type","$pid","$limit");
 
                 foreach(\$__LIST__ as \$key => \$nav):
                 ?>

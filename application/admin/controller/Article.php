@@ -102,11 +102,10 @@ class Article extends Common
             if(!$params['cid']){
                 exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
             }
-
+            $params['publishtime'] = strtotime($params['publishtime']);
             if (!$params['id']) {
                 //新增
                 unset($params['id']);
-                $params['publishtime'] = strtotime("now");
                 //描述为空 则截取内容填补
                 if(!$params['description']){
                     $content = strip_tags($params['content']);
