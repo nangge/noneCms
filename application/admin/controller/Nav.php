@@ -83,7 +83,8 @@ class Nav extends Common
     public function edit($id){
         //获取主题下的列表和展示模板
         $theme = get_system_value('site_theme');
-        $dir = 'template/'. $theme. '/';
+        
+        $dir = 'template/index/'. $theme. '/';
         $list_dir=glob($dir .'List_*');
         $show_dir=glob($dir .'Show_*');
         foreach ($list_dir as $key => $value) {
