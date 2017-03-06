@@ -12,8 +12,7 @@ class Listing extends Common
 
         $template_list = $cat_info['template_list'];
         if(!$template_list) {
-            $model = Db::name('model')->field('template_list')->where('id',$cat_info['modelid'])->find();
-            $template_list = $model['template_list'];
+            $template_list = Db::name('model')->where('id',$cat_info['modelid'])->value('template_list');
         }
         $template = 'template/index/'. $this->theme .'/'.$template_list;
         $this->assign('cate',$cat_info);

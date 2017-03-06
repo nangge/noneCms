@@ -13,6 +13,7 @@ class Show extends Common
 
         //根据cid来获取表模型
         $cat_info = Db::table($this->prefix . 'category cat,' . $this->prefix . 'model mo')
+            ->field('cat.*, mo.tablename, mo.template_show as origin_template_show')
             ->where('cat.modelid = mo.id')
             ->where('cat.id', $cid)
             ->find();
@@ -25,12 +26,7 @@ class Show extends Common
             $data['pictureurls'] = explode('|',$data['pictureurls']);
         }
         //获取模板文件
-        $template_show = $cat_info['template_show'];
-
-        if(!$template_show) {
-            $model = Db::name('model')->field('template_show')->find($cat_info['modelid']);
-            $template_show = $model['template_show'];
-        }
+        $template_show = $cat_info['template_show']?:$cat_info['origin_template_show'];
         $template = 'template/mobile/'. $this->theme .'/'.$template_show;
         
         $this->assign('content',$data);
