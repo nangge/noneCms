@@ -30,11 +30,18 @@
  
  URL PHP Extension
  
+
+---
+
+ 
 ### 文档地址
 
 文档1：http://wiki.5none.com
 
 文档2：http://www.kancloud.cn/nango/nonecms
+
+---
+
  
 ### 使用许可
  
@@ -43,6 +50,9 @@
 你可以免费下载NoneCms，用来搭建自己的或者团体的网站。
 
 另外你也可以自由的进行二次开发。
+
+---
+
 
 ### bug及建议
 
