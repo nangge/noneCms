@@ -56,6 +56,6 @@
 
 ### bug及建议
 
-如有bug欢迎开Issues或者到[博客](http://blog.5none.com/)(http://blog.5none.com)下留言，如有好的建议以及意见也欢迎交流。
+如有bug欢迎开Issues或者到[博客](http://blog.5none.com/)(http://blog.5none.com) 下留言，如有好的建议以及意见也欢迎交流。
 
 
