@@ -1,47 +1,51 @@
-### noneCms 该cms是基于thinkphp5，适用于企业站、个人博客，具有简便，灵活，开发快等优点。
-常用标签
-```
-nav // 导航标签
-article // 文章标签
-product // 产品标签
-web //系统关键参数标签
-```
-nav 示例：
-```
-{nav  orderby="sort DESC"}
-//CODE...
-{/nav }
-参数：pid, // 父级栏目ID，可不指定，则为顶级栏目
-orderby, // 排序规则
-limit, // 限制条数
-```
-article 示例：
-```
-{article orderby="publishtime DESC" pagesize='15'}
-//CODE...
-{/article}
-参数：cid, // 栏目ID
-field, // 指定要取的字段
-orderby, // 排序规则
-limit, // 限制条数
-pagesize // 分页 （pagesize 和 limit 只能选一个）
-```
+### NoneCms是基于Thinkphp5开发的内容管理系统，适用于企业站、个人博客，具有简便，灵活，开发快等优点。
 
-prodcut 示例：
-```
-{prodcut orderby="publishtime DESC" pagesize='15'}
-//CODE...
-{/prodcut }
-参数：cid, // 栏目ID
-field, // 指定要取的字段
-orderby, // 排序规则
-limit, // 限制条数
-pagesize // 分页 （pagesize 和 limit 只能选一个）
-```
-web 示例：
-```
-{web name='keywords' /}
 
-参数：name, // 可取值 keywords，description，title。。。
+---
+### 安装
 
-```
+- 1：下载
+
+    使用Git：git clone https://github.com/nangge/noneCms.git
+    
+    百度云盘：http://pan.baidu.com/s/1o8z2N94
+- 2：安装
+    在浏览器地址栏输入：
+    ```
+    http://localhost/nonecms/public/install
+    ```
+    按照安装步骤可快速进行安装。
+    
+- 3：安装成功后删除``install``文件夹
+
+
+---
+### 环境要求
+
+ PHP >= 5.4.0
+ 
+ PDO PHP Extension
+ 
+ MBstring PHP Extension
+ 
+ URL PHP Extension
+ 
+### 文档地址
+
+文档1：http://wiki.5none.com
+
+文档2：http://www.kancloud.cn/nango/nonecms
+ 
+### 使用许可
+ 
+ NoneCms是基于MIT协议的开源系统，它完全免费。
+
+你可以免费下载NoneCms，用来搭建自己的或者团体的网站。
+
+另外你也可以自由的进行二次开发。
+
+### bug及建议
+
+如有bug欢迎开Issues或者到[博客](http://blog.5none.com/)(http://blog.5none.com)下留言，如有好的建议以及意见也欢迎交流。
+
+
