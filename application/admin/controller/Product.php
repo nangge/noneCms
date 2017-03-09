@@ -66,7 +66,7 @@ class Product extends Common
         $page = $list->render();
 
         if ($list->total() < 1) {
-            $this->assign('empty', "<tr><td colspan='6'>暂无数据</td></tr>");
+            $this->assign('empty', "<tr><td colspan='7'>暂无数据</td></tr>");
         }
         $this->assign('page',$page);
         $this->assign("id", $id);
@@ -204,39 +204,4 @@ class Product extends Common
        }
    }
 
-    /**
-     * 图片上传
-     */
-    public function upload()
-    {
-        if (request()->isPost()) {
-            $file = request()->file('pic_url');
-            $info = $file->move(ROOT_PATH . 'public/uploads');
-            if ($info) {
-                // 成功上传后 获取上传信息
-                $path = $info->getPath();
-                $filename = $info->getFilename();
-                //$root = request()->domain();
-                $save_name = $info->getSaveName();
-                if(__ROOT__){
-                    $realpath =  __ROOT__.'/uploads/' . $save_name;
-                }else{
-                    $realpath =  '/uploads/' . $save_name;
-                }
-                exit(json_encode(['status' => 1, 'path' => $realpath, 'save_name' => $save_name]));
-            } else {
-                // 上传失败获取错误信息
-                exit(json_encode(['status' => 1, 'error' => $file->getError()]));
-            }
-        } elseif (request()->isGet()) {
-            //删除图片
-            $real_path = request()->get('path');
-            $path = ROOT_PATH . 'public/uploads/' . $real_path;
-            if (unlink($path)) {
-                exit(json_encode(['status' => 1, 'msg' => '删除成功']));
-            } else {
-                exit(json_encode(['status' => 0, 'msg' => '删除成功']));
-            }
-        }
-    }
 }

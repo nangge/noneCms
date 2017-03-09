@@ -67,7 +67,7 @@
 <script type="text/javascript">
 $(function () {
     //图片上传
-    var upload_max = typeof(upload_max) == 'undefined'?1:upload_max;
+    upload_max = typeof(upload_max) == 'undefined'?1:upload_max;
     
     var $imgarea = $('#images_area');
     var $tip = $(".tip");
@@ -88,11 +88,12 @@ $(function () {
                     var picture_html= '<div class="picture_item"><img src="'+ img +'" width="110" height="110"><div class="upload_success"></div><div class="index_picture">设为封面</div><div class="layui-layer-ico picture_del"></div><input type="hidden" name="pic_url[]" value="'+ img +'" /></div>';
                     $('#images_area').append(picture_html);
                 }else {
-                    $tip.html(data.status);   
+                    $tip.html(data.error);   
                 }           
 
             },
             error:function(xhr){
+                console.log(xhr);
                 alerts("上传失败"+xhr+",请重新选择上传");
             }
         });

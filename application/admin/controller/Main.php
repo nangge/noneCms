@@ -63,12 +63,21 @@ class Main extends Common
     {
         if (!input('?param.act')) {
             $file = request()->file('pic_url');
+
+
             $info = $file->move(ROOT_PATH . 'public/uploads');
             if ($info) {
                 // 成功上传后 获取上传信息
+                //判断类型
+                if (!in_array($info->getExtension(), ['gif', 'jpg', 'jpeg', 'bmp', 'png'])) {
+                    exit(json_encode(['status' => 0, 'error' => '不允许的上传类型'.$info->getExtension()]));
+                } 
+                //判断大小
+                if ($info->checkSize(2048)) {
+                    exit(json_encode(['status' => 0, 'error' => '图片大小不能超出2M']));
+                }
                 $path = $info->getPath();
                 $filename = $info->getFilename();
-                //$root = request()->domain();
                 $save_name = $info->getSaveName();
                 if(__ROOT__){
                     $realpath =  __ROOT__.'/uploads/' . $save_name;
@@ -78,7 +87,7 @@ class Main extends Common
                 exit(json_encode(['status' => 1, 'path' => $realpath, 'save_name' => $save_name]));
             } else {
                 // 上传失败获取错误信息
-                exit(json_encode(['status' => 1, 'error' => $file->getError()]));
+                exit(json_encode(['status' => 0, 'error' => $file->getError()]));
             }
         } else {
             //删除图片
