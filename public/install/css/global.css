@@ -7,7 +7,7 @@ body{background: url('../images/1.jpg');}
 .main {background:#272525;width:730px;margin:0px auto;padding:0px 20px;}
 
 .header {width:730px;margin:0px auto;padding:0px 20px;box-shadow: 0 3px 3px #DDDDDD;color: #FFFFFF;height: 110px;background:#555;margin-top:0px;}
-.header .logo {width:500px; height:110px; float:left;line-height:86px;font-weight:bold;font-size:60px;text-indent:99px;}
+.header .logo {width:520px; height:110px; float:left;line-height:86px;font-weight:bold;font-size:60px;text-indent:99px;}
 .header .motto{line-height: 12px;font-size: 12px;}
 .header .version {height:35px; float:right;margin-top:45px;line-height:35px;font-size: 20px}
 .red {color:red;}
