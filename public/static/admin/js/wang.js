@@ -14,17 +14,17 @@
 			var passwd = $("input[name='password']").val();
 			var captcha = $("input[name='captcha']").val();
 			if(!username){
-				alerts('用户名不能为空！');
+				layer.msg('用户名不能为空！');
 				return false;
 			}
 
 			if(!passwd){
-				alerts('密码不能为空！');
+				layer.msg('密码不能为空！');
 				return false;
 			}
 
 			if(!captcha){
-				alerts('验证码不能为空！');
+				layer.msg('验证码不能为空！');
 				return false;
 			}
 
@@ -41,11 +41,11 @@
 					if(res.status){
 						window.location.href = res.url;
 					} else {
-						alerts(res.msg);
+						layer.msg(res.msg);
 					}
 				},
 				error:function(res){
-					alerts('error');
+					layer.msg('error');
 				}
 			});
 		});
@@ -53,19 +53,19 @@
 	//退出登录
 	$("#logout").click(function(){
 		$.ajax({
-			url:logout,
+			url:logout_url,
 			dataType:'json',
 			success:function(res){
 				if(res.status){
-					alertw(res.msg);
-					//location.reload();
+					layer.msg(res.msg, {time: 2000}, function() {
+                            location.reload();
+                        });
 				} else {
 					alertw(res.msg);
 				}
 			},
 			error:function(res){
-				console.log(res);
-				alertw('error');
+				layer.msg('服务器出错，请稍后重新操作！')
 			}
 		});
 	});
@@ -128,27 +128,31 @@
          success: function(data) {
             if(data.status == 1){
             	if(data.url == ''){
-            		alerts(data.msg);
+            		layer.msg(data.msg);
             	}else{
-            		//layer层 特殊处理
-            		var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            		
+            		layer.msg(data.msg,{time: 2000}, function(){
+	                  window.location.href = data.url;
+	                  //layer层 特殊处理
+	                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
             		if(index){
             			parent.layer.close(index); //再执行关闭
             			parent.window.location.reload();
             		}
-            		alertw(data.msg,data.url);
+	                });
+            		//alertw(data.msg,data.url);
             	}
             	if(typeof(data.type) != 'undefined' && data.type == 'nav') parent.reload_category();
             }else{
-                alerts(data.msg);
+                layer.msg(data.msg);
             }
             
         },
          error: function(data){
-            alerts('服务器出错，请稍后重新操作！');
+            layer.msg('服务器出错，请稍后重新操作！');
          }
      });
     });
 
-
+	
 });

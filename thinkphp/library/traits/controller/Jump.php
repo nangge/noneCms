@@ -31,9 +31,10 @@ trait Jump
      * @param string    $url 跳转的URL地址
      * @param mixed     $data 返回的数据
      * @param integer   $wait 跳转等待时间
+     * @param array     $header 发送的Header信息
      * @return void
      */
-    protected function success($msg = '', $url = null, $data = '', $wait = 3)
+    protected function success($msg = '', $url = null, $data = '', $wait = 3, array $header = [])
     {
         $code = 1;
         if (is_numeric($msg)) {
@@ -43,7 +44,7 @@ trait Jump
         if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
             $url = $_SERVER["HTTP_REFERER"];
         } elseif ('' !== $url) {
-            $url = preg_match('/^(https?:|\/)/', $url) ? $url : Url::build($url);
+            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : Url::build($url);
         }
         $result = [
             'code' => $code,
@@ -58,7 +59,7 @@ trait Jump
             $result = ViewTemplate::instance(Config::get('template'), Config::get('view_replace_str'))
                 ->fetch(Config::get('dispatch_success_tmpl'), $result);
         }
-        $response = Response::create($result, $type);
+        $response = Response::create($result, $type)->header($header);
         throw new HttpResponseException($response);
     }
 
@@ -69,9 +70,10 @@ trait Jump
      * @param string    $url 跳转的URL地址
      * @param mixed     $data 返回的数据
      * @param integer   $wait 跳转等待时间
+     * @param array     $header 发送的Header信息
      * @return void
      */
-    protected function error($msg = '', $url = null, $data = '', $wait = 3)
+    protected function error($msg = '', $url = null, $data = '', $wait = 3, array $header = [])
     {
         $code = 0;
         if (is_numeric($msg)) {
@@ -79,9 +81,9 @@ trait Jump
             $msg  = '';
         }
         if (is_null($url)) {
-            $url = 'javascript:history.back(-1);';
+            $url = Request::instance()->isAjax() ? '' : 'javascript:history.back(-1);';
         } elseif ('' !== $url) {
-            $url = preg_match('/^(https?:|\/)/', $url) ? $url : Url::build($url);
+            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : Url::build($url);
         }
         $result = [
             'code' => $code,
@@ -96,7 +98,7 @@ trait Jump
             $result = ViewTemplate::instance(Config::get('template'), Config::get('view_replace_str'))
                 ->fetch(Config::get('dispatch_error_tmpl'), $result);
         }
-        $response = Response::create($result, $type);
+        $response = Response::create($result, $type)->header($header);
         throw new HttpResponseException($response);
     }
 
@@ -107,9 +109,10 @@ trait Jump
      * @param integer   $code 返回的code
      * @param mixed     $msg 提示信息
      * @param string    $type 返回数据格式
+     * @param array     $header 发送的Header信息
      * @return void
      */
-    protected function result($data, $code = 0, $msg = '', $type = '')
+    protected function result($data, $code = 0, $msg = '', $type = '', array $header = [])
     {
         $result = [
             'code' => $code,
@@ -118,7 +121,7 @@ trait Jump
             'data' => $data,
         ];
         $type     = $type ?: $this->getResponseType();
-        $response = Response::create($result, $type);
+        $response = Response::create($result, $type)->header($header);
         throw new HttpResponseException($response);
     }
 
@@ -128,16 +131,17 @@ trait Jump
      * @param string         $url 跳转的URL表达式
      * @param array|integer  $params 其它URL参数
      * @param integer        $code http code
+     * @param array          $with 隐式传参
      * @return void
      */
-    protected function redirect($url, $params = [], $code = 302)
+    protected function redirect($url, $params = [], $code = 302, $with = [])
     {
         $response = new Redirect($url);
         if (is_integer($params)) {
             $code   = $params;
             $params = [];
         }
-        $response->code($code)->params($params);
+        $response->code($code)->params($params)->with($with);
         throw new HttpResponseException($response);
     }
 

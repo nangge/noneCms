@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<!--头部文件-->
+{include file="public/header" /}
+
+<body>
+    <div class="fire_right">        
+        <div id="urHere">管理中心<b>></b><strong>角色管理</strong></div>
+         <div class="mainfff">
+            <form class=" role_add">
+            <ul>
+                <li><span>角色：</span><input type="text" name="name" value="{$find.name}" maxlength="20"></li>
+                <li><span>备注：</span><textarea name="description" class="roleinput_all" maxlength="100">{$find.remark}</textarea></li>
+            </ul>
+            <div class="role_table">
+                <dl>
+                    <dt>权限管理</dt>
+                    <dd>权限分配细则</dd>
+                </dl>
+                {volist name="power" id="val"}
+                <dl>
+                    <dt><p><i><b>
+                        <input type="checkbox" name="power" value="{$val.id}" {if condition="$val.checked eq true"}checked="checked"{/if} class="ipt-hide">
+                        <label value="{$val.id}" class="checkall checkboxdd {if condition="$val.checked eq true"}cur{/if}"><em>{$val.name}</em></label>
+                    </b></i></p></dt>
+                    <dd>
+                        <p>
+                            <i>
+                                {if condition="!empty($val.sub)"}
+                                {volist name="$val.sub" id="val_sub"}
+                                <b><input type="checkbox" name="power" value="{$val_sub.id}" {if condition="$val_sub.checked eq true"}checked="checked"{/if} class="ipt-hide">
+                                <label value="{$val_sub.id}" class="checkboxdd {if condition="$val_sub.checked eq true"}cur{/if}"><em>{$val_sub.name}</em></label></b>
+                                {/volist}{/if}
+                            </i>
+                        </p>
+                    </dd>
+                </dl>
+                {/volist}
+            </div>
+            <div class="submit_btn">
+                <ol>
+                    <li><a href="javascript:;" id="id_a_confirm">确定</a></li>
+                    <li><a href="javascript:;" class="bac_aaa">取消</a></li>
+                </ol>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(function(){
+
+
+            $(".checkall").click(function(){
+                //alert(1)
+                $(this).toggleClass("cur");
+
+                if ($(this).hasClass("cur")) {
+                    $(this).parents('dl').find("dd p i b .checkboxdd").addClass("cur");
+                }else{
+                    $(this).parents('dl').find("dd p i b .checkboxdd").removeClass("cur");
+                };
+            });
+
+            $(".role_table dl dd p i b .checkboxdd").click(function(){
+                $(this).toggleClass("cur");         
+                $(this).each(function(){
+                    if ($(this).parent().parent().find(".cur").length>=1) {
+                        $(this).parent().parent().parent().parent().siblings("dt").find("p i b .checkboxdd").addClass("cur");
+                    }else{
+                        $(this).parent().parent().parent().parent().siblings("dt").find("p i b .checkboxdd").removeClass("cur");
+                    };
+                })
+            });
+
+
+            
+            $(".role_table dl dt").each(function() {
+                $(this).height($(this).siblings().height());
+            });
+            $('#id_a_confirm').one('click', confirm);
+            $('.bac_aaa').on('click', close);
+
+            // $(".role_table dl dt label").click(function() {
+            //     alert(1);
+            //     var dd = $(this).parent().parent().parent().parent().next();
+            //     var ed = $(this).siblings('input').attr('checked');
+            //     if (dd.is('dd')) {
+            //         if (ed) {
+            //             dd.find('input').each(function() {
+            //                 if (!$(this).attr('checked')) {
+            //                     $(this).siblings('label').click();
+            //                 }
+            //             });
+            //         } else {
+            //             dd.find('input').each(function() {
+            //                 if ($(this).attr('checked')) {
+            //                     $(this).siblings('label').click();
+            //                 }
+            //             });
+            //         }
+            //     }
+            // });
+
+            $(".role_table dl dd label").click(function() {
+                var dt = $(this).parent().parent().parent().parent().siblings('dt');
+                var ed = $(this).siblings('input').attr('checked');
+                if (dt && ed) {
+                    dt.find('input').attr('checked', 'checked');
+                    dt.find('label').addClass('cur');
+                }
+            });
+        });
+
+        function close() {
+            history.back();
+        }
+
+        function confirm() {
+            var dat = $('form').serializeArray();
+                dat = serializeObject(dat);
+                dat.id = '{$find.id}';
+            if (!dat.name) {
+                $('#id_a_confirm').one('click', confirm);
+                layer.msg('角色名称未填写！', {time: 2000});
+            } else {
+                dat.power = '';
+                $('.checkboxdd').each(function() {
+                    if ($(this).attr('class') && $(this).attr('class').indexOf('cur') > 0)
+                        dat.power += (dat.power ? ',' : '') + $(this).attr('value');
+                });
+                var url = '{:url("role/edit")}';
+                $.post(url, dat, function(_res) {
+                    if (_res.status == 1) {
+                        layer.msg('修改成功，正在跳转...', {time: 2000}, function() {
+                            window.location.href = '{:url("role/index")}';
+                        });
+                    } else {
+                        layer.msg(_res.msg, {time: 2000});
+                    }
+                    $('#id_a_confirm').one('click', confirm);
+                }, 'json');
+            }
+        }
+    </script>
+</body>
+</html>

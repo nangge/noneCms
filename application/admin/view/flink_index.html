@@ -22,7 +22,7 @@
                     <td align="center">{if condition="$vo['logo'] neq ''"}<img src='{$vo.logo}' width="50px" height="50px" />{/if}</td>
                     <td align="center"><a href="{$vo.url}" target="_blank">{$vo.url}</a></td>
                     <td align="center">{$vo.create_time|date='Y-m-d H:i:s',###}</td>
-                    <td align="center"><a data-url="{:url('flink/edit',['id' => $vo.id])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删除</a></td>
+                    <td align="center"><a data-url="{:url('flink/edit',['id' => $vo.id])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删 除</a></td>
                 </tr>
                 {/volist}
             </table>
@@ -58,10 +58,15 @@
     //删除
    $(".del").click(function(){
         var id= $(this).data('id');
+        var $this = $(this).parents('tr');
         confirms('','是否确认删除编号为【'+ id +'】的友链？','',function(){
             $.get("{:url('flink/dele')}",{id:id},function(data){
-                alertw(data);
-            });
+               layer.msg(data.msg,{time: 1000}, function(){
+                  if (data.status == 1) {
+                    $this.remove();
+                  }
+                });
+            },'json');
         }); 
     })
 </script>

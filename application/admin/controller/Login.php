@@ -6,6 +6,7 @@ use think\Controller;
 use think\Db;
 use think\Request;
 use think\Session;
+use think\Cache;
 
 class Login extends Controller
 {
@@ -54,13 +55,17 @@ class Login extends Controller
         Db::name('admin')->where('id',$info['id'])->update($login);
 
         //登入成功，存入session
-        Session::set('userinfo',['name' => $name,'id' => $info['id'],'login_time' => time()]);
+        Session::set('userinfo',['name' => $name,'role_id' => $info['role_id'],'id' => $info['id'],'usertype' => $info['usertype'],'login_time' => time()]);
+        //权限存入缓存并设置auth标签
+        Cache::tag('auth')->set('auth_'.$info['id'], get_power_by_uid($info['role_id']));
+
         exit(json_encode(array('status' => 1, 'msg' => '登录成功', 'url' => url('index/index'))));
 
     }
 
     //退出
     public function logout(){
+        Cache::rm('auth_'.Session::get('userinfo.id'));
         Session::clear();
         exit(json_encode(array('status' => 1, 'msg' => '退出成功')));
     }

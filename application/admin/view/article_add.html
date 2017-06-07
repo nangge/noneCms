@@ -27,10 +27,16 @@
                                 <option value="0">未分类</option>
                                 {volist name="category" id="fcat"}
                                 <option value="{$fcat.id}"> {$fcat.name}</option>
-                                <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                <!--二级分类-->
                                 {if condition="isset($fcat.children)"}
                                 {volist name="fcat['children']" id="scat"}
-                                <option value="{$scat.id}">- {$scat.name}</option>
+                                <option value="{$scat.id}">&nbsp;&nbsp;├&nbsp;&nbsp;{$scat.name}</option>
+                                    <!--三级分类-->
+                                    {if condition="isset($scat.children)"}
+                                    {volist name="scat['children']" id="tcat"}
+                                    <option value="{$tcat.id}">&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;{$tcat.name}</option>
+                                    {/volist}
+                                    {/if}
                                 {/volist}
                                 {/if}
                                 {/volist}

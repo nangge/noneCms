@@ -14,7 +14,7 @@
                         <td width="90" align="right">文章地址</td>
                         <td>
                             <input type="text" name="url" value="" class="inpMain" size="100" placeholder="请输入csdn博客文章地址" />
-                            <p class="cue" style="color:red;">*请输入完整url地址</p>
+                            <p class="cue" style="color:red;">*请输入完整url地址(暂只支持csdn网站文章转载)</p>
                         </td>
                     </tr>
                     <tr>
@@ -24,10 +24,16 @@
                                 <option value="0">未分类</option>
                                 {volist name="category" id="fcat"}
                                 <option value="{$fcat.id}"> {$fcat.name}</option>
-                                <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                <!--二级分类-->
                                 {if condition="isset($fcat.children)"}
                                 {volist name="fcat['children']" id="scat"}
-                                <option value="{$scat.id}">- {$scat.name}</option>
+                                <option value="{$scat.id}">&nbsp;&nbsp;├&nbsp;&nbsp;{$scat.name}</option>
+                                    <!--三级分类-->
+                                    {if condition="isset($scat.children)"}
+                                    {volist name="scat['children']" id="tcat"}
+                                    <option value="{$tcat.id}">&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;{$tcat.name}</option>
+                                    {/volist}
+                                    {/if}
                                 {/volist}
                                 {/if}
                                 {/volist}

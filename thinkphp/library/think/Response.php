@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -19,7 +19,6 @@ use think\response\Xml as XmlResponse;
 
 class Response
 {
-
     // 原始数据
     protected $data;
 
@@ -40,7 +39,7 @@ class Response
     protected $content = null;
 
     /**
-     * 架构函数
+     * 构造函数
      * @access   public
      * @param mixed $data    输出数据
      * @param int   $code
@@ -50,12 +49,12 @@ class Response
     public function __construct($data = '', $code = 200, array $header = [], $options = [])
     {
         $this->data($data);
-        $this->header = $header;
-        $this->code   = $code;
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
         $this->contentType($this->contentType, $this->charset);
+        $this->header = array_merge($this->header, $header);
+        $this->code   = $code;
     }
 
     /**
@@ -93,14 +92,34 @@ class Response
         // 处理输出数据
         $data = $this->getContent();
 
+        // Trace调试注入
+        if (Env::get('app_trace', Config::get('app_trace'))) {
+            Debug::inject($this, $data);
+        }
+
+        if (200 == $this->code) {
+            $cache = Request::instance()->getCache();
+            if ($cache) {
+                $this->header['Cache-Control'] = 'max-age=' . $cache[1] . ',must-revalidate';
+                $this->header['Last-Modified'] = gmdate('D, d M Y H:i:s') . ' GMT';
+                $this->header['Expires']       = gmdate('D, d M Y H:i:s', $_SERVER['REQUEST_TIME'] + $cache[1]) . ' GMT';
+                Cache::set($cache[0], [$data, $this->header], $cache[1]);
+            }
+        }
+
         if (!headers_sent() && !empty($this->header)) {
             // 发送状态码
             http_response_code($this->code);
             // 发送头部信息
             foreach ($this->header as $name => $val) {
-                header($name . ':' . $val);
+                if (is_null($val)) {
+                    header($name);
+                } else {
+                    header($name . ':' . $val);
+                }
             }
         }
+
         echo $data;
 
         if (function_exists('fastcgi_finish_request')) {
@@ -108,6 +127,13 @@ class Response
             fastcgi_finish_request();
         }
 
+        // 监听response_end
+        Hook::listen('response_end', $this);
+
+        // 清空当次请求有效的数据
+        if (!($this instanceof RedirectResponse)) {
+            Session::flush();
+        }
     }
 
     /**
@@ -170,14 +196,14 @@ class Response
     public function content($content)
     {
         if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable([
-                $content,
-                '__toString',
-            ])
+            $content,
+            '__toString',
+        ])
         ) {
             throw new \InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
         }
 
-        $this->content = (string)$content;
+        $this->content = (string) $content;
 
         return $this;
     }
@@ -248,7 +274,7 @@ class Response
         $this->header['Content-Type'] = $contentType . '; charset=' . $charset;
         return $this;
     }
-    
+
     /**
      * 获取头部信息
      * @param string $name 头部名称
@@ -256,7 +282,11 @@ class Response
      */
     public function getHeader($name = '')
     {
-        return !empty($name) ? $this->header[$name] : $this->header;
+        if (!empty($name)) {
+            return isset($this->header[$name]) ? $this->header[$name] : null;
+        } else {
+            return $this->header;
+        }
     }
 
     /**
@@ -274,18 +304,18 @@ class Response
      */
     public function getContent()
     {
-        if ($this->content == null) {
+        if (null == $this->content) {
             $content = $this->output($this->data);
 
             if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable([
-                    $content,
-                    '__toString',
-                ])
+                $content,
+                '__toString',
+            ])
             ) {
                 throw new \InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
             }
 
-            $this->content = (string)$content;
+            $this->content = (string) $content;
         }
         return $this->content;
     }

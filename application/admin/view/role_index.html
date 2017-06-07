@@ -1,0 +1,70 @@
+{include file="public/header" /}
+<div id="dcWrap">
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">管理中心<b>></b><strong>角色管理</strong></div>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('role/add')}" class="actionBtn">添加角色</a>角色管理</h3>
+            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                <tr>
+                    <th width="30" align="center">编号</th>
+                    <th align="left">角色名称</th>
+                    <th align="center">备注</th>
+                    <th align="center">创建时间</th>
+                    <th align="center">操作</th>
+                </tr>
+                {volist name="list" id="vo"}
+                <tr>
+                    <td align="center">{$vo.id}</td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.remark}</td>
+                    <td align="center">{$vo.createtime|date='Y-m-d H:i',###}</td>
+                    <td align="center"><a href="{:url('role/edit',['id' => $vo.id])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删 除</a></td>
+                </tr>
+                {/volist}
+            </table>
+        </div>
+    </div>
+    <div class="clear"></div>
+    {include file="public/footer" /}
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+    // $('.actionBtn').click(function(){
+    //     layer.open({
+    //       title: '添加管理员',
+    //       type: 2,
+    //       area: ['700px', '530px'],
+    //       fixed: false, //不固定
+    //       maxmin: true,
+    //       content: 'add'
+    //     });
+    // });
+    // $('.edit-flink').click(function(){
+    //     var url = $(this).data('url');
+    //     layer.open({
+    //       title: '修改管理员',
+    //       type: 2,
+    //       area: ['700px', '530px'],
+    //       fixed: false, //不固定
+    //       maxmin: true,
+    //       content: url
+    //     });
+    // });
+    //删除
+   $(".del").click(function(){
+        var id= $(this).data('id');
+        var $this = $(this).parents('tr');
+        confirms('','是否确认删除编号为【'+ id +'】的角色？','',function(){
+            $.get("{:url('role/dele')}",{id:id},function(data){
+                layer.msg(data.msg,{time: 1000}, function(){
+                  if (data.status == 1) {
+                    $this.remove();
+                  }
+                });
+            },'json');
+        }); 
+    })
+</script>
+</body>
+</html>

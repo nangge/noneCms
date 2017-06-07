@@ -22,7 +22,7 @@
                     <td align="center">{if condition="$vo['logo'] neq ''"}<img src='{$vo.logo}' width="50px" height="50px" />{/if}</td>
                     <td align="center">{$vo.description|mb_substr=0,30}</td>
                     <td align="center">{$vo.create_time|date='Y-m-d H:i:s',###}</td>
-                    <td align="center"><a data-url="{:url('flink/edit',['id' => $vo.id, 'type' => 2])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删除</a></td>
+                    <td align="center"><a data-url="{:url('flink/edit',['id' => $vo.id, 'type' => 2])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删 除</a></td>
                 </tr>
                 {/volist}
             </table>

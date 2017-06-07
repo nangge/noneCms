@@ -1,11 +1,47 @@
-{load href="__PUBLIC__/js/ueditor/ueditor.config.js,__PUBLIC__/js/ueditor/ueditor.all.min.js,__PUBLIC__/js/ueditor/lang/zh-cn/zh-cn.js" /}
+{if condition="get_system_value('site_editor') eq 'markdown'"}
+	{css href="__COMMON__/plugin/editor.md/css/editormd.css"}
+	{load href="__COMMON__/plugin/editor.md/editormd.min.js" /}
 
-<!--ueditor-->
-<textarea id="editor" style="width:780px;height:500px;" name="content">
- {if condition="isset($item['content'])" }
-	{$item['content']}
- {/if}
-</textarea>
-<script type="text/javascript">
-    var ue = UE.getEditor('editor');   
-</script>
+	<!--markdown-->
+	<div id="markdown">
+		{if condition="isset($item['content'])" }
+			<textarea  style="display:none;" name="content">{$item['content']}</textarea>
+		{else /}
+			<textarea  style="display:none;" name="content"></textarea>
+		{/if}
+	</div>
+	<script type="text/javascript">
+	    $(function() {
+	      var Editor = editormd("markdown", {
+	            width   : "100%",
+	            height  : 540,
+                codeFold : true,
+                htmlDecode : "style,script,iframe|on*", 
+	            syncScrolling : "single",
+	            path    : "__COMMON__/plugin/editor.md/lib/",
+	            emoji : false,
+	            imageUpload : true,
+                imageFormats : ["jpg", "jpeg", "gif", "png", "bmp"],
+                imageUploadURL : "{:url('main/uploadEditor')}",
+	        });
+	    });   
+	</script>
+{else /}
+	{load href="__PUBLIC__/js/ueditor/ueditor.config.js,__PUBLIC__/js/ueditor/ueditor.all.min.js,__PUBLIC__/js/ueditor/lang/zh-cn/zh-cn.js" /}
+
+	<!--ueditor-->
+	<textarea id="editor" style="width:780px;height:500px;" name="content">
+	 {if condition="isset($item['content'])" }
+		{$item['content']}
+	 {/if}
+	</textarea>
+	<script type="text/javascript">
+	    var ue = UE.getEditor('editor',{
+	    	"imageUrl": "{:url('main/uploadEditor')}",
+		    "imagePath": "/",
+		    "imageFieldName": "editormd-image-file",
+		    "imageMaxSize": 2048,
+		    "imageAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"]
+	    });   
+	</script>
+{/if}

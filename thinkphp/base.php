@@ -2,14 +2,14 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-define('THINK_VERSION', '5.0.0 RC4');
+define('THINK_VERSION', '5.0.9');
 define('THINK_START_TIME', microtime(true));
 define('THINK_START_MEM', memory_get_usage());
 define('EXT', '.php');
@@ -19,7 +19,7 @@ define('LIB_PATH', THINK_PATH . 'library' . DS);
 define('CORE_PATH', LIB_PATH . 'think' . DS);
 define('TRAIT_PATH', LIB_PATH . 'traits' . DS);
 defined('APP_PATH') or define('APP_PATH', dirname($_SERVER['SCRIPT_FILENAME']) . DS);
-defined('ROOT_PATH') or define('ROOT_PATH', dirname(APP_PATH) . DS);
+defined('ROOT_PATH') or define('ROOT_PATH', dirname(realpath(APP_PATH)) . DS);
 defined('EXTEND_PATH') or define('EXTEND_PATH', ROOT_PATH . 'extend' . DS);
 defined('VENDOR_PATH') or define('VENDOR_PATH', ROOT_PATH . 'vendor' . DS);
 defined('RUNTIME_PATH') or define('RUNTIME_PATH', ROOT_PATH . 'runtime' . DS);
@@ -38,16 +38,18 @@ define('IS_WIN', strpos(PHP_OS, 'WIN') !== false);
 require CORE_PATH . 'Loader.php';
 
 // 加载环境变量配置文件
-if (is_file(ROOT_PATH . 'env' . EXT)) {
-    $env = include ROOT_PATH . 'env' . EXT;
+if (is_file(ROOT_PATH . '.env')) {
+    $env = parse_ini_file(ROOT_PATH . '.env', true);
     foreach ($env as $key => $val) {
         $name = ENV_PREFIX . strtoupper($key);
-        if (is_bool($val)) {
-            $val = $val ? 1 : 0;
-        } elseif (!is_scalar($val)) {
-            continue;
+        if (is_array($val)) {
+            foreach ($val as $k => $v) {
+                $item = $name . '_' . strtoupper($k);
+                putenv("$item=$v");
+            }
+        } else {
+            putenv("$name=$val");
         }
-        putenv("$name=$val");
     }
 }
 
@@ -57,5 +59,5 @@ if (is_file(ROOT_PATH . 'env' . EXT)) {
 // 注册错误和异常处理机制
 \think\Error::register();
 
-// 加载模式配置文件
+// 加载惯例配置文件
 \think\Config::set(include THINK_PATH . 'convention' . EXT);

@@ -11,18 +11,15 @@
 
 namespace think\console\command;
 
+use think\App;
 use think\Config;
+use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
 use think\console\Output;
 
 abstract class Make extends Command
 {
-    /** @var  Input */
-    protected $input;
-
-    /** @var  Output */
-    protected $output;
 
     protected $type;
 
@@ -31,13 +28,6 @@ abstract class Make extends Command
     protected function configure()
     {
         $this->addArgument('name', Argument::REQUIRED, "The name of the class");
-    }
-
-    public function run(Input $input, Output $output)
-    {
-        $this->input  = $input;
-        $this->output = $output;
-        return parent::run($input, $output);
     }
 
     protected function execute(Input $input, Output $output)
@@ -75,21 +65,21 @@ abstract class Make extends Command
         return str_replace(['{%className%}', '{%namespace%}', '{%app_namespace%}'], [
             $class,
             $namespace,
-            Config::get('app_namespace')
+            App::$namespace,
         ], $stub);
 
     }
 
     protected function getPathName($name)
     {
-        $name = str_replace(Config::get('app_namespace') . '\\', '', $name);
+        $name = str_replace(App::$namespace . '\\', '', $name);
 
         return APP_PATH . str_replace('\\', '/', $name) . '.php';
     }
 
     protected function getClassName($name)
     {
-        $appNamespace = Config::get('app_namespace');
+        $appNamespace = App::$namespace;
 
         if (strpos($name, $appNamespace . '\\') === 0) {
             return $name;

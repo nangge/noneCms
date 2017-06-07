@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by Wang.
- * User: nange
+ * User: nango
  * Date: 2016-08-30
  * Time: 14:08
  */
@@ -17,8 +17,8 @@ class Admin extends Validate {
     ];
 
     protected $message  =   [
-        'username.require' => '名称必须',
-        'username.max'     => '名称最多不能超过25个字符',
+        'username.require' => '管理员名称必须',
+        'username.max'     => '管理员名称最多不能超过25个字符',
         'password.require'   => '密码必须',
         'password.min'  => '密码长度至少六位',
         'email'        => '邮箱格式错误',
@@ -30,6 +30,11 @@ class Admin extends Validate {
      * 验证场景
      */
     protected $scene = [
-        'edit'  =>  ['name','repassword'=>'confirm:password'],
+        'edit'  =>  [
+            'username' => 'require|max:25', 
+            'email' => 'email', 
+            'password' => 'min:6', 
+            'repassword' => 'confirm:password'
+            ],
     ];
 }

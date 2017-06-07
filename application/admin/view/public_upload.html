@@ -74,7 +74,7 @@ $(function () {
     $("#picture_upload").wrap("<form id='picture_form' action='{:url('main/upload')}' method='post' enctype='multipart/form-data'></form>");
     $("#picture_upload").change(function(){
         if($("#picture_upload").val() == "") return;
-        if ($("#images_area>.picture_item").length >= upload_max ) {alerts('最多上传'+ upload_max +'张图片');return;}
+        if ($("#images_area>.picture_item").length >= upload_max ) {layer.msg('最多上传'+ upload_max +'张图片');return;}
     
         $("#picture_form").ajaxSubmit({
             dataType:  'json',
@@ -93,8 +93,7 @@ $(function () {
 
             },
             error:function(xhr){
-                console.log(xhr);
-                alerts("上传失败"+xhr+",请重新选择上传");
+                layer.msg("上传失败"+xhr+",请重新选择上传");
             }
         });
     });
@@ -106,10 +105,10 @@ $(function () {
         $this.parent().remove();
         /*$.post("{:url('main/upload')}",{path:img,act:'del'},function(data){
             if(data.status == 1){
-                alerts(data.msg);
+                layer.msg(data.msg);
                 $this.parent().remove();
             }else{
-                alerts(data.msg);
+                layer.msg(data.msg);
             }
         },'json');*/        
     });

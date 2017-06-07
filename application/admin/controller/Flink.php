@@ -70,28 +70,15 @@ class Flink extends Common
             	$params['logo'] = '';
             }
             
-            if (!$params['id']) {
-                //新增
-                unset($params['id']);
-                $params['create_time'] = strtotime("now");
-                
-                $flag = Db::name(self::$_table)->insert($params);
-                if ($flag) {
-                    exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('flink/index')]));
-                } else {
-                    exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
-                }
+            //新增
+            unset($params['id']);
+            $params['create_time'] = strtotime("now");
+            
+            $flag = Db::name(self::$_table)->insert($params);
+            if ($flag) {
+                exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('flink/index')]));
             } else {
-                //更新
-                $id = $params['id'];
-                unset($params['id']);
-                $url = $params['type'] == 1?url('flink/index'):url('flink/annindex');
-                $flag = Db::name(self::$_table)->where(['id' => $id])->update($params);
-                if ($flag) {
-                    exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => $url]));
-                } else {
-                    exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
-                }
+                exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
             }
         }
     }
@@ -102,14 +89,52 @@ class Flink extends Common
      * $id 资源id
      */
     public function edit() {
-    	$id = input('param.id/d',0);
-        $data = Db::name(self::$_table)->where(['id' => $id])->find();
-        $this->assign('item',$data);
-        if (input('?type') && input('param.type/d') == 2){
-        	return $this->fetch('annedit');
-        }else{
-			return $this->fetch();
+        //显示页面
+        if (request()->isGet()) {
+            $id = input('param.id/d',0);
+            $data = Db::name(self::$_table)->where(['id' => $id])->find();
+            $this->assign('item',$data);
+            if (input('?type') && input('param.type/d') == 2){
+                return $this->fetch('annedit');
+            }else{
+                return $this->fetch();
+            }
+        } elseif (request()->isPost()) {
+            $params = input('post.');
+            if ($params['type'] == 2){
+                if ($params['title'] == '') {
+                    exit(json_encode(['status' => 0, 'msg' => '请填写公告标题', 'url' => '']));
+                }
+            }else{
+                if ($params['title'] == '') {
+                    exit(json_encode(['status' => 0, 'msg' => '请填写网站名称', 'url' => '']));
+                }
+
+                if ($params['url'] == '') {
+                    exit(json_encode(['status' => 0, 'msg' => '请填写网站url', 'url' => '']));
+                }
+            }
+            
+
+            if (isset($params['pic_url'])) {
+                $params['logo'] = implode('|',$params['pic_url']);
+                unset($params['pic_url']);
+            }else{
+                $params['logo'] = '';
+            }
+            
+             //更新
+            $id = $params['id'];
+            unset($params['id']);
+            $url = $params['type'] == 1?url('flink/index'):url('flink/annindex');
+            $flag = Db::name(self::$_table)->where(['id' => $id])->update($params);
+            if ($flag !== false) {
+                exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => $url]));
+            } else {
+                exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
+            }
         }
+    	
         
     }
 

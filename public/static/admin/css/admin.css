@@ -142,3 +142,36 @@
   background-color: #fff;
   border-color: #ddd;
 }
+/* 提交按钮 */
+.submit_btn ol{ width: 280px; margin:auto;}
+.submit_btn ol li { float: left; height: 40px; padding-bottom: 30px; margin-top: 20px;display: inline-block;width: 120px;}
+.submit_btn ol li a{ width:120px; height: 40px;line-height: 40px;background:#45c8dc;color: #fff; font-size: 16px; display: inline-block; text-align: center; border-radius: 5px;}
+.submit_btn ol li:first-child { margin-right: 40px}
+.submit_btn ol li a.bac_aaa{ background: #aaa;}
+
+/* 角色管理--添加 */
+.role_add { width: 1100px;margin:0px auto; padding-top: 50px}
+.role_add ul li{ width: 700px;padding: 0px 50px 0px 0px; line-height: 30px; margin: auto;margin-bottom:5px; }
+.role_add ul li span { width: 100px; margin-right:5px; color: #666; line-height: 30px; float: left; text-align: right; color: #666}
+.role_add ul li select,.role_add ul li input { width: 500px; border: 1px solid #efefef; border-radius: 3px; line-height: 30px; height: 30px; font-size: 14px; color: #333; padding-left: 5px}
+.role_add ul li .roleinput_all {width: 495px; height: 70px;line-height:30px;border: 1px solid #efefef; border-radius: 3px;font-size: 14px; color: #333; padding:5px; resize:none;}
+.role_add ul li select{ width: 508px}
+/* 角色管理表格 */
+
+
+.role_table dl { width: 980px;background: #fff; margin:auto;line-height: 38px; height: auto; float: left;}
+.role_table dl:first-child{border-top: 1px solid #efefef;}
+.role_table dl dt,.role_table dl dd{ border: 1px solid #efefef;display: inline-block;font-size: 14px; color: #666; float: left;border-top:none; background: #fff}
+.role_table dl dt{ width: 179px;text-align: center;}
+.role_table dl dd{ width: 770px;padding-left: 27px; border-left: none; }
+.role_table dl p { width: 770px;margin-top: 12px;line-height: 28px;height: 28px;}
+.role_table dl p i{ width: 770px;  }
+.role_table dl p i b { width: 120px;display: inline-block; float: left;padding-bottom: 5px;}
+.role_table dl p i input[type=checkbox] {visibility: hidden;display: none; }
+.role_table dl p i label {margin-bottom: 5px;line-height: 18px;font-weight: normal;}
+.role_table dl p i .checkboxdd{height: 18px;display: block;float: left;cursor: pointer;background:url(../images/checkboxno.png) no-repeat; text-indent: 20px}
+.role_table dl p i .cur{border:none;height: 18px;background:url(../images/checkboxyes.png) no-repeat;text-indent: 20px;display: inline-block;}
+.role_table dl p i.num_check b:first-child { padding-left: 0px;}
+.role_table dl p i.num_check b { padding-left: 20px;}
+
+.role_table dl dt p { margin-left: 50px;}

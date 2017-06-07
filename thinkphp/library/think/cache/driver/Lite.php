@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -11,11 +11,13 @@
 
 namespace think\cache\driver;
 
+use think\cache\Driver;
+
 /**
  * 文件类型缓存类
  * @author    liu21st <liu21st@gmail.com>
  */
-class Lite
+class Lite extends Driver
 {
     protected $options = [
         'prefix' => '',
@@ -24,7 +26,7 @@ class Lite
     ];
 
     /**
-     * 架构函数
+     * 构造函数
      * @access public
      *
      * @param array $options
@@ -42,11 +44,11 @@ class Lite
 
     /**
      * 取得变量的存储文件名
-     * @access private
+     * @access protected
      * @param string $name 缓存变量名
      * @return string
      */
-    private function filename($name)
+    protected function getCacheKey($name)
     {
         return $this->options['path'] . $this->options['prefix'] . md5($name) . '.php';
     }
@@ -59,8 +61,7 @@ class Lite
      */
     public function has($name)
     {
-        $filename = $this->filename($name);
-        return is_file($filename);
+        return $this->get($name) ? true : false;
     }
 
     /**
@@ -72,7 +73,7 @@ class Lite
      */
     public function get($name, $default = false)
     {
-        $filename = $this->filename($name);
+        $filename = $this->getCacheKey($name);
         if (is_file($filename)) {
             // 判断是否过期
             $mtime = filemtime($filename);
@@ -104,10 +105,14 @@ class Lite
         if (0 === $expire) {
             $expire = 10 * 365 * 24 * 3600;
         }
-        $filename = $this->filename($name);
-        $ret      = file_put_contents($filename, ("<?php return " . var_export($value, true) . ";"));
+        $filename = $this->getCacheKey($name);
+        if ($this->tag && !is_file($filename)) {
+            $first = true;
+        }
+        $ret = file_put_contents($filename, ("<?php return " . var_export($value, true) . ";"));
         // 通过设置修改时间实现有效期
         if ($ret) {
+            isset($first) && $this->setTagItem($filename);
             touch($filename, $_SERVER['REQUEST_TIME'] + $expire);
         }
         return $ret;
@@ -155,18 +160,26 @@ class Lite
      */
     public function rm($name)
     {
-        return unlink($this->filename($name));
+        return unlink($this->getCacheKey($name));
     }
 
     /**
      * 清除缓存
      * @access   public
+     * @param string $tag 标签名
      * @return bool
-     * @internal param string $name 缓存变量名
      */
-    public function clear()
+    public function clear($tag = null)
     {
-        $filename = $this->filename('*');
-        array_map("unlink", glob($filename));
+        if ($tag) {
+            // 指定标签清除
+            $keys = $this->getTagItem($tag);
+            foreach ($keys as $key) {
+                unlink($key);
+            }
+            $this->rm('tag_' . md5($tag));
+            return true;
+        }
+        array_map("unlink", glob($this->options['path'] . ($this->options['prefix'] ? $this->options['prefix'] . DS : '') . '*.php'));
     }
 }

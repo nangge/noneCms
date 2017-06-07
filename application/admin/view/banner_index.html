@@ -39,7 +39,7 @@
                     <tr>
                         <td> {$ba.id}</td>
                         <td align="center"> {$ba.title}</td>
-                        <td align="center"><a data-url="{:url('banner/edit',['id' => $ba.id])}" class="btn btn-info edit-flink">编辑</a> <a class="btn" style="cursor: pointer;" href="{:url('banner/banlist',['id' => $ba.id])}">编辑列表</a>  <a class="del btn btn-danger" style="cursor: pointer;" data-id="{$ba.id}">删除</a></td>
+                        <td align="center"><a data-url="{:url('banner/edit',['id' => $ba.id])}" class="btn btn-info edit-flink">编 辑</a> <a class="btn" style="cursor: pointer;" href="{:url('banner/banlist',['id' => $ba.id])}">编辑列表</a>  <a class="del btn btn-danger" style="cursor: pointer;" data-id="{$ba.id}">删 除</a></td>
                     </tr>
                     {/eq}
                     {/volist}
@@ -75,10 +75,16 @@
     });
     $(".del").click(function(){
         var id= $(this).data('id');
+        var name = $(this).data('name');
+        var $this = $(this).parents('tr');
         confirms('','是否确认删除id为【'+ id +'】的幻灯广告？','',function(){
             $.get("{:url('banner/dele')}",{id:id},function(data){
-                alertw(data);
-            });
+               layer.msg(data.msg,{time: 1000}, function(){
+                  if (data.status == 1) {
+                    $this.remove();
+                  }
+                });
+            },'json');
         }); 
     })
     //tab

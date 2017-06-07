@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -19,7 +19,7 @@ class Memcached extends SessionHandler
     protected $handler = null;
     protected $config  = [
         'host'         => '127.0.0.1', // memcache主机
-        'port'         => 1121, // memcache端口
+        'port'         => 11211, // memcache端口
         'expire'       => 3600, // session有效期
         'timeout'      => 0, // 连接超时时间（单位：毫秒）
         'session_name' => '', // memcache key前缀
@@ -61,9 +61,9 @@ class Memcached extends SessionHandler
             $servers[] = [$host, (isset($ports[$i]) ? $ports[$i] : $ports[0]), 1];
         }
         $this->handler->addServers($servers);
-        if('' != $this->config['username']){
+        if ('' != $this->config['username']) {
             $this->handler->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
-            $this->handler->setSaslAuthData($this->config['username'], $this->config['password']);	
+            $this->handler->setSaslAuthData($this->config['username'], $this->config['password']);
         }
         return true;
     }
@@ -87,7 +87,7 @@ class Memcached extends SessionHandler
      */
     public function read($sessID)
     {
-        return $this->handler->get($this->config['session_name'] . $sessID);
+        return (string) $this->handler->get($this->config['session_name'] . $sessID);
     }
 
     /**
@@ -95,6 +95,7 @@ class Memcached extends SessionHandler
      * @access public
      * @param string $sessID
      * @param String $sessData
+     * @return bool
      */
     public function write($sessID, $sessData)
     {
@@ -105,6 +106,7 @@ class Memcached extends SessionHandler
      * 删除Session
      * @access public
      * @param string $sessID
+     * @return bool
      */
     public function destroy($sessID)
     {
@@ -115,6 +117,7 @@ class Memcached extends SessionHandler
      * Session 垃圾回收
      * @access public
      * @param string $sessMaxLifeTime
+     * @return true
      */
     public function gc($sessMaxLifeTime)
     {

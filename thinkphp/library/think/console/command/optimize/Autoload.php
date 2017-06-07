@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006-2015 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -11,14 +11,13 @@
 namespace think\console\command\optimize;
 
 use think\App;
-use think\console\command\Command;
+use think\Config;
+use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 
 class Autoload extends Command
 {
-    /** @var  Output */
-    protected $output;
 
     protected function configure()
     {
@@ -28,14 +27,13 @@ class Autoload extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        $this->output = $output;
 
         $classmapFile = <<<EOF
 <?php
 /**
- * ThinkPHP 类库映射定义
+ * 类库映射
  */
- 
+
 return [
 
 EOF;
@@ -45,7 +43,13 @@ EOF;
             'think\\'              => LIB_PATH . 'think',
             'behavior\\'           => LIB_PATH . 'behavior',
             'traits\\'             => LIB_PATH . 'traits',
+            ''                     => realpath(rtrim(EXTEND_PATH)),
         ];
+
+        $root_namespace = Config::get('root_namespace');
+        foreach ($root_namespace as $namespace => $dir) {
+            $namespacesToScan[$namespace . '\\'] = realpath($dir);
+        }
 
         krsort($namespacesToScan);
         $classMap = [];
@@ -79,14 +83,14 @@ EOF;
         foreach ($this->createMap($dir, $namespace) as $class => $path) {
 
             $pathCode = $this->getPathCode($path) . ",\n";
-            
+
             if (!isset($classMap[$class])) {
                 $classMap[$class] = $pathCode;
             } elseif ($classMap[$class] !== $pathCode && !preg_match('{/(test|fixture|example|stub)s?/}i', strtr($classMap[$class] . ' ' . $path, '\\', '/'))) {
                 $this->output->writeln(
                     '<warning>Warning: Ambiguous class resolution, "' . $class . '"' .
                     ' was found in both "' . str_replace(["',\n"], [
-                        ''
+                        '',
                     ], $classMap[$class]) . '" and "' . $path . '", the first will be used.</warning>'
                 );
             }
@@ -97,17 +101,25 @@ EOF;
     protected function getPathCode($path)
     {
 
-        $baseDir = '';
-        $appPath = $this->normalizePath(realpath(APP_PATH));
-        $libPath = $this->normalizePath(realpath(LIB_PATH));
-        $path    = $this->normalizePath($path);
+        $baseDir    = '';
+        $libPath    = $this->normalizePath(realpath(LIB_PATH));
+        $appPath    = $this->normalizePath(realpath(APP_PATH));
+        $extendPath = $this->normalizePath(realpath(EXTEND_PATH));
+        $rootPath   = $this->normalizePath(realpath(ROOT_PATH));
+        $path       = $this->normalizePath($path);
 
-        if (strpos($path, $libPath . '/') === 0) {
+        if ($libPath !== null && strpos($path, $libPath . '/') === 0) {
             $path    = substr($path, strlen(LIB_PATH));
             $baseDir = 'LIB_PATH';
-        } elseif (strpos($path, $appPath . '/') === 0) {
+        } elseif ($appPath !== null && strpos($path, $appPath . '/') === 0) {
             $path    = substr($path, strlen($appPath) + 1);
             $baseDir = 'APP_PATH';
+        } elseif ($extendPath !== null && strpos($path, $extendPath . '/') === 0) {
+            $path    = substr($path, strlen($extendPath) + 1);
+            $baseDir = 'EXTEND_PATH';
+        } elseif ($rootPath !== null && strpos($path, $rootPath . '/') === 0) {
+            $path    = substr($path, strlen($rootPath) + 1);
+            $baseDir = 'ROOT_PATH';
         }
 
         if ($path !== false) {
@@ -117,9 +129,11 @@ EOF;
         return $baseDir . (($path !== false) ? var_export($path, true) : "");
     }
 
-
     protected function normalizePath($path)
     {
+        if ($path === false) {
+            return;
+        }
         $parts    = [];
         $path     = strtr($path, '\\', '/');
         $prefix   = '';
@@ -204,7 +218,6 @@ EOF;
 
         return $map;
     }
-
 
     protected function findClasses($path)
     {

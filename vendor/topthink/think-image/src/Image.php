@@ -11,8 +11,8 @@
 
 namespace think;
 
-use think\image\gif\Gif;
 use think\image\Exception as ImageException;
+use think\image\gif\Gif;
 
 class Image
 {
@@ -37,7 +37,6 @@ class Image
     /* 翻转相关常量定义 */
     const FLIP_X = 1; //X轴翻转
     const FLIP_Y = 2; //Y轴翻转
-
 
     /**
      * 图像资源对象
@@ -132,7 +131,7 @@ class Image
             //设定保存完整的 alpha 通道信息
             imagesavealpha($this->im, true);
             //ImagePNG生成图像的质量范围从0到9的
-            imagepng($this->im, $pathname, min((int)($quality / 10), 9));
+            imagepng($this->im, $pathname, min((int) ($quality / 10), 9));
         } else {
             $fun = 'image' . $type;
             $fun($this->im, $pathname);
@@ -258,7 +257,7 @@ class Image
     public function crop($w, $h, $x = 0, $y = 0, $width = null, $height = null)
     {
         //设置保存尺寸
-        empty($width) && $width = $w;
+        empty($width) && $width   = $w;
         empty($height) && $height = $h;
         do {
             //创建新图像
@@ -272,8 +271,8 @@ class Image
             //设置新图像
             $this->im = $img;
         } while (!empty($this->gif) && $this->gifNext());
-        $this->info['width']  = (int)$width;
-        $this->info['height'] = (int)$height;
+        $this->info['width']  = (int) $width;
+        $this->info['height'] = (int) $height;
         return $this;
     }
 
@@ -297,12 +296,12 @@ class Image
             case self::THUMB_SCALING:
                 //原图尺寸小于缩略图尺寸则不进行缩略
                 if ($w < $width && $h < $height) {
-                    return false;
+                    return $this;
                 }
                 //计算缩放比例
                 $scale = min($width / $w, $height / $h);
                 //设置缩略图的坐标及宽度和高度
-                $x      = $y = 0;
+                $x      = $y      = 0;
                 $width  = $w * $scale;
                 $height = $h * $scale;
                 break;
@@ -361,8 +360,8 @@ class Image
                     imagedestroy($this->im); //销毁原图
                     $this->im = $img;
                 } while (!empty($this->gif) && $this->gifNext());
-                $this->info['width']  = (int)$width;
-                $this->info['height'] = (int)$height;
+                $this->info['width']  = (int) $width;
+                $this->info['height'] = (int) $height;
                 return $this;
             /* 固定 */
             case self::THUMB_FIXED:
@@ -372,10 +371,8 @@ class Image
                 throw new ImageException('不支持的缩略图裁剪类型');
         }
         /* 裁剪图像 */
-        $this->crop($w, $h, $x, $y, $width, $height);
-        return $this;
+        return $this->crop($w, $h, $x, $y, $width, $height);
     }
-
 
     /**
      * 添加水印
@@ -486,8 +483,7 @@ class Image
      * @throws ImageException
      */
     public function text($text, $font, $size, $color = '#00000000',
-                         $locate = self::WATER_SOUTHEAST, $offset = 0, $angle = 0)
-    {
+        $locate = self::WATER_SOUTHEAST, $offset = 0, $angle = 0) {
 
         if (!is_file($font)) {
             throw new ImageException("不存在的字体文件：{$font}");
@@ -557,11 +553,11 @@ class Image
         }
         /* 设置偏移量 */
         if (is_array($offset)) {
-            $offset = array_map('intval', $offset);
+            $offset        = array_map('intval', $offset);
             list($ox, $oy) = $offset;
         } else {
             $offset = intval($offset);
-            $ox     = $oy = $offset;
+            $ox     = $oy     = $offset;
         }
         /* 设置颜色 */
         if (is_string($color) && 0 === strpos($color, '#')) {

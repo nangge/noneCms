@@ -59,10 +59,10 @@ class Comment extends Common
         $id = input('param.id/d',0);
         //逻辑删除
         $flag = Db::name('comment')->where(['id' => $id])->update(['status' => 1]);
-        if ($flag) {
-            echo '删除成功';
-        } else {
-            echo '删除失败';
+        if ($flag !== false) {
+            exit(json_encode(['status' => 1, 'msg' => '删除成功']));
+        }else{
+            exit(json_encode(['status' => 0, 'msg' => '删除失败']));
         }
     }
 

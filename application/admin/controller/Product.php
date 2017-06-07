@@ -29,18 +29,9 @@ class Product extends Common
         parent::__construct();
 
         //分类
-        $catgeroy = Db::name('category')->field('id,pid,name')->where('modelid', 3)->select();
-        $all_cat = [];
-        //拼接导航 一级二级
-        foreach ($catgeroy as $val) {
-            if ($val['pid'] == 0) {
-                $all_cat[$val['id']] = $val;
-            } else {
-                $all_cat[$val['pid']]['children'][] = $val;
-            }
-        }
+        $catgeroy = Db::name('category')->field('id,pid,name')->where('modelid', 3)->order('id ASC')->select();
 
-        $this->assign('category', $all_cat);
+        $this->assign('category', create_tree($catgeroy));
     }
 
     /**
@@ -50,7 +41,6 @@ class Product extends Common
      */
     public function index($id = 0)
     {
-        //$list = Db::name(self::$_table)->field('id,title,publishtime,cid')->order('id DESC');
         $list = Db::field('p.id,p.title,p.publishtime,p.cid,p.flag,p.click,c.name')
             ->table($this->prefix.'product p,'.$this->prefix.'category c')
             ->where('p.cid = c.id')
@@ -90,11 +80,9 @@ class Product extends Common
         } elseif (request()->isPost()) {
             $params = input('post.');
             if (isset($params['pic_url'])) {
-                $img1 = str_replace(__ROOT__,'',$params['pic_url'][0]);
-                $realpath = str_replace(['/..\/','/../'],'/',ROOT_PATH.$img1);
-
+                $realpath = str_replace(__ROOT__,'',$params['pic_url'][0]);
                 //第一张图生成缩略图
-                $image = \think\Image::open($realpath);
+                $image = \think\Image::open('.'.$realpath);
                 $type = $image->type();
                 $thumb_path = './uploads/'.date('Ymd').'/'.date('YmdHis').'-thumb.'.$type;
                 $image->thumb($thumb_width,$thumb_height)->save($thumb_path);
@@ -114,28 +102,15 @@ class Product extends Common
                 exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
             }
             $params['publishtime'] = strtotime($params['publishtime']);
-            if (!$params['id']) {
-                //新增
-                unset($params['id']);
-                $flag = Db::name(self::$_table)->insert($params);
-                if ($flag) {
-                    exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('product/index',['id' => $params['cid']])]));
-                    $this->success('添加成功', 'product/index?id='.$params['cid']);
-                } else {
-                    exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
-                }
+            //新增
+            unset($params['id']);
+            $flag = Db::name(self::$_table)->insert($params);
+            if ($flag) {
+                exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('product/index',['id' => $params['cid']])]));
             } else {
-                //更新
-                $id = $params['id'];
-                unset($params['id']);
-                $params['updatetime'] = strtotime("now");
-                $flag = Db::name(self::$_table)->where('id', $id)->update($params);
-                if ($flag) {
-                    exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => url('product/index',['id' => $params['cid']])]));
-                } else {
-                    exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
-                }
+                exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
             }
+            
         }
     }
 
@@ -145,10 +120,54 @@ class Product extends Common
      * $id 资源id
      */
     public function edit($id = 0) {
-        $data = Db::name(self::$_table)->where('id',$id)->find();
-        $data['pic_url'] = explode('|',$data['pictureurls']);
-        $this->assign('item',$data);
-        return $this->fetch();
+        //显示页面
+        if (request()->isGet()) {
+            $data = Db::name(self::$_table)->where('id',$id)->find();
+            $data['pic_url'] = explode('|',$data['pictureurls']);
+            $this->assign('item',$data);
+            return $this->fetch();
+        } elseif (request()->isPost()) {
+            //获取图片缩略图宽高
+            $config = Db::name('system')->field('value')->where('name','in',['display_thumbw','display_thumbh'])->select();
+            $thumb_width = $config[0]['value'];
+            $thumb_height = $config[1]['value'];
+            $params = input('post.');
+            if (isset($params['pic_url'])) {
+                $realpath = str_replace(__ROOT__,'',$params['pic_url'][0]);
+                
+                //第一张图生成缩略图
+                $image = \think\Image::open('.'.$realpath);
+                $type = $image->type();
+                $thumb_path = './uploads/'.date('Ymd').'/'.date('YmdHis').'-thumb.'.$type;
+                $image->thumb($thumb_width,$thumb_height)->save($thumb_path);
+                if(__ROOT__){
+                    $params['litpic'] = __ROOT__.ltrim($thumb_path,'.');
+                }else{
+                    $params['litpic'] = ltrim($thumb_path,'.');
+                }
+
+                $params['pictureurls'] = implode('|',$params['pic_url']);
+                unset($params['pic_url']);
+            }else{
+                $params['pictureurls'] = $params['litpic'] = '';
+            }
+            
+            if(!$params['cid']){
+                exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
+            }
+            $params['publishtime'] = strtotime($params['publishtime']);
+            //更新
+            $id = $params['id'];
+            unset($params['id']);
+            $params['updatetime'] = strtotime("now");
+            $flag = Db::name(self::$_table)->where('id', $id)->update($params);
+            if ($flag) {
+                exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => url('product/index',['id' => $params['cid']])]));
+            } else {
+                exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
+            }
+        }
+       
     }
 
     /*
@@ -181,10 +200,10 @@ class Product extends Common
         }
         //逻辑删除
         $flag = Db::name(self::$_table)->where('id','in',$ids)->update(['status' => 1]);
-        if ($flag) {
-            echo '删除成功';
-        } else {
-            echo '删除失败';
+        if ($flag !== false) {
+            exit(json_encode(['status' => 1, 'msg' => '删除成功']));
+        }else{
+            exit(json_encode(['status' => 0, 'msg' => '删除失败']));
         }
     }
 

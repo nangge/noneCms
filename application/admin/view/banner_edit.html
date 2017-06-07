@@ -41,6 +41,7 @@
                                 <tr>
                                     <td></td>
                                     <td>
+                                        <input type="hidden" name="id" value="{$item.id}" />
                                         <span class="btn"> 提交 </span>
                                     </td>
                                 </tr>
@@ -53,7 +54,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    var art_pro_url = "{:url('banner/add')}";
+    var art_pro_url = "{:url('banner/edit')}";
     $.datetimepicker.setLocale('ch');//设置中文
     $(".date-picker").datetimepicker({
       format:"Y-m-d",      //格式化日期

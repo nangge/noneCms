@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -18,9 +18,12 @@ use think\Config;
 use think\Cookie;
 use think\Db;
 use think\Debug;
+use think\exception\HttpException;
+use think\exception\HttpResponseException;
 use think\Lang;
 use think\Loader;
 use think\Log;
+use think\Model;
 use think\Request;
 use think\Response;
 use think\Session;
@@ -100,7 +103,7 @@ if (!function_exists('config')) {
     function config($name = '', $value = null, $range = '')
     {
         if (is_null($value) && is_string($name)) {
-            return Config::get($name, $range);
+            return 0 === strpos($name, '?') ? Config::has(substr($name, 1), $range) : Config::get($name, $range);
         } else {
             return Config::set($name, $value, $range);
         }
@@ -115,7 +118,7 @@ if (!function_exists('input')) {
      * @param string    $filter 过滤方法
      * @return mixed
      */
-    function input($key = '', $default = null, $filter = null)
+    function input($key = '', $default = null, $filter = '')
     {
         if (0 === strpos($key, '?')) {
             $key = substr($key, 1);
@@ -123,10 +126,9 @@ if (!function_exists('input')) {
         }
         if ($pos = strpos($key, '.')) {
             // 指定参数来源
-            $method = substr($key, 0, $pos);
-            if (in_array($method, ['get', 'post', 'put', 'patch', 'delete', 'param', 'request', 'session', 'cookie', 'server', 'env', 'path', 'file'])) {
-                $key = substr($key, $pos + 1);
-            } else {
+            list($method, $key) = explode('.', $key, 2);
+            if (!in_array($method, ['get', 'post', 'put', 'patch', 'delete', 'param', 'request', 'session', 'cookie', 'server', 'env', 'path', 'file'])) {
+                $key    = $method . '.' . $key;
                 $method = 'param';
             }
         } else {
@@ -145,7 +147,7 @@ if (!function_exists('widget')) {
     /**
      * 渲染输出Widget
      * @param string    $name Widget名称
-     * @param array     $data 传人的参数
+     * @param array     $data 传入的参数
      * @return mixed
      */
     function widget($name, $data = [])
@@ -187,11 +189,12 @@ if (!function_exists('db')) {
      * 实例化数据库类
      * @param string        $name 操作的数据表名称（不含前缀）
      * @param array|string  $config 数据库配置参数
+     * @param bool          $force 是否强制重新连接
      * @return \think\db\Query
      */
-    function db($name = '', $config = [])
+    function db($name = '', $config = [], $force = false)
     {
-        return Db::connect($config, true)->name($name);
+        return Db::connect($config, $force)->name($name);
     }
 }
 
@@ -269,8 +272,8 @@ if (!function_exists('url')) {
     /**
      * Url生成
      * @param string        $url 路由地址
-     * @param string|array  $value 变量
-     * @param bool|string   $suffix 前缀
+     * @param string|array  $vars 变量
+     * @param bool|string   $suffix 生成的URL后缀
      * @param bool|string   $domain 域名
      * @return string
      */
@@ -295,7 +298,7 @@ if (!function_exists('session')) {
             Session::init($name);
         } elseif (is_null($name)) {
             // 清除
-            Session::clear($value);
+            Session::clear('' === $value ? null : $value);
         } elseif ('' === $value) {
             // 判断或获取
             return 0 === strpos($name, '?') ? Session::has(substr($name, 1), $prefix) : Session::get($name, $prefix);
@@ -327,7 +330,7 @@ if (!function_exists('cookie')) {
             Cookie::clear($value);
         } elseif ('' === $value) {
             // 获取
-            return 0 === strpos($name, '?') ? Cookie::has(substr($name, 1), $option) : Cookie::get($name);
+            return 0 === strpos($name, '?') ? Cookie::has(substr($name, 1), $option) : Cookie::get($name, $option);
         } elseif (is_null($value)) {
             // 删除
             return Cookie::delete($name);
@@ -344,23 +347,32 @@ if (!function_exists('cache')) {
      * @param mixed     $name 缓存名称，如果为数组表示进行缓存设置
      * @param mixed     $value 缓存值
      * @param mixed     $options 缓存参数
+     * @param string    $tag 缓存标签
      * @return mixed
      */
-    function cache($name, $value = '', $options = null)
+    function cache($name, $value = '', $options = null, $tag = null)
     {
         if (is_array($options)) {
             // 缓存操作的同时初始化
-            Cache::connect($options);
+            $cache = Cache::connect($options);
         } elseif (is_array($name)) {
             // 缓存初始化
             return Cache::connect($name);
+        } else {
+            $cache = Cache::init();
         }
-        if ('' === $value) {
+
+        if (is_null($name)) {
+            return $cache->clear($value);
+        } elseif ('' === $value) {
             // 获取缓存
-            return Cache::get($name);
+            return 0 === strpos($name, '?') ? $cache->has(substr($name, 1)) : $cache->get($name);
         } elseif (is_null($value)) {
             // 删除缓存
-            return Cache::rm($name);
+            return $cache->rm($name);
+        } elseif (0 === strpos($name, '?') && '' !== $value) {
+            $expire = is_numeric($options) ? $options : null;
+            return $cache->remember(substr($name, 1), $value, $expire);
         } else {
             // 缓存数据
             if (is_array($options)) {
@@ -368,7 +380,11 @@ if (!function_exists('cache')) {
             } else {
                 $expire = is_numeric($options) ? $options : null; //默认快捷缓存设置过期时间
             }
-            return Cache::set($name, $value, $expire);
+            if (is_null($tag)) {
+                return $cache->set($name, $value, $expire);
+            } else {
+                return $cache->tag($tag)->set($name, $value, $expire);
+            }
         }
     }
 }
@@ -482,15 +498,16 @@ if (!function_exists('redirect')) {
      * @param mixed         $url 重定向地址 支持Url::build方法的地址
      * @param array|integer $params 额外参数
      * @param integer       $code 状态码
+     * @param array         $with 隐式传参
      * @return \think\response\Redirect
      */
-    function redirect($url = [], $params = [], $code = 302)
+    function redirect($url = [], $params = [], $code = 302, $with = [])
     {
         if (is_integer($params)) {
             $code   = $params;
             $params = [];
         }
-        return Response::create($url, 'redirect', $code)->params($params);
+        return Response::create($url, 'redirect', $code)->params($params)->with($with);
     }
 }
 
@@ -504,9 +521,69 @@ if (!function_exists('abort')) {
     function abort($code, $message = null, $header = [])
     {
         if ($code instanceof Response) {
-            throw new \think\exception\HttpResponseException($code);
+            throw new HttpResponseException($code);
         } else {
-            throw new \think\exception\HttpException($code, $message, null, $header);
+            throw new HttpException($code, $message, null, $header);
+        }
+    }
+}
+
+if (!function_exists('halt')) {
+    /**
+     * 调试变量并且中断输出
+     * @param mixed      $var 调试变量或者信息
+     */
+    function halt($var)
+    {
+        dump($var);
+        throw new HttpResponseException(new Response);
+    }
+}
+
+if (!function_exists('token')) {
+    /**
+     * 生成表单令牌
+     * @param string $name 令牌名称
+     * @param mixed  $type 令牌生成方法
+     * @return string
+     */
+    function token($name = '__token__', $type = 'md5')
+    {
+        $token = Request::instance()->token($name, $type);
+        return '<input type="hidden" name="' . $name . '" value="' . $token . '" />';
+    }
+}
+
+if (!function_exists('load_relation')) {
+    /**
+     * 延迟预载入关联查询
+     * @param mixed $resultSet 数据集
+     * @param mixed $relation 关联
+     * @return array
+     */
+    function load_relation($resultSet, $relation)
+    {
+        $item = current($resultSet);
+        if ($item instanceof Model) {
+            $item->eagerlyResultSet($resultSet, $relation);
+        }
+        return $resultSet;
+    }
+}
+
+if (!function_exists('collection')) {
+    /**
+     * 数组转换为数据集对象
+     * @param array $resultSet 数据集数组
+     * @return \think\model\Collection|\think\Collection
+     */
+    function collection($resultSet)
+    {
+        $item = current($resultSet);
+        if ($item instanceof Model) {
+            return \think\model\Collection::make($resultSet);
+        } else {
+            return \think\Collection::make($resultSet);
         }
     }
 }

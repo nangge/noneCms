@@ -1,0 +1,23 @@
+{css href="__COMMON__/plugin/editor.md/css/editormd.css"}
+{load href="__COMMON__/plugin/editor.md/editormd.min.js" /}
+
+<!--ueditor-->
+<div id="editor">
+<textarea  style="display: none;" name="content">
+ {if condition="isset($item['content'])" }
+	{$item['content']}
+ {/if}
+</textarea>
+</div>
+<script type="text/javascript">
+    var Editor;
+
+    $(function() {
+        Editor = editormd("editor", {
+            width   : "100%",
+            height  : 540,
+            syncScrolling : "single",
+            path    : "__COMMON__/plugin/editor.md/lib/"
+        });
+    });   
+</script>

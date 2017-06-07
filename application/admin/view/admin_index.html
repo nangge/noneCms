@@ -10,6 +10,7 @@
                     <th width="30" align="center">编号</th>
                     <th align="left">管理员名称</th>
                     <th align="center">E-mail地址</th>
+                    <th align="left">角色</th>
                     <th align="center">是否锁定</th>
                     <th align="center">最后登录时间</th>
                     <th align="center">操作</th>
@@ -19,9 +20,10 @@
                     <td align="center">{$vo.id}</td>
                     <td>{$vo.username}</td>
                     <td align="center">{$vo.email}</td>
+                    <td>{if condition="$vo['usertype'] eq 9"}超级管理员{else/}{$vo.name}{/if}</td>
                     <td align="center">{if condition="$vo['islock'] eq 1"}是{else}否{/if}</td>
                     <td align="center">{$vo.logintime|date='Y-m-d H:i:s',###}</td>
-                    <td align="center"><a data-url="{:url('admin/edit',['id' => $vo.id])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删除</a></td>
+                    <td align="center"><a data-url="{:url('admin/edit',['id' => $vo.id])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删 除</a></td>
                 </tr>
                 {/volist}
             </table>
@@ -56,10 +58,15 @@
     //删除
    $(".del").click(function(){
         var id= $(this).data('id');
+        var $this = $(this).parents('tr');
         confirms('','是否确认删除编号为【'+ id +'】的用户？','',function(){
-            $.get("{:url('admin/dele')}",{id:id},function(data){
-                alertw(data);
-            });
+          $.get("{:url('admin/dele')}",{id:id},function(data){
+               layer.msg(data.msg,{time: 1000}, function(){
+                  if (data.status == 1) {
+                    $this.remove();
+                  }
+                });
+            },'json');
         }); 
     })
 </script>

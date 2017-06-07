@@ -30,7 +30,7 @@
 			</tr>
 			<tr>
 				<td><font class="red">*</font>&nbsp;数据库名称：</td>
-				<td><input type="text" class="text" value="nonecms" name="DB_NAME" /></td>
+				<td><input type="text" class="text" value="NoneCMS" name="DB_NAME" /></td>
 				<td>不存在则自动创建</td>
 			</tr>
 			<tr>
@@ -45,17 +45,17 @@
 			</tr>
 			<tr>
 				<td>网站名称：</td>
-				<td><input type="text" class="text" value="我的网站" name="WEB_NAME" /></td>
+				<td><input type="text" class="text" value="我的网站" name="SITE_NAME" /></td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
 				<td><font class="red">*</font>&nbsp;网站网址：</td>
-				<td><input type="text" class="text" value="<?php echo $weburl;?>" name="WEB_URL" /></td>
+				<td><input type="text" class="text" value="<?php echo $weburl;?>" name="SITE_URL" /></td>
 				<td>请带上协议头http://或https://</td>
 			</tr>
 			<tr>
 				<td><font class="red">*</font>&nbsp;网站主题：</td>
-				<td><input type="radio" name="WEB_THEME" value="default" checked="checked">企业站  <input type="radio" name="WEB_THEME" value="blog">个人博客</td>
+				<td><input type="radio" name="SITE_THEME" value="default" checked="checked">企业站  <input type="radio" name="SITE_THEME" value="blog">个人博客</td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
@@ -65,7 +65,7 @@
 			</tr>
 			<tr>
 				<td><font class="red">*</font>&nbsp;用户名：</td>
-				<td><input type="text" class="text" value="nonecms" name="username" /></td>
+				<td><input type="text" class="text" value="NoneCMS" name="username" /></td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>

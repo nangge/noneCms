@@ -19,22 +19,33 @@
                             <input type="text" name="email" size="40" value="{$data.email}" class="inpMain"/>
                         </td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td align="right">原密码</td>
                         <td>
-                            <input type="password" name="old_password" size="40" class="inpMain"/>
+                            <input type="password" name="old_password" size="40" class="inpMain" />
                         </td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td align="right">新密码</td>
                         <td>
-                            <input type="password" name="password" size="40" class="inpMain"/>
+                            <input type="password" name="password" size="40" class="inpMain" />
                         </td>
                     </tr>
                     <tr>
                         <td align="right">确认密码</td>
                         <td>
                             <input type="password" name="repassword" size="40" class="inpMain"/>
+                        </td>
+                    </tr>
+                     <tr>
+                        <td align="right">角色</td>
+                        <td>
+                            <select name="role_id">
+                            <option>---- 请选择 ----</option>
+                            {volist name="role" id="r"}
+                            <option value="{$r.id}" {eq name="$r.id" value="$data.role_id" }selected{/eq}>{$r.name}</option>
+                            {/volist}
+                            </select>
                         </td>
                     </tr>
                     <tr>
@@ -64,7 +75,7 @@
     <div class="clear"></div>
 </div>
 <script type="text/javascript">
-    var art_pro_url = "{:url('admin/add')}";//form表单要提交的地址
+    var art_pro_url = "{:url('admin/edit')}";//form表单要提交的地址
 </script>
 </body>
 </html>

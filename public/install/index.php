@@ -103,7 +103,7 @@ switch ($step ) {
 			if (empty($_POST['DB_PREFIX'])) {
 				exit(json_encode(array('status'=>'error','info'=>$lang['install_mysql_prefix_empty'],'input'=>'DB_PREFIX')));
 			}
-			if (empty($_POST['WEB_URL'])) {
+			if (empty($_POST['SITE_URL'])) {
 				exit(json_encode(array('status'=>'error','info'=>$lang['site_url_empty'],'input'=>'WEB_URL')));
 			}
 			if (empty($_POST['username'])) {
@@ -132,7 +132,7 @@ switch ($step ) {
 			$db->close();
 			
 			//右边的/一定要去除
-			$_POST['WEB_URL'] = rtrim($_POST['WEB_URL'],'/');
+			$_POST['SITE_URL'] = rtrim($_POST['SITE_URL'],'/');
 			$_POST['add_test'] = isset($_POST['add_test']) ? intval($_POST['add_test']) : 0;
 			$content = var_export($_POST,true);
 			if (file_put_contents('temp.php',"<?php\r\nreturn " .$content."\r\n?>")) {
@@ -179,8 +179,8 @@ switch ($step ) {
 			$content=preg_replace('/\/\*[\w\W]*?\*\//', '', $content);
        		$content=preg_replace('/-- ----------------------------[\w\W]*?-- ----------------------------/', '', $content);
 			$content = str_replace(
-					array('#none#_','#web_url#','#site_name#','#site_theme#','#web_cookie_code#',"\r"),
-					array($setting['DB_PREFIX'],$setting['WEB_URL'],$setting['WEB_NAME'],$setting['WEB_THEME'],$cookie_code,"\n"), 
+					array('#none#_','#site_url#','#site_name#','#site_theme#','#web_cookie_code#',"\r"),
+					array($setting['DB_PREFIX'],$setting['SITE_URL'],$setting['SITE_NAME'],$setting['SITE_THEME'],$cookie_code,"\n"), 
 					$content);
 
 
@@ -278,6 +278,7 @@ switch ($step ) {
 				'prefix' => $setting['DB_PREFIX'],
 				'dsn'            => '',
 				'charset'        => 'utf8',
+				'fields_strict'  => false,
 			];
 
 		

@@ -12,15 +12,17 @@ use think\Session;
 
 class Operation
 {
+    public function run(){
+        $this->action_begin();
+    }
+    
     public function action_begin(){
         //获取可操作栏目
         $rabc = include APP_PATH.'admin/rbac.php';
         //记录操作
-        $module = request()->module();
-        $controller = request()->controller();
-        $action = request()->action();
-
-        if($controller !== 'login' && isset($rabc[$controller][$action])){
+        $controller = strtolower(request()->controller());
+        $action = strtolower(request()->action());
+        if($controller != 'login' && isset($rabc[$controller][$action])){
             $uname = Session::get('userinfo.name');
             $data['content'] = $uname.$rabc[$controller][$action];
             $data['datetime'] = time();

@@ -2,7 +2,7 @@
 {css href="__PUBLIC__/css/public.css" /}
 <script type="text/javascript">
     var cache = "{:url('index/clear')}";
-    var logout = "{:url('login/logout')}";
+    var logout_url = "{:url('login/logout')}";
     
     //无刷新重载栏目
     var reload_category = function (){
@@ -10,46 +10,84 @@
         $.get("{:url('common/reloadCategory')}",function(data){
             for(var k in data){
                 var nav = data[k];
-                switch(nav.modelid){
-                    case 0:
-                        var url = nav.url;
-                        var cls = 'articleCat';
-                        break;
-                    case 1:
-                        var url = "{:url('article/index')}";
-                        var cls = 'articleCat';
-                        break;
-                    case 2:
-                        var url = "{:url('page/edit')}";
-                        var cls = 'articleCat';
-                        break;
-                    case 3:
-                    case 4:
-                        var url = "{:url('product/index')}";
-                        var cls = 'productCat';
-                        break;
-                    default :
-                        var url = "{:url('comment/index')}";
-                        var cls = 'announcement';
-                }
+                var url_cls = get_url_by_modelid(nav.modelid, nav.url);
                 //外链判断
                 if (nav.type == 1){
-                    cate_html += '<li><a href="'+ url +'" target="_blank"><i class="nav"></i><em>'+ nav.name +'</em></a></li>';
+                    cate_html += '<li><a href="'+ nav.url +'" target="_blank"><i class="nav"></i><em>'+ nav.name +'</em></a></li>';
                 }else{
-                  var furl = url + '?id=' + nav.id;
-                  cate_html += '<li><a href="'+ furl +'" target="main"><i class="'+ cls +'"></i><em>'+ nav.name +'</em></a></li>';
+                    if (url_cls.status == 1) {
+                        var furl = url_cls.url + '?id=' + nav.id;
+                        cate_html += '<li><a href="'+ furl +'" target="main"><i class="'+ url_cls.cls +'"></i><em>'+ nav.name +'</em></a></li>';
+                    }
                 }
                 //遍历子栏目
                 if (typeof(nav.children) != 'undefined'){
                     for (var ck in nav.children){
                         var snav = nav.children[ck];
-                        var surl = url + '?id=' + snav.id;
-                        cate_html += '<li><a href="'+ surl +'" target="main"><i class="'+ cls +'"></i><em>&nbsp;&nbsp;├&nbsp;&nbsp;'+ snav.name +'</em></a></li>';
+                        var url_cls2 = get_url_by_modelid(snav.modelid, snav.url);
+                        if (snav.type == 1){
+                            cate_html += '<li><a href="'+ snav.url +'" target="_blank"><i class="nav"></i><em>'+ snav.name +'</em></a></li>';
+                        }else{
+                            if (url_cls2.status == 1) {
+                                var surl = url_cls2.url + '?id=' + snav.id;
+                                cate_html += '<li><a href="'+ surl +'" target="main"><i class="'+ url_cls2.cls +'"></i><em>&nbsp;&nbsp;├&nbsp;&nbsp;'+ snav.name +'</em></a></li>'; 
+                            }
+                        }
+                        //三级栏目
+                        if (typeof(snav.children) != 'undefined'){
+                            for (var ck in snav.children){
+                                var tnav = snav.children[ck];
+                                var url_cls3 = get_url_by_modelid(tnav.modelid, tnav.url);
+                                if (tnav.type == 1){
+                                    cate_html += '<li><a href="'+ tnav.url +'" target="_blank"><i class="nav"></i><em>'+ tnav.name +'</em></a></li>';
+                                }else{
+                                    if (url_cls3.status == 1) {
+                                        var turl = url_cls3.url + '?id=' + tnav.id;
+                                        cate_html += '<li><a href="'+ turl +'" target="main"><i class="'+ url_cls3.cls +'"></i><em>&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;'+ tnav.name +'</em></a></li>'; 
+                                    }
+                                }
+                                
+                            }
+                        }
                     }
                 }
             }
             $('#second-nav').html(cate_html);
         },'json');
+
+        //根据modelid获取url 
+        function get_url_by_modelid(modelid, url) {
+            var url_cls = {};
+            switch(modelid){
+                    case 0:
+                        url_cls.url = url;
+                        url_cls.cls = 'articleCat';
+                        url_cls.status = 1;
+                        break;
+                    case 1:
+                        url_cls.url = "{:url('article/index')}";
+                        url_cls.cls = 'articleCat';
+                        url_cls.status = {:has_auth_by_route('article/index')};
+                        break;
+                    case 2:
+                        url_cls.url = "{:url('page/edit')}";
+                        url_cls.cls = 'articleCat';
+                        url_cls.status = {:has_auth_by_route('page/edit')};
+                        break;
+                    case 3:
+                    case 4:
+                        url_cls.url = "{:url('product/index')}";
+                        url_cls.cls = 'productCat';
+                        url_cls.status = {:has_auth_by_route('product/index')};
+                        break;
+                    default :
+                        url_cls.url = "{:url('comment/index')}";
+                        url_cls.cls = 'announcement';
+                        url_cls.status = {:has_auth_by_route('comment/index')};
+                }
+
+            return url_cls;
+        }
         
     }
     reload_category();
@@ -57,16 +95,16 @@
 <body style="height: 100%;overflow: hidden;background-color: #EEEEEE;">
     <div class="head">
         <div id="head">
-            <div class="logo"><a target="main" style="color: #fff;font-size: 18px;line-height: 40px;margin-left: 40px;"><i>NONECMS</i></a></div>
+            <div class="logo" style="background-color: #FFF;"><a target="main" style="margin-left: 40px;"><img style="height: 100%;width: 80px;" src="__PUBLIC__/images/logo.png" /></a></div>
             <div class="nav">
                 <ul>
                     <li class="M"><a href="JavaScript:void(0);" class="topAdd">新建</a>
-                        <div class="drop mTopad"><a href="{:url('product/add')}" target="main">商品</a> <a href="{:url('article/add')}" target="main">文章</a> <a href="{:url('nav/add')}" target="main">自定义导航</a> <!--<a href="../show.html">首页幻灯</a>--> <a href="{:url('page/add')}" target="main">单页面</a> <a href="{:url('admin/add')}" target="main">管理员</a> <a href="#"></a> </div>
+                        <div class="drop mTopad"><a href="{:url('product/add')}" target="main">产品</a> <a href="{:url('article/add')}" target="main">文章</a> <a href="{:url('nav/add')}" target="main">自定义导航</a> <!--<a href="../show.html">首页幻灯</a>--> <a href="{:url('page/add')}" target="main">单页面</a> <a href="{:url('admin/add')}" target="main">管理员</a> <a href="#"></a> </div>
                     </li>
                     <li><a href="{$web_site}" target="_blank">查看站点</a></li>
-                    <li><a id="clear-cache" href="javascript:void(0);">清除缓存</a></li>
-                    <li><a href="http://www.5none.com" target="_blank">帮助</a></li>
-                    <li class="noRight"><a href="{:url('nav/add')}" target="main"> +</a></li>
+                    {if condition="has_auth_by_route('index/clear')"}<li><a id="clear-cache" href="javascript:void(0);">清除缓存</a></li>{/if}
+                    <li><a href="//www.5none.com" target="_blank">帮助</a></li>
+                    <!-- <li class="noRight"><a href="{:url('nav/add')}" target="main"> +</a></li> -->
                 </ul>
                 <ul class="navRight">
                     <li class="M noLeft"><a href="JavaScript:void(0);">您好，{$username}</a>
@@ -88,10 +126,10 @@
                 <li><a href="{:url('main/index')}" target="main"><i class="home"></i><em>管理首页</em></a></li>
             </ul>
             <ul>
-                <li><a href="{:url('index/system')}" target="main"><i class="system" ></i><em>系统设置</em></a></li>
-                <li><a href="{:url('nav/index')}" target="main"><i class="nav"></i><em>自定义导航栏</em></a></li>
-                <li><a href="{:url('banner/index')}" target="main"><i class="show" ></i><em>幻灯广告</em></a></li>
-                <li><a href="{:url('page/index')}" target="main"><i class="page"></i><em>单页面管理</em></a></li>
+                {if condition="has_auth_by_route('index/system')"}<li><a href="{:url('index/system')}" target="main"><i class="system" ></i><em>系统设置</em></a></li>{/if}
+                {if condition="has_auth_by_route('nav/index')"}<li><a href="{:url('nav/index')}" target="main"><i class="nav"></i><em>自定义导航栏</em></a></li>{/if}
+                {if condition="has_auth_by_route('banner/index')"}<li><a href="{:url('banner/index')}" target="main"><i class="show" ></i><em>幻灯广告</em></a></li>{/if}
+                {if condition="has_auth_by_route('page/index')"}<li><a href="{:url('page/index')}" target="main"><i class="page"></i><em>单页面管理</em></a></li>{/if}
             </ul>
             <ul>
                 <li class="nav-manage top-nav"><a><i class="nav-nav"></i><em>栏目管理</em><span class="arrow"></span></a></li>
@@ -100,20 +138,15 @@
                 
             </ul>
             
-            <!-- <ul>
-                <li><a href="article_category.html"><i class="articleCat"></i><em>文章分类</em></a></li>
-                <li><a href="article.html"><i class="article"></i><em>文章列表</em></a></li>
-            </ul> -->
             <ul class="bot">
-                <!--<li><a href="backup.html" target="main"><i class="backup"></i><em>数据备份</em></a></li>
-                <li><a href="mobile.html" target="main"><i class="mobile"></i><em>手机版</em></a></li>
-                <li><a href="theme.html" target="main"><i class="theme"></i><em>设置模板</em></a></li>-->
-                <li><a href="{:url('admin/index')}" target="main"><i class="manager"></i><em>网站管理员</em></a></li>
-                <li><a href="{:url('flink/index')}" target="main"><i class="flink"></i><em>友情链接</em></a></li>
-                <li><a href="{:url('flink/annindex')}" target="main"><i class=""></i><em>公告管理</em></a></li>
-                <li><a href="{:url('comment/index')}" target="main"><i class="announcement"></i><em>留言管理</em></a></li>
-                <li><a href="{:url('log/index')}" target="main"><i class="managerLog"></i><em>操作记录</em></a></li>
-                <li><a href="{:url('article/copy')}" target="main"><i class="page"></i><em>转载文章</em></a></li>
+                <!--<li><a href="backup.html" target="main"><i class="backup"></i><em>数据备份</em></a></li>-->
+                {if condition="has_auth_by_route('admin/index')"}<li><a href="{:url('admin/index')}" target="main"><i class="manager"></i><em>管理员</em></a></li>{/if}
+                {if condition="has_auth_by_route('role/index')"}<li><a href="{:url('role/index')}" target="main"><i class="role"></i><em>角色管理</em></a></li>{/if}
+                {if condition="has_auth_by_route('flink/index')"}<li><a href="{:url('flink/index')}" target="main"><i class="flink"></i><em>友情链接</em></a></li>{/if}
+               {if condition="has_auth_by_route('flink/annindex')"} <li><a href="{:url('flink/annindex')}" target="main"><i class=""></i><em>公告管理</em></a></li>{/if}
+                {if condition="has_auth_by_route('comment/index')"}<li><a href="{:url('comment/index')}" target="main"><i class="announcement"></i><em>留言管理</em></a></li>{/if}
+                {if condition="has_auth_by_route('log/index')"}<li><a href="{:url('log/index')}" target="main"><i class="managerLog"></i><em>操作记录</em></a></li>{/if}
+                {if condition="has_auth_by_route('article/copy')"}<li><a href="{:url('article/copy')}" target="main"><i class="page"></i><em>转载文章</em></a></li>{/if}
             </ul>
 
         </div>

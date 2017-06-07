@@ -11,7 +11,7 @@ class Log extends Common
 
     public function index()
     {
-        $list = Db::name('log')->paginate(20);
+        $list = Db::name('log')->order('id DESC')->paginate(20);
         $this->assign('page',$list->render());
         $this->assign('list', $list);
         return $this->fetch();

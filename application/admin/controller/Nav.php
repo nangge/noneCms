@@ -18,7 +18,7 @@ class Nav extends Common
         //获取已定义模型
         $model = Db::name(self::$_model)->field('id,name')->select();
         //已添加栏目
-        $category = Db::name(self::$_category)->field('id,name')->where('pid', 0)->select();
+        $category = getAllCategory('all');
 
         $this->assign('model', $model);
         $this->assign('category', $category);
@@ -41,6 +41,7 @@ class Nav extends Common
             $list_dir2=glob($dir .'Guestbook_*');
             $list_dir = array_merge($list_dir, $list_dir2);
             $show_dir=glob($dir .'Show_*');
+            $list_template = $show_template = [];
             foreach ($list_dir as $key => $value) {
                 $list_template[] = str_replace($dir, '', $value);
             }
@@ -55,24 +56,12 @@ class Nav extends Common
         } elseif (request()->isPost()) {
             $data = input('post.');
             //新增导航
-            if(!input('?post.id')){
-                $flag = Db::name(self::$_category)->insert($data);
-                if ($flag) {
-                    exit(json_encode(['status' => 1, 'msg' => '添加栏目成功','url' => url('nav/index'),'type' => 'nav']));
-                }else{
-                    exit(json_encode(['status' => 0, 'msg' => '添加栏目失败','url' => url('nav/index'),'type' => 'nav']));
-                }
+            $flag = Db::name(self::$_category)->insert($data);
+            if ($flag) {
+                exit(json_encode(['status' => 1, 'msg' => '添加栏目成功','url' => url('nav/index'),'type' => 'nav']));
             }else{
-                $id = $data['id'];
-                unset($data['id']);
-                $flag = Db::name(self::$_category)->where(['id' => $id])->update($data);
-                if ($flag) {
-                     exit(json_encode(['status' => 1, 'msg' => '修改栏目成功','url' => url('nav/index'),'type' => 'nav']));
-                }else{
-                     exit(json_encode(['status' => 0, 'msg' => '修改栏目成功','url' => url('nav/index'),'type' => 'nav']));
-                }
+                exit(json_encode(['status' => 0, 'msg' => '添加栏目失败','url' => url('nav/index'),'type' => 'nav']));
             }
-
         }
 
     }
@@ -80,26 +69,40 @@ class Nav extends Common
     /*
      * 编辑导航
      */
-    public function edit($id){
-        //获取主题下的列表和展示模板
-        $theme = get_system_value('site_theme');
+    public function edit(){
+        if (request()->isPost()) {
+            $data = input('post.');
+            $id = $data['id'];
+            unset($data['id']);
+            $flag = Db::name(self::$_category)->where(['id' => $id])->update($data);
+            if ($flag !== false) {
+                 exit(json_encode(['status' => 1, 'msg' => '修改栏目成功','url' => url('nav/index'),'type' => 'nav']));
+            }else{
+                 exit(json_encode(['status' => 0, 'msg' => '修改栏目失败','url' => url('nav/index'),'type' => 'nav']));
+            }
+        } else {
+            $id = input('param.id/d',0);
+            //获取主题下的列表和展示模板
+            $theme = get_system_value('site_theme');
+            
+            $dir = 'template/index/'. $theme. '/';
+            $list_dir=glob($dir .'List_*');
+            $show_dir=glob($dir .'Show_*');
+            foreach ($list_dir as $key => $value) {
+                $list_template[] = str_replace($dir, '', $value);
+            }
+            foreach ($show_dir as $key => $value) {
+                $show_template[] = str_replace($dir, '', $value);
+            }
+            $this->assign([
+                'list_template' => $list_template,
+                'show_template' => $show_template
+                ]);
+            $data = Db::name(self::$_category)->where(['id' => $id])->find();
+            $this->assign('data',$data);
+            return $this->fetch();
+        }
         
-        $dir = 'template/index/'. $theme. '/';
-        $list_dir=glob($dir .'List_*');
-        $show_dir=glob($dir .'Show_*');
-        foreach ($list_dir as $key => $value) {
-            $list_template[] = str_replace($dir, '', $value);
-        }
-        foreach ($show_dir as $key => $value) {
-            $show_template[] = str_replace($dir, '', $value);
-        }
-        $this->assign([
-            'list_template' => $list_template,
-            'show_template' => $show_template
-            ]);
-        $data = Db::name(self::$_category)->where(['id' => $id])->find();
-        $this->assign('data',$data);
-        return $this->fetch();
     }
 
     /*
@@ -108,10 +111,10 @@ class Nav extends Common
     public function dele(){
         $id = input('param.id/d',0);
         $flag = Db::name(self::$_category)->where(['id' => $id])->delete();
-        if ($flag) {
-            echo '删除成功！';
+        if ($flag !== false) {
+            exit(json_encode(['status' => 1, 'msg' => '删除成功']));
         }else{
-            echo '删除失败！';
+            exit(json_encode(['status' => 0, 'msg' => '删除失败']));
         }
     }
 }

@@ -49,7 +49,7 @@ class Page extends Common
             }else{
                 exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
             }
-        }else{
+        } else {
             return $this->fetch();
         }
     }
@@ -58,10 +58,24 @@ class Page extends Common
      * 修改单页面
      */
     public function edit($id){
-        $cat_info = Category::get($id);
-        $data = $cat_info->toArray();
-        $this->assign('item',$data);
-        return $this->fetch();
+        if (request()->isAjax()) {
+            //新增处理
+            $params = input('post.');
+            $cid = $params['cid'];
+            unset($params['cid']);
+            $flag = Category::where('id',$cid)->update($params);
+            if ($flag) {
+                exit(json_encode(['status' => 1, 'msg' => '修改成功', 'url' => url('page/index')]));
+            }else{
+                exit(json_encode(['status' => 0, 'msg' => '修改失败', 'url' => '']));
+            }
+        } else {
+            $cat_info = Category::get($id);
+            $data = $cat_info->toArray();
+            $this->assign('item',$data);
+            return $this->fetch();
+        }
+        
     }
 
     /**
@@ -69,10 +83,10 @@ class Page extends Common
      */
     public function dele($id){
         $flag = Category::destroy($id);
-        if ($flag) {
-            $this->success('删除成功');
+        if ($flag !== false) {
+            exit(json_encode(['status' => 1, 'msg' => '删除成功']));
         }else{
-            $this->error('删除失败');
+            exit(json_encode(['status' => 0, 'msg' => '删除失败']));
         }
     }
 }

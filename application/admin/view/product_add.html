@@ -7,43 +7,49 @@
     {include file="public/lefter" /}
     <div id="dcMain">
         <!-- 当前位置 -->
-        <div id="urHere"><a>管理中心</a><b>></b><strong>添加商品</strong></div>
+        <div id="urHere"><a>管理中心</a><b>></b><strong>添加产品</strong></div>
         <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
-            <h3><a href="{:url('product/index')}" class="actionBtn">商品列表</a>添加商品</h3>
+            <h3><a href="{:url('product/index')}" class="actionBtn">产品列表</a>添加产品</h3>
 
             <form action="{:url('product/add')}" method="post" enctype="multipart/form-data">
                 <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
                     <tr>
-                        <td width="90" align="right">商品名称</td>
+                        <td width="90" align="right">产品名称</td>
                         <td>
                             <input type="text" name="title" value="" size="80" class="inpMain" required/>
                         </td>
                     </tr>
                     <tr>
-                        <td align="right">商品分类</td>
+                        <td align="right">产品分类</td>
                         <td>
                             <select name="cid">
                                 <option value="0">未分类</option>
                                 {volist name="category" id="fcat"}
                                 <option value="{$fcat.id}"> {$fcat.name}</option>
-                                <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
-                                {if condition="isset($fcat.children)"}
-                                {volist name="fcat['children']" id="scat"}
-                                <option value="{$scat.id}">- {$scat.name}</option>
-                                {/volist}
-                                {/if}
+                                    <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                    {if condition="isset($fcat.children)"}
+                                    {volist name="fcat['children']" id="scat"}
+                                    <option value="{$scat.id}">&nbsp; &nbsp;|-{$scat.name}</option>
+                                        <!--三级分类-->
+                                        {if condition="isset($scat.children)"}
+                                        {volist name="scat['children']" id="tcat"}
+                                        <option value="{$tcat.id}">&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;{$tcat.name}</option>
+                                        {/volist}
+                                        {/if}
+                                    {/volist}
+                                    {/if}
                                 {/volist}
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td width="90" align="right">商品品牌</td>
+                        <td width="90" align="right">产品品牌</td>
                         <td>
                             <input type="text" name="brand" value="" size="50" class="inpMain"/>
                         </td>
                     </tr>
                     <tr>
-                        <td width="90" align="right">商品单位</td>
+                        <td width="90" align="right">产品单位</td>
                         <td>
                             <input type="text" name="units" value="" size="10" placeholder="例：kg，个" class="inpMain"/>
                         </td>
@@ -55,13 +61,19 @@
                         </td>
                     </tr>
                     <tr>
-                        <td align="right">商品价格</td>
+                        <td align="right">产品价格</td>
                         <td>
                             <input type="text" name="price" value="" size="10" placeholder="0.00" class="inpMain" required/> <font color="#FF0000"> * 单位：元</font>
                         </td>
                     </tr>
                     <tr>
-                        <td align="right" valign="top">商品内容</td>
+                        <td align="right">市场价格</td>
+                        <td>
+                            <input type="text" name="marketprice" value="" size="10" placeholder="0.00" class="inpMain" required/> <font color="#FF0000"> * 单位：元</font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" valign="top">产品描述</td>
                         <td>
                             <!-- 富文本框 -->
                             {include file="public/editor"}

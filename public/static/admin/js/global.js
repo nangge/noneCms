@@ -151,3 +151,19 @@ function douRemove(target) {
 function change(id, choose) {
     document.getElementById(id).value = choose.options[choose.selectedIndex].title;
 }
+
+function serializeObject(array) {
+        var serializeObj={};
+        $(array).each(function(){
+            if(serializeObj[this.name]){
+                if($.isArray(serializeObj[this.name])){
+                    serializeObj[this.name].push(this.value);
+                }else{
+                    serializeObj[this.name]=[serializeObj[this.name],this.value];
+                }
+            }else{
+                serializeObj[this.name]=this.value; 
+            }
+        });
+        return serializeObj;
+    };

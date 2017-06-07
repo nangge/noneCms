@@ -21,6 +21,5 @@
     },
     "extra": {
         "class": "think\\composer\\Plugin"
-    },
-    "minimum-stability": "dev"
+    }
 }

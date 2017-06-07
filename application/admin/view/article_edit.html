@@ -27,10 +27,16 @@
                                 <option value="0">未分类</option>
                                 {volist name="category" id="fcat"}
                                 <option value="{$fcat.id}" {if condition="$fcat.id eq $item.cid"}selected{/if}> {$fcat.name}</option>
-                                <!--二级分类{ if condition="$data['id'] eq $fcat['id']"}selected{/if}    -->
+                                <!--二级分类-->
                                 {if condition="isset($fcat.children)"}
                                 {volist name="fcat['children']" id="scat"}
-                                <option value="{$scat.id}" {if condition="$scat.id eq $item.cid"}selected{/if}>- {$scat.name}</option>
+                                <option value="{$scat.id}" {if condition="$item.cid eq $scat['id']" }selected{/if}>&nbsp;&nbsp;├&nbsp;&nbsp;{$scat.name}</option>
+                                    <!--三级分类-->
+                                    {if condition="isset($scat.children)"}
+                                    {volist name="scat['children']" id="tcat"}
+                                    <option value="{$tcat.id}" {if condition="$item.cid eq $tcat['id']" }selected{/if}>&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;{$tcat.name}</option>
+                                    {/volist}
+                                    {/if}
                                 {/volist}
                                 {/if}
                                 {/volist}
@@ -81,7 +87,7 @@
     <div class="clear"></div>
 </div>
 <script type="text/javascript">
-    var art_pro_url = "{:url('article/add')}";
+    var art_pro_url = "{:url('article/edit')}";
     $.datetimepicker.setLocale('ch');//设置中文
     $(".date-picker").datetimepicker({
       format:"Y-m-d H:i",      //格式化日期

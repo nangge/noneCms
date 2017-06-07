@@ -8,8 +8,8 @@
 .main_box .setting {position: absolute; top: 5px; right: 10px; width: 10px; height: 10px;}
 .main_box .setting a {color: #FF6600;}
 .main_box .setting a:hover {color: #555;}
-.login_logo {margin-bottom: 20px; height: 45px; text-align: center;}
-.login_logo img {height: 45px;}
+.login_logo {margin-bottom: 20px; text-align: center;}
+.login_logo img {width: 121px;}
 .login_msg {text-align: center; font-size: 16px;}
 .login_form {padding-top: 20px; font-size: 16px;}
 .login_box .form-control {display: inline-block; *display: inline; zoom: 1; width: auto; font-size: 18px;}

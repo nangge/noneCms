@@ -342,9 +342,9 @@ select {
  height: 40px;
  font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
 }
-#head .logo img {
+/*#head .logo img {
  margin: 7px 0 0 13px;
-}
+}*/
 #head .nav {
  margin-left: 180px;
  height: 40px;
@@ -534,7 +534,10 @@ select {
  background-position: 13px -359px;
 }
 #menu li i.manager {
- background-position: 13px -399px;
+ background-position: 13px -640px;
+}
+#menu li i.role {
+ background-position: 13px -400px;
 }
 #menu li i.managerLog {
  background-position: 13px -439px;
@@ -717,7 +720,7 @@ select {
 }
 #index .indexBox .ipage a {
  display: block;
- background-color: #c9dbf1;
+ background-color: #28b779;
  color: #555555;
  font-weight: bold;
  border: 1px dotted #CCCCCC;
@@ -759,7 +762,7 @@ select {
 ----------------------------------------------- */
 .page dl {
  border: 1px dotted #CCC;
- background-color: #DDDDDD;
+ background-color: #F5F5F5;
  float: left;
  width: 120px;
  height: 75px;
@@ -792,7 +795,7 @@ select {
 .page dd a {
  color: #999;
 }
-/* 首页商品筛选
+/* 首页产品筛选
 ----------------------------------------------- */
 .homeSortLeft {
  margin-right: 70px;

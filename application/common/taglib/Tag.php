@@ -180,7 +180,7 @@ EOF;
     }
 
     /**
-     * 获取商品列表
+     * 获取产品列表
      */
     public function tagProduct($tag, $content)
     {
@@ -252,7 +252,7 @@ EOF;
                 }
                 \$list = think\Db::name('article')->where(\$condition);
                 if(isset(\$children_ids) && \$children_ids){
-                     \$list = \$list->whereor('cid','in',\$children_ids);
+                     \$list = \$list->whereor(['cid' => ['in',\$children_ids], 'status' => 0]);
                  }
 
                 if("$field" != ''){

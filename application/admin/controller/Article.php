@@ -17,37 +17,12 @@ class Article extends Common
      */
     private static $_table = 'article';
 
-    /*
-     * 数据库配置参数
-     */
-    protected $db_config = [];
-
-    /*
-     * 存储表对象
-     */
-    private static $db = '';
-
-
     public function __construct()
     {
         parent::__construct();
-        //加载数据库配置
-        $this->db_config =  Config::load(APP_PATH.'/database.php');
         //分类
         $catgeroy = Db::name('category')->field('id,pid,name')->where('modelid', 1)->select();
-        $all_cat = [];
-        //拼接导航 一级二级
-        foreach ($catgeroy as $val) {
-            if ($val['pid'] == 0) {
-                $all_cat[$val['id']] = $val;
-            } else {
-                $all_cat[$val['pid']]['children'][] = $val;
-            }
-        }
-        //实例化表对象
-        self::$db = Db::name(self::$_table);
-
-        $this->assign('category', $all_cat);
+        $this->assign('category', create_tree($catgeroy));
     }
 
     /**
@@ -59,7 +34,7 @@ class Article extends Common
     {
         $id = input('param.id/d',0);
         $list = Db::field('p.id,p.title,p.publishtime,p.cid,p.click,p.flag,c.name')
-            ->table($this->db_config['prefix'].'article p,'.$this->db_config['prefix'].'category c')
+            ->table($this->prefix.'article p,'.$this->prefix.'category c')
             ->where('p.cid = c.id')
             ->where('p.status',0)
             ->order('p.flag DESC,p.publishtime DESC');
@@ -138,9 +113,36 @@ class Article extends Common
      * $id 资源id
      */
     public function edit($id = 0) {
-        $data = Db::name(self::$_table)->where('id',$id)->find();
-        $this->assign('item',$data);
-        return $this->fetch();
+        if (request()->isPost()) {
+            $params = input('post.');
+            
+            if (isset($params['pic_url'])) {
+                $params['litpic'] = implode('|',$params['pic_url']);
+                unset($params['pic_url']);
+            }else{
+                $params['litpic'] = '';
+            }
+
+            if(!$params['cid']){
+                exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
+            }
+            $params['publishtime'] = strtotime($params['publishtime']);
+            
+            //更新
+            $id = $params['id'];
+            unset($params['id']);
+            $params['updatetime'] = strtotime("now");
+            $flag = Db::name(self::$_table)->where('id', $id)->update($params);
+            if ($flag) {
+                exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => url('article/index',['id' => $params['cid']])]));
+            } else {
+                exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
+            }
+        } else {
+            $data = Db::name(self::$_table)->where('id',$id)->find();
+            $this->assign('item',$data);
+            return $this->fetch();
+        }
     }
 
     /*
@@ -173,10 +175,10 @@ class Article extends Common
         }
         //逻辑删除
         $flag = Db::name(self::$_table)->where('id','in',$ids)->update(['status' => 1]);
-        if ($flag) {
-            echo '删除成功';
-        } else {
-            echo '删除失败';
+        if ($flag !== false) {
+            exit(json_encode(['status' => 1, 'msg' => '删除成功']));
+        }else{
+            exit(json_encode(['status' => 0, 'msg' => '删除失败']));
         }
     }
 

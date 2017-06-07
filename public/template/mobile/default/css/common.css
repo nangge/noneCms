@@ -3095,8 +3095,8 @@ h4.title{
 .Toolbar_show01-d1_c1 ul li.inquiry a.click span{
 	background-position:0px -288px;
 }
-/************商品列表页*************/
-/** 手机商品分类组件 **/
+/************产品列表页*************/
+/** 手机产品分类组件 **/
 .ProductsCategory_show01-d1_c1{
 	width:100%;
 	margin:0 auto;
@@ -3121,7 +3121,7 @@ h4.title{
 .ProductsCategory_show01-d1_c1 .product_search label{
 	padding:0 10px;
 }
-/** 手机商品列表组件 **/
+/** 手机产品列表组件 **/
 .Products_mobilelist01-d1_c1{
 	width:100%;
 	clear:both;
@@ -3193,7 +3193,7 @@ h4.title{
 }
 
 
-/**********************商品详细页面**********************************/
+/**********************产品详细页面**********************************/
 /** 手机产品详细 **/
 .Products_detail01-d1_c1{
 	width:100%;

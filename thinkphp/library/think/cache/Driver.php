@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -16,6 +16,7 @@ namespace think\cache;
  */
 abstract class Driver
 {
+    protected $handler = null;
     protected $options = [];
     protected $tag;
 
@@ -92,6 +93,44 @@ abstract class Driver
     }
 
     /**
+     * 读取缓存并删除
+     * @access public
+     * @param string $name 缓存变量名
+     * @return mixed
+     */
+    public function pull($name)
+    {
+        $result = $this->get($name, false);
+        if ($result) {
+            $this->rm($name);
+            return $result;
+        } else {
+            return;
+        }
+    }
+
+    /**
+     * 如果不存在则写入缓存
+     * @access public
+     * @param string    $name 缓存变量名
+     * @param mixed     $value  存储数据
+     * @param int       $expire  有效时间 0为永久
+     * @return mixed
+     */
+    public function remember($name, $value, $expire = null)
+    {
+        if (!$this->has($name)) {
+            if ($value instanceof \Closure) {
+                $value = call_user_func($value);
+            }
+            $this->set($name, $value, $expire);
+        } else {
+            $value = $this->get($name);
+        }
+        return $value;
+    }
+
+    /**
      * 缓存标签
      * @access public
      * @param string        $name 标签名
@@ -155,5 +194,16 @@ abstract class Driver
         } else {
             return [];
         }
+    }
+
+    /**
+     * 返回句柄对象，可执行其它高级方法
+     *
+     * @access public
+     * @return object
+     */
+    public function handler()
+    {
+        return $this->handler;
     }
 }

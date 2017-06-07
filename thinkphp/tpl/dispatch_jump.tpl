@@ -28,34 +28,20 @@
         <?php } ?>
         <p class="detail"></p>
         <p class="jump">
-            页面自动 <a id="href">跳转</a> 等待时间： <b id="wait"><?php echo($wait);?></b>
+            页面自动 <a id="href" href="<?php echo($url);?>">跳转</a> 等待时间： <b id="wait"><?php echo($wait);?></b>
         </p>
     </div>
     <script type="text/javascript">
         (function(){
-            var type = "<?php if($data){echo $data;}else{echo 0;}?>";
-            var href = "<?php echo $url;?>";
-            var wait = document.getElementById('wait');
-
+            var wait = document.getElementById('wait'),
+                href = document.getElementById('href').href;
             var interval = setInterval(function(){
                 var time = --wait.innerHTML;
                 if(time <= 0) {
-                    if(type == 'timeout'){
-                        top.location.href = href;
-                    }else{
-                        location.href = href;
-                    }
+                    location.href = href;
                     clearInterval(interval);
                 };
             }, 1000);
-
-            document.getElementById('href').addEventListener('click',function(){
-                if(type == 'timeout'){
-                    top.location.href = href;
-                }else{
-                    location.href = href;
-                }
-            });
         })();
     </script>
 </body>

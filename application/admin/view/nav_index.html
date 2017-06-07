@@ -13,6 +13,7 @@
                 </ul>
                 <table width="100%" border="0" cellpadding="10" cellspacing="0" class="tableBasic">
                     <tr>
+                        <th width="50" align="center">ID</th>
                         <th width="113" align="center">导航名称</th>
                         <th align="left">链接地址</th>
                         <th width="80" align="center">显示</th>
@@ -21,22 +22,37 @@
                     </tr>
                     {volist name="all_nav" id="fnav"}
                     <tr>
+                        <td>{$fnav.id}</td>
                         <td>{$fnav.name} {if condition="$fnav.type eq 1"}<span class="top-it">外链</span>{/if} </td>
                         <td><a href="{$fnav.url}" target="_blank">{$fnav.url}</a></td>
                         <td align="center">{if condition="$fnav['status'] eq 0"}显示{else /}不显示{/if}</td>
                         <td align="center">{$fnav.sort}</td>
-                        <td align="center"><a href="{:url('nav/edit',['id' => $fnav.id])}" class="btn btn-info">编辑</a>  <a class="del btn btn-danger" style="cursor: pointer;" data-id="{$fnav.id}">删除</a></td>
+                        <td align="center"><a href="{:url('nav/edit',['id' => $fnav.id])}" class="btn btn-info">编 辑</a>  <a class="del btn btn-danger" style="cursor: pointer;" data-id="{$fnav.id}">删 除</a></td>
                     </tr>
                     <!--二级栏目-->
                     {if condition="isset($fnav.children)"}
                     {volist name="fnav['children']" id="snav"}
                     <tr>
+                        <td>{$snav.id}</td>
                         <td>&nbsp;&nbsp;├&nbsp;&nbsp;{$snav.name}</td>
                         <td><a href="{$snav.url}" target="_blank">{$snav.url}</a></td>
                         <td align="center">{if condition="$snav['status'] eq 0"}显示{else /}不显示{/if}</td>
                         <td align="center">{$snav.sort}</td>
                         <td align="center"><a href="{:url('nav/edit',['id' => $snav.id])}" class="btn btn-info">编 辑</a>  <a class="del btn btn-danger" data-id="{$snav.id}">删 除</a></td>
                     </tr>
+                    <!--三级栏目-->
+                    {if condition="isset($snav.children)"}
+                    {volist name="snav['children']" id="tnav"}
+                    <tr>
+                        <td>{$tnav.id}</td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;{$tnav.name}</td>
+                        <td><a href="{$snav.url}" target="_blank">{$tnav.url}</a></td>
+                        <td align="center">{if condition="$tnav['status'] eq 0"}显示{else /}不显示{/if}</td>
+                        <td align="center">{$tnav.sort}</td>
+                        <td align="center"><a href="{:url('nav/edit',['id' => $tnav.id])}" class="btn btn-info">编 辑</a>  <a class="del btn btn-danger" data-id="{$tnav.id}">删 除</a></td>
+                    </tr>
+                    {/volist}
+                    {/if}
                     {/volist}
                     {/if}
                     {/volist}
@@ -51,11 +67,17 @@
 <script type="text/javascript">
     $(".del").click(function(){
         var id= $(this).data('id');
+        var $this = $(this).parents('tr');
         confirms('','是否确认删除id为【'+ id +'】的栏目？','',function(){
             $.get("{:url('nav/dele')}",{id:id},function(data){
-                alertw(data);
-                parent.reload_category();
-            });
+                layer.msg(data.msg,{time: 1000}, function(){
+                  if (data.status == 1) {
+                    $this.remove();
+                    parent.reload_category();
+                  }
+                });
+               
+            },'json');
         }); 
     })
 </script>

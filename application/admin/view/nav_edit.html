@@ -25,10 +25,10 @@
                                 <tr>
                                     <td width="80" height="35" align="right">栏目模型</td>
                                     <td>
-                                        <select name="modelid" onchange="change('nav_name', this)">
+                                        <select name="modelid">
                                             <option value="">请您选择栏目模型</option>
                                             {volist name="model" id="m"}
-                                            <option value="{$m.id}" title="{$m.name}" {if condition="$data['modelid'] eq $m['id']"}selected{/if}>- {$m.name}</option>
+                                            <option value="{$m.id}" title="{$m.name}" {if condition="$data['modelid'] eq $m['id']"}selected{/if}>{$m.name}</option>
                                             {/volist}
                                         </select>
                                     </td>
@@ -38,6 +38,22 @@
                                     <td>
                                         <input type="text" id="nav_name" name="name" value="{$data.name}" size="19" class="inpMain"
                                                required="required"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td height="35" align="right">上级分类</td>
+                                    <td id="parent">
+                                        <select name="pid">
+                                            <option value="0">无</option>
+                                            {volist name="category" id="c"}
+                                            <option value="{$c.id}" title="{$c.name}" {if condition="$data['pid'] eq $c['id']"}selected{/if}>{$c.name}</option>
+                                                {if condition="isset($c.children)"}
+                                                    {volist name="c['children']" id="n"}
+                                                    <option value="{$n.id}" title="{$n.name}" {if condition="$data['pid'] eq $n['id']"}selected{/if}> &nbsp; &nbsp;|- {$n.name}</option>
+                                                    {/volist}
+                                                {/if}
+                                            {/volist}
+                                        </select>
                                     </td>
                                 </tr>
                                 <tr>
@@ -83,17 +99,7 @@
                                             侧边</label>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td height="35" align="right">上级分类</td>
-                                    <td id="parent">
-                                        <select name="pid">
-                                            <option value="0">无</option>
-                                            {volist name="category" id="c"}
-                                            <option value="{$c.id}" title="{$c.name}" {if condition="$data['pid'] eq $c['id']"}selected{/if}>- {$c.name}</option>
-                                            {/volist}
-                                        </select>
-                                    </td>
-                                </tr>
+                                
                                 <tr>
                                     <td height="35" align="right">关键词</td>
                                     <td>
@@ -143,6 +149,22 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td height="35" align="right">上级分类</td>
+                                    <td id="parent">
+                                        <select name="pid">
+                                            <option value="0">无</option>
+                                            {volist name="category" id="c"}
+                                            <option value="{$c.id}" title="{$c.name}" {if condition="$data['pid'] eq $c['id']"}selected{/if}>{$c.name}</option>
+                                                {if condition="isset($c.children)"}
+                                                    {volist name="c['children']" id="n"}
+                                                    <option value="{$n.id}" title="{$n.name}" {if condition="$data['pid'] eq $n['id']"}selected{/if}> &nbsp; &nbsp;|- {$n.name}</option>
+                                                    {/volist}
+                                                {/if}
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td height="35" align="right">别名（英文）</td>
                                     <td>
                                         <input type="text" name="ename" value="{$data.ename}" class="inpMain" required="required"/>
@@ -166,17 +188,6 @@
                                     <td height="35" align="right">链接地址</td>
                                     <td>
                                         <input type="text" name="outurl" value="{$data.outurl}" size="80" class="inpMain"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td height="35" align="right">上级分类</td>
-                                    <td id="parent_external">
-                                        <select name="pid">
-                                            <option value="0">无</option>
-                                            {volist name="category" id="c"}
-                                            <option value="{$c.id}" title="{$c.name}" {if condition="$data['pid'] eq $c['id']"}selected{/if}>- {$c.name}</option>
-                                            {/volist}
-                                        </select>
                                     </td>
                                 </tr>
                                 <tr>
@@ -218,7 +229,7 @@
     <div class="clear"></div>
 </div>
 <script type="text/javascript">
-    var art_pro_url = "{:url('nav/add')}";
+    var art_pro_url = "{:url('nav/edit')}";
 </script>
 </body>
 </html>

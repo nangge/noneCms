@@ -41,6 +41,22 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td height="35" align="right">上级分类</td>
+                                    <td id="parent">
+                                        <select name="pid">
+                                            <option value="0">无</option>
+                                            {volist name="category" id="c"}
+                                            <option value="{$c.id}" title="{$c.name}">{$c.name}</option>
+                                                {if condition="isset($c.children)"}
+                                                    {volist name="c['children']" id="n"}
+                                                    <option value="{$n.id}" title="{$n.name}"> &nbsp;&nbsp;|- {$n.name}</option>
+                                                    {/volist}
+                                                {/if}
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td width="80" height="35" align="right">列表模板</td>
                                     <td>
                                         <select name="template_list">
@@ -83,17 +99,7 @@
                                             侧边</label>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td height="35" align="right">上级分类</td>
-                                    <td id="parent">
-                                        <select name="pid">
-                                            <option value="0">无</option>
-                                            {volist name="category" id="c"}
-                                            <option value="{$c.id}" title="{$c.name}">{$c.name}</option>
-                                            {/volist}
-                                        </select>
-                                    </td>
-                                </tr>
+                                
                                 <tr>
                                     <td height="35" align="right">关键词</td>
                                     <td>
@@ -143,6 +149,22 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td height="35" align="right">上级分类</td>
+                                    <td id="parent">
+                                        <select name="pid">
+                                            <option value="0">无</option>
+                                            {volist name="category" id="c"}
+                                            <option value="{$c.id}" title="{$c.name}">{$c.name}</option>
+                                                {if condition="isset($c.children)"}
+                                                    {volist name="c['children']" id="n"}
+                                                    <option value="{$n.id}" title="{$n.name}"> &nbsp;&nbsp;|- {$n.name}</option>
+                                                    {/volist}
+                                                {/if}
+                                            {/volist}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td height="35" align="right">别名（英文）</td>
                                     <td>
                                         <input type="text" name="ename" value="" class="inpMain" required="required"/>
@@ -166,17 +188,6 @@
                                     <td height="35" align="right">链接地址</td>
                                     <td>
                                         <input type="text" name="outurl" value="" size="80" class="inpMain"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td height="35" align="right">上级分类</td>
-                                    <td id="parent_external">
-                                        <select name="pid">
-                                            <option value="0">无</option>
-                                            {volist name="category" id="c"}
-                                            <option value="{$c.id}" title="{$c.name}">{$c.name}</option>
-                                            {/volist}
-                                        </select>
                                     </td>
                                 </tr>
                                 <tr>

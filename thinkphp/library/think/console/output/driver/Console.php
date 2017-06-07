@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006-2015 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -35,6 +35,11 @@ class Console
         $this->stdout    = $this->openOutputStream();
         $decorated       = $this->hasColorSupport($this->stdout);
         $this->formatter->setDecorated($decorated);
+    }
+
+    public function getFormatter()
+    {
+        return $this->formatter;
     }
 
     public function setDecorated($decorated)
@@ -196,7 +201,7 @@ class Console
     private function getSttyColumns()
     {
         if (!function_exists('proc_open')) {
-            return null;
+            return;
         }
 
         $descriptorspec = [1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
@@ -209,7 +214,7 @@ class Console
 
             return $info;
         }
-        return null;
+        return;
     }
 
     /**
@@ -219,7 +224,7 @@ class Console
     private function getMode()
     {
         if (!function_exists('proc_open')) {
-            return null;
+            return;
         }
 
         $descriptorspec = [1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
@@ -234,7 +239,7 @@ class Console
                 return $matches[2] . 'x' . $matches[1];
             }
         }
-        return null;
+        return;
     }
 
     private function stringWidth($string)
@@ -356,7 +361,7 @@ class Console
     {
         if (DIRECTORY_SEPARATOR === '\\') {
             return
-            0 >= version_compare('10.0.10586', PHP_WINDOWS_VERSION_MAJOR . '.' . PHP_WINDOWS_VERSION_MINOR . '.' . PHP_WINDOWS_VERSION_BUILD)
+            '10.0.10586' === PHP_WINDOWS_VERSION_MAJOR . '.' . PHP_WINDOWS_VERSION_MINOR . '.' . PHP_WINDOWS_VERSION_BUILD
             || false !== getenv('ANSICON')
             || 'ON' === getenv('ConEmuANSI')
             || 'xterm' === getenv('TERM');

@@ -32,13 +32,24 @@
                                 <tr>
                                     <td align="right">{$vo.title}</td>
                                     <td>
+                                    {switch name="vo.name"}
+                                      {case value="site_editor"}
+                                      <label for="{$vo.name}">
+                                            <input type="radio" name="{$vo.name}" id="{$vo.name}" value="ue" {eq name="$vo.value" value="ue"}checked="true"{/eq}>
+                                            富文本编辑器</label> &nbsp;&nbsp;
                                         <label for="{$vo.name}">
-                                            <input type="radio" name="{$vo.name}" id="{$vo.name}" value="0" checked="true">
+                                            <input type="radio" name="{$vo.name}" id="{$vo.name}" value="markdown" {eq name="$vo.value" value="markdown"}checked="true"{/eq}>
+                                            Markdown编辑器</label>
+                                      {/case}
+                                      {default /}
+                                        <label for="{$vo.name}">
+                                            <input type="radio" name="{$vo.name}" id="{$vo.name}" value="0" {eq name="$vo.value" value="0"}checked="true"{/eq}>
                                             否</label>
                                         <label for="{$vo.name}">
-                                            <input type="radio" name="{$vo.name}" id="{$vo.name}" value="1">
+                                            <input type="radio" name="{$vo.name}" id="{$vo.name}" value="1" {eq name="$vo.value" value="1"}checked="true"{/eq}>
                                             是</label>
-                                        {if condition="$vo['remark']"}<p class="cue">{$vo.remark}</p>{/if}
+                                    {/switch}
+                                    {if condition="$vo['remark']"}<p class="cue">{$vo.remark}</p>{/if}
                                     </td>
                                 </tr>
                                 {/case}

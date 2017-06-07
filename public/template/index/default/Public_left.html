@@ -5,9 +5,12 @@
 				<div class="clear"></div>
 				<ul>
 				{nav pid='$cid'}
+				<li><img src="__PUBLIC__/images/sanj.png" /><a href="{$nav.url}">{$nav.name}</a></li>
+				{if condition="isset($nav['children'])"}
 				{volist name="$nav['children']" id='cat'} 
 				<li><img src="__PUBLIC__/images/sanj.png" /><a href="{$cat.url}">{$cat.name}</a></li>
 				{/volist}
+				{/if}
 				{/nav}
 				</ul>
 			</div>

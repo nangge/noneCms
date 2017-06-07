@@ -20,6 +20,13 @@ class Common extends Controller
         parent::__construct();
         $this->prefix = Config::get('database.prefix');
         $this->checkLogin();
+        if (!has_auth_by_route()) {
+            if (request()->isAjax()) {
+                exit(json_encode(['status' => 0, 'msg' => '未获取权限，请联系超级管理员开通相应权限！']));
+            } else {
+                echo '<div style="width:600px;margin:0 auto;margin-top:20%;font-size:26px;font-weight:bolder">未获取权限，请联系超级管理员开通相应权限！</div>';exit;
+            }
+        }
         $this->assign('web_site',$this->request->domain());
         $this->assign('all_nav', getAllCategory('all'));//获取所有导航
     }

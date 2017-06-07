@@ -32,6 +32,17 @@
                         </td>
                     </tr>
                     <tr>
+                        <td align="right">角色</td>
+                        <td>
+                            <select name="role_id">
+                            <option>---- 请选择 ----</option>
+                            {volist name="role" id="r"}
+                            <option value="{$r.id}">{$r.name}</option>
+                            {/volist}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <td align="right">是否锁定</td>
                         <td>
                             <label for="islock">

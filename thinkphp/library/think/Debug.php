@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -11,11 +11,7 @@
 
 namespace think;
 
-use think\Config;
 use think\exception\ClassNotFoundException;
-use think\Log;
-use think\Request;
-use think\Response;
 use think\response\Redirect;
 
 class Debug
@@ -42,7 +38,7 @@ class Debug
     }
 
     /**
-     * 统计某个区间的时间（微秒）使用情况
+     * 统计某个区间的时间（微秒）使用情况 返回值以秒为单位
      * @param string            $start 开始标签
      * @param string            $end 结束标签
      * @param integer|string    $dec 小数位
@@ -57,7 +53,7 @@ class Debug
     }
 
     /**
-     * 统计从开始到统计时的时间（微秒）使用情况
+     * 统计从开始到统计时的时间（微秒）使用情况 返回值以秒为单位
      * @param integer|string $dec 小数位
      * @return integer
      */
@@ -159,9 +155,10 @@ class Debug
      * @param mixed         $var 变量
      * @param boolean       $echo 是否输出 默认为true 如果为false 则返回输出字符串
      * @param string        $label 标签 默认为空
+     * @param integer       $flags htmlspecialchars flags
      * @return void|string
      */
-    public static function dump($var, $echo = true, $label = null)
+    public static function dump($var, $echo = true, $label = null, $flags = ENT_SUBSTITUTE)
     {
         $label = (null === $label) ? '' : rtrim($label) . ':';
         ob_start();
@@ -172,26 +169,24 @@ class Debug
             $output = PHP_EOL . $label . $output . PHP_EOL;
         } else {
             if (!extension_loaded('xdebug')) {
-                $output = htmlspecialchars($output, ENT_QUOTES);
+                $output = htmlspecialchars($output, $flags);
             }
             $output = '<pre>' . $label . $output . '</pre>';
         }
         if ($echo) {
-            echo ($output);
-            return null;
+            echo($output);
+            return;
         } else {
             return $output;
         }
     }
 
-    public static function inject(Response $response)
+    public static function inject(Response $response, &$content)
     {
-        $config      = Config::get('trace');
-        $type        = isset($config['type']) ? $config['type'] : 'Html';
-        $request     = Request::instance();
-        $accept      = $request->header('accept');
-        $contentType = $response->getHeader('Content-Type');
-        $class       = false !== strpos($type, '\\') ? $type : '\\think\\debug\\' . ucwords($type);
+        $config  = Config::get('trace');
+        $type    = isset($config['type']) ? $config['type'] : 'Html';
+        $request = Request::instance();
+        $class   = false !== strpos($type, '\\') ? $type : '\\think\\debug\\' . ucwords($type);
         unset($config['type']);
         if (class_exists($class)) {
             $trace = new $class($config);
@@ -205,14 +200,12 @@ class Debug
             $output = $trace->output($response, Log::getLog());
             if (is_string($output)) {
                 // trace调试信息注入
-                $content = $response->getContent();
-                $pos     = strripos($content, '</body>');
+                $pos = strripos($content, '</body>');
                 if (false !== $pos) {
                     $content = substr($content, 0, $pos) . $output . substr($content, $pos);
                 } else {
                     $content = $content . $output;
                 }
-                $response->content($content);
             }
         }
     }

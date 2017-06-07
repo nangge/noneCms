@@ -1,9 +1,9 @@
 <?php
 if(!defined('NONECMS_INSTALL')) exit('Access Denied');
 $lang = array(
-	'install_title' => 'NONECMS 1.0安装向导',
-	'install_license' => 'NONECMS内容管理系统-安装用户协议',
-	'install_is_lock' => '您已成功安装NONECMS，需重新安装请手动删除网站目录下public/install/install.lock文件', 
+	'install_title' => 'NoneCMS 1.0安装向导',
+	'install_license' => 'NoneCMS内容管理系统-安装用户协议',
+	'install_is_lock' => '您已成功安装NoneCMS，需重新安装请手动删除网站目录下public/install/install.lock文件', 
 	'install_db_error' => '数据库文件无法读取，请检查public/install/inc/wang.sql是否存在。',	
 	'agree_and_accept' => '同意并接受',	
 	'detection_environment' => '检测环境',

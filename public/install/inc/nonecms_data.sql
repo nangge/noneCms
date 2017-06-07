@@ -16,9 +16,89 @@ CREATE TABLE `#none#_admin` (
   `loginip` varchar(30) NOT NULL COMMENT '登录IP',
   `islock` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '锁定状态',
   `createtime` int(10) NOT NULL DEFAULT '0' COMMENT '管理员创建时间',
+  `role_id` int(10) DEFAULT '0' COMMENT '角色id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Table structure for #none#_admin_power
+-- ----------------------------
+DROP TABLE IF EXISTS `#none#_admin_power`;
+CREATE TABLE `#none#_admin_power` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '权限id',
+  `name` varchar(255) NOT NULL COMMENT '操作名称',
+  `route` varchar(255) NOT NULL COMMENT '路由 =》MVC',
+  `parent` int(10) DEFAULT '0' COMMENT '父级',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of #none#_admin_power
+-- ----------------------------
+INSERT INTO `#none#_admin_power` VALUES ('1', '后台管理', 'main/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('2', '系统设置', 'index/system', '1');
+INSERT INTO `#none#_admin_power` VALUES ('3', '清除缓存', 'index/clear', '1');
+INSERT INTO `#none#_admin_power` VALUES ('4', '查看操作记录', 'log/index', '1');
+INSERT INTO `#none#_admin_power` VALUES ('5', '文章管理', 'article/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('6', '添加文章', 'article/add', '5');
+INSERT INTO `#none#_admin_power` VALUES ('7', '编辑文章', 'article/edit', '5');
+INSERT INTO `#none#_admin_power` VALUES ('8', '删除文章', 'article/dele', '5');
+INSERT INTO `#none#_admin_power` VALUES ('9', '移动文章分类', 'article/move', '5');
+INSERT INTO `#none#_admin_power` VALUES ('10', '产品管理', 'product/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('11', '添加产品', 'product/add', '10');
+INSERT INTO `#none#_admin_power` VALUES ('12', '编辑产品', 'product/edit', '10');
+INSERT INTO `#none#_admin_power` VALUES ('13', '删除产品', 'product/dele', '10');
+INSERT INTO `#none#_admin_power` VALUES ('14', '移动产品分类', 'product/move', '10');
+INSERT INTO `#none#_admin_power` VALUES ('15', '单页管理', 'page/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('16', '添加单页', 'page/add', '15');
+INSERT INTO `#none#_admin_power` VALUES ('17', '修改单页', 'page/edit', '15');
+INSERT INTO `#none#_admin_power` VALUES ('18', '删除单页', 'page/dele', '15');
+INSERT INTO `#none#_admin_power` VALUES ('19', '导航管理', 'nav/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('20', '添加导航', 'nav/add', '19');
+INSERT INTO `#none#_admin_power` VALUES ('21', '修改导航', 'nav/edit', '19');
+INSERT INTO `#none#_admin_power` VALUES ('22', '删除导航', 'nav/dele', '19');
+INSERT INTO `#none#_admin_power` VALUES ('23', '管理员管理', 'admin/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('24', '添加管理员', 'admin/add', '23');
+INSERT INTO `#none#_admin_power` VALUES ('25', '修改管理员', 'admin/edit', '23');
+INSERT INTO `#none#_admin_power` VALUES ('26', '删除管理员', 'admin/dele', '23');
+INSERT INTO `#none#_admin_power` VALUES ('27', '幻灯广告管理', 'banner/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('28', '添加幻灯广告', 'banner/add', '27');
+INSERT INTO `#none#_admin_power` VALUES ('29', '修改幻灯广告', 'banner/edit', '27');
+INSERT INTO `#none#_admin_power` VALUES ('30', '删除幻灯广告', 'banner/dele', '27');
+INSERT INTO `#none#_admin_power` VALUES ('31', '添加幻灯图片集', 'banner/adddetail', '27');
+INSERT INTO `#none#_admin_power` VALUES ('32', '修改幻灯图片集', 'banner/editdetail', '27');
+INSERT INTO `#none#_admin_power` VALUES ('33', '删除幻灯图片集', 'banner/deledetail', '27');
+INSERT INTO `#none#_admin_power` VALUES ('34', '友情链接管理', 'flink/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('35', '添加友链', 'flink/add', '34');
+INSERT INTO `#none#_admin_power` VALUES ('36', '修改友链', 'flink/edit', '34');
+INSERT INTO `#none#_admin_power` VALUES ('37', '删除友链', 'flink/dele', '34');
+INSERT INTO `#none#_admin_power` VALUES ('38', '转载文章', 'article/copy', '5');
+INSERT INTO `#none#_admin_power` VALUES ('39', '角色管理', 'role/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('40', '添加角色', 'role/add', '39');
+INSERT INTO `#none#_admin_power` VALUES ('41', '修改角色', 'role/edit', '39');
+INSERT INTO `#none#_admin_power` VALUES ('42', '删除角色', 'role/dele', '39');
+INSERT INTO `#none#_admin_power` VALUES ('43', '幻灯图片集管理', 'banner/banlist', '27');
+INSERT INTO `#none#_admin_power` VALUES ('44', '留言管理', 'comment/index', '0');
+INSERT INTO `#none#_admin_power` VALUES ('45', '回复留言', 'comment/add', '44');
+INSERT INTO `#none#_admin_power` VALUES ('46', '删除留言', 'comment/dele', '44');
+
+
+-- ----------------------------
+-- Table structure for #none#_admin_role
+-- ----------------------------
+DROP TABLE IF EXISTS `#none#_admin_role`;
+CREATE TABLE `#none#_admin_role` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '角色id',
+  `name` varchar(255) NOT NULL COMMENT '角色名',
+  `power` varchar(255) DEFAULT '' COMMENT '拥有的权限',
+  `createtime` int(10) DEFAULT NULL COMMENT '创建时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of #none#_admin_role
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for #none#_article
@@ -46,13 +126,13 @@ CREATE TABLE `#none#_article` (
   `userid` int(10) unsigned NOT NULL DEFAULT '0',
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_article
 -- ----------------------------
-INSERT INTO `#none#_article` VALUES ('7', 'Ubuntu 15.04 静态IP网络配置\n浏览器内部工作原理\nLinux下c语言线程池的实现\njsoncpp解析\nC+', '', '', 'http://blog.csdn.net/a854073071/article/details', '', '', '', '', '', '1474191607', '0', '1', '47', '1', '0', '', '0', '0', '0');
-INSERT INTO `#none#_article` VALUES ('8', '图片上传', '', '', '', '', '', '/uploads/20161114\\583404ee60de6f311e4da6375abcb84e.jpg', '<p><img src=\"/ueditor/php/upload/image/20161113/1479018170146092.jpg\" title=\"1479018170146092.jpg\" alt=\"post3.jpg\"/></p><p>图片上传</p>', '图片上传', '1479018333', '1479115209', '1', '47', '1', '0', '', '0', '0', '0');
+INSERT INTO `#none#_article` VALUES ('1', 'Ubuntu 15.04 静态IP网络配置\n浏览器内部工作原理\nLinux下c语言线程池的实现\njsoncpp解析\nC+', '', '', 'http://blog.csdn.net/a854073071/article/details', '', '', '', '', '', '1474191607', '0', '1', '47', '1', '0', '', '0', '0', '0');
+INSERT INTO `#none#_article` VALUES ('2', '图片上传', '', '', '', '', '', '/uploads/20161114\\583404ee60de6f311e4da6375abcb84e.jpg', '<p><img src=\"/ueditor/php/upload/image/20161113/1479018170146092.jpg\" title=\"1479018170146092.jpg\" alt=\"post3.jpg\"/></p><p>图片上传</p>', '图片上传', '1479018333', '1479115209', '1', '47', '1', '0', '', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for #none#_banner
@@ -84,14 +164,14 @@ CREATE TABLE `#none#_banner_detail` (
   `img` varchar(255) DEFAULT '' COMMENT '图片地址',
   `url` varchar(255) DEFAULT '' COMMENT '图片链接',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_banner_detail
 -- ----------------------------
-INSERT INTO `#none#_banner_detail` VALUES ('3', '1', '2', '/public/uploads/20161219\\d57ee6aa088a79866cfa7f8d64c3546a.jpg', 'http://blog.csdn.net/free_ant/article/details/52701212');
-INSERT INTO `#none#_banner_detail` VALUES ('4', '1', '2', '/public/uploads/20161219\\47aacf820659b5e3bcf08e74174e7946.jpg', 'http://blog.csdn.net/free_ant/article/details/52936756');
-INSERT INTO `#none#_banner_detail` VALUES ('5', '1', '3', '/public/uploads/20161219\\d764a6c9cb36617eefd1340d2b3fb69e.jpg', 'http://blog.csdn.net/free_ant/article/details/52936722');
+INSERT INTO `#none#_banner_detail` VALUES ('1', '1', '2222', '/uploads/20161219\\d57ee6aa088a79866cfa7f8d64c3546a.jpg', 'http://blog.csdn.net/free_ant/article/details/52701212');
+INSERT INTO `#none#_banner_detail` VALUES ('2', '1', '2', '/uploads/20161219\\47aacf820659b5e3bcf08e74174e7946.jpg', 'http://blog.csdn.net/free_ant/article/details/52936756');
+INSERT INTO `#none#_banner_detail` VALUES ('3', '1', '3', '/uploads/20161219\\d764a6c9cb36617eefd1340d2b3fb69e.jpg', 'http://blog.csdn.net/free_ant/article/details/52936722');
 
 -- ----------------------------
 -- Table structure for #none#_category
@@ -149,17 +229,11 @@ CREATE TABLE `#none#_comment` (
   `aid` int(10) DEFAULT '0' COMMENT '管理员id',
   `from` varchar(10) DEFAULT '' COMMENT '评论来源：本站 or 第三方站（多说）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_comment
 -- ----------------------------
-INSERT INTO `#none#_comment` VALUES ('1', '留言测试', 'nango', '18745212365', '553212320@qq.com', '553212320', '留言测试测试测试测试', '2016-12-19 16:37:11', '0', '0', '0', '0', '');
-INSERT INTO `#none#_comment` VALUES ('2', '回复：留言测试', '', '', '', '', '暗示法撒旦法撒旦法士大夫', '0000-00-00 00:00:00', '1', '1', '0', '0', '');
-INSERT INTO `#none#_comment` VALUES ('3', '@nango回复：留言测试', '', '', '', '', '发顺丰的', '0000-00-00 00:00:00', '1', '1', '0', '0', '');
-INSERT INTO `#none#_comment` VALUES ('4', '@nango回复：留言测试', '', '', '', '', '阿斯顿发送到佛挡杀佛', '2016-12-19 17:51:00', '1', '0', '0', '0', '');
-INSERT INTO `#none#_comment` VALUES ('5', '留言测试', 'wyn', '18741256325', '', '', '的说法撒旦法撒旦法士大夫', '2016-12-20 11:04:00', '0', '0', '0', '0', '');
-INSERT INTO `#none#_comment` VALUES ('6', '萨芬是', '所发生的', '18741256325', '', '', '方式撒旦法撒旦法', '2016-12-20 11:15:00', '0', '0', '0', '0', '');
 
 -- ----------------------------
 -- Table structure for #none#_flink
@@ -175,12 +249,12 @@ CREATE TABLE `#none#_flink` (
   `status` tinyint(1) DEFAULT '0' COMMENT '状态',
   `create_time` int(11) DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_flink
 -- ----------------------------
-INSERT INTO `#none#_flink` VALUES ('1', '5none', '1', '', 'http://www.5none.com', '', '0', '1481786106');
+INSERT INTO `#none#_flink` VALUES ('1', 'nonecms', '1', '', 'http://www.5none.com', '简单建站！', '1', null);
 
 -- ----------------------------
 -- Table structure for #none#_log
@@ -195,7 +269,8 @@ CREATE TABLE `#none#_log` (
   `username` varchar(255) DEFAULT NULL,
   `userid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2416 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 
 -- ----------------------------
 -- Table structure for #none#_model
@@ -257,8 +332,9 @@ CREATE TABLE `#none#_product` (
 -- ----------------------------
 INSERT INTO `#none#_product` VALUES ('29', 'webupload', '', '', '/uploads/20161124/20161124141006-thumb.jpeg', '/uploads/20161124\\8a9af5a4a608ce3088bb99123f97ae98.jpg', '<p>sfasfdasdfasdfsd</p>', '', '1.00', '0.00', 'sdf', '', '', '1479887452', '1479967806', '1', '46', '1', '0', '', '0', '0', '0');
 INSERT INTO `#none#_product` VALUES ('30', 'ces', '', 'dsd', '/uploads/20161124/20161124112437-thumb.jpeg', '/uploads/20161124\\1b1bc8747798660f36965bfd79332d4c.jpg|/uploads/20161124\\b777ed2fda015fa99cb1bf40868b35ff.jpg|/uploads/20161124\\7baca94ccf44ad9243700edc30efc4f0.jpg|/uploads/20161124\\ab77d53288704b54d43864d2dd5cf490.jpg|/uploads/20161124\\741c9adb296ade60846fb53d751eecc2.jpg|/uploads/20161124\\e6f6880ce3a3cf1c94e9ac4de7f5256a.jpg|/uploads/20161124\\dabcf8714caa18c970ac5f8609de0dd9.jpg|/uploads/20161124\\aba1bce170f09dc3e73c18e54ec7525e.jpg|/uploads/20161124\\d0228344a0f05869b0f24cdcb5b24241.jpg|/uploads/20161124\\891c56539aa96ae3134979ac90640129.jpg|/uploads/20161124\\6883d39163b8ec00196d53d05a58736a.jpg|/uploads/20161124\\72ca7423c0bed3c45bc296c97e4238ea.jpg', '<p>contentcontentcontentcontentcontentcontentcontentcontent</p>', '', '1.00', '0.00', 'sdf', '', '', '1479957877', '0', '1', '46', '1', '0', '', '0', '0', '0');
-INSERT INTO `#none#_product` VALUES ('31', 'CENTOS7 下部署RSync', '', '', '/uploads/20161124/20161124165252-thumb.jpeg', '/uploads/20161124\\b770210db9f306fb4d47251701a93912.jpg', ' 	 	 ', '', '0.00', '0.00', '', '', '', '1479977262', '1479977572', '0', '46', '1', '0', '', '0', '0', '0');
+INSERT INTO `#none#_product` VALUES ('31', 'CENTOS7 下部署RSync', '', '', '/uploads/20161124/20161124165252-thumb.jpeg', '/uploads/20161124\\b770210db9f306fb4d47251701a93912.jpg', '     ', '', '0.00', '0.00', '', '', '', '1479977262', '1479977572', '0', '46', '1', '0', '', '0', '0', '0');
 INSERT INTO `#none#_product` VALUES ('32', 'asdfs', '', '', '/uploads/20161124/20161124165515-thumb.jpeg', '/uploads/20161124\\bdfea98f884f6769d36c9405bca5534a.jpg', '<p>afas</p>', 'asf', '1.00', '0.00', 'fas', '', '', '1479977715', '0', '0', '46', '1', '0', '', '0', '0', '0');
+
 
 -- ----------------------------
 -- Table structure for #none#_system
@@ -275,46 +351,24 @@ CREATE TABLE `#none#_system` (
   `value` text,
   `sort` smallint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_system
 -- ----------------------------
-INSERT INTO `#none#_system` VALUES ('64', 'site_name', '站点名称', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('65', 'site_title', '站点标题', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('66', 'site_keywords', '站点关键字', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('67', 'site_description', '站点描述', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('68', 'site_address', '公司地址', '', '', '0', '0', '浙江省杭州市', '0');
-INSERT INTO `#none#_system` VALUES ('69', 'site_closed', '关闭网站', '', 'radio', '0', '0', '0', '0');
-INSERT INTO `#none#_system` VALUES ('70', 'site_icp', 'ICP备案证书号', '', '', '0', '0', '', '0');
-INSERT INTO `#none#_system` VALUES ('71', 'site_tel', '客服电话', '', '', '0', '0', '0571-1122331111', '0');
-INSERT INTO `#none#_system` VALUES ('72', 'site_fax', '传真', '', '', '0', '0', '0571-112231111', '0');
-INSERT INTO `#none#_system` VALUES ('73', 'site_qq', '客服QQ号码', '多个客服的QQ号码请以半角逗号（,）分隔，如果需要设定昵称则在号码后跟 /昵称。', '', '0', '0', '553212320', '0');
-INSERT INTO `#none#_system` VALUES ('74', 'site_email', '邮件地址', '', '', '0', '0', '553212320@qq.com', '0');
--- ----------------------------
---INSERT INTO `#none#_system` VALUES ('75', 'site_language', '系统语言', '', 'select', '0', '0', 'zh_cn', '0');
---INSERT INTO `#none#_system` VALUES ('76', 'site_rewrite', 'URL 重写', '', 'radio', '0', '0', '0', '0');
---INSERT INTO `#none#_system` VALUES ('77', 'site_map', '启用站点地图', '', 'radio', '0', '0', '0', '0');
---INSERT INTO `#none#_system` VALUES ('78', 'site_captcha', '启用验证码', '', 'radio', '0', '0', '0', '0');
---INSERT INTO `#none#_system` VALUES ('79', 'site_guestbook', '留言板强制中文输入', '强制用户留言时必须输入中文，可以有效抵御英文广告信息', 'radio', '0', '0', '0', '0');
---INSERT INTO `#none#_system` VALUES ('80', 'site_code', '统计/客服代码调用 ', '', 'area', '0', '0', '', '0');
--- ----------------------------
-INSERT INTO `#none#_system` VALUES ('81', 'display_thumbw', '缩略图宽度', '', '', '0', '0', '300', '0');
-INSERT INTO `#none#_system` VALUES ('82', 'display_thumbh', '缩略图高度', '', '', '0', '0', '300', '0');
-INSERT INTO `#none#_system` VALUES ('83', 'display_decimal', '价格保留小数位数', '将以四舍五入形式保留小数', '', '0', '0', '', '0');
-INSERT INTO `#none#_system` VALUES ('84', 'display_article', '文章列表数量', '', '', '0', '0', '', '0');
-INSERT INTO `#none#_system` VALUES ('85', 'display_iarticle', '首页展示文章数量', '', '', '0', '0', '', '0');
-INSERT INTO `#none#_system` VALUES ('86', 'display_product', '商品列表数量', '', '', '0', '0', '', '0');
-INSERT INTO `#none#_system` VALUES ('87', 'display_iproduct', '首页展示商品数量', '', '', '0', '0', '', '0');
-INSERT INTO `#none#_system` VALUES ('88', 'defined_article', '文章自定义属性', '如\"颜色,尺寸,型号\"中间以英文逗号隔开', '', '0', '0', '', '0');
-INSERT INTO `#none#_system` VALUES ('89', 'defined_product', '商品自定义属性', '如\"颜色,尺寸,型号\"中间以英文逗号隔开', '', '0', '0', '', '0');
--- ----------------------------
---INSERT INTO `#none#_system` VALUES ('90', 'mail_service', '邮件服务', '如果选择系统内置Mail服务则以下SMTP有关信息无需填写', 'radio', '0', '0', '0', '0');
---INSERT INTO `#none#_system` VALUES ('91', 'mail_host', 'SMTP服务器', '一般邮件服务器地址为：smtp.domain.com，如果是本机则对应localhost即可', '', '0', '0', '', '0');
---INSERT INTO `#none#_system` VALUES ('92', 'mail_port', '服务器端口', '', '', '0', '0', '', '0');
---INSERT INTO `#none#_system` VALUES ('93', 'mail_ssl', '是否使用SSL安全协议', '', '', '0', '0', 'on', '0');
---INSERT INTO `#none#_system` VALUES ('94', 'mail_username', '发件邮箱', '', '', '0', '0', '', '0');
---INSERT INTO `#none#_system` VALUES ('95', 'mail_password', '发件邮箱密码', '', '', '0', '0', '1111', '0');
--- ----------------------------
-INSERT INTO `#none#_system` VALUES ('96', 'site_theme', '网站主题', '', 'select', '0', '0', '#site_theme#', '0');
-INSERT INTO `#none#_system` VALUES ('97', 'site_mobile_theme', '移动端主题', '', 'select', '0', '0', 'default', '0');
+INSERT INTO `#none#_system` VALUES ('1', 'site_name', '站点名称', '', '', '0', '0', '#site_name#', '0');
+INSERT INTO `#none#_system` VALUES ('2', 'site_title', '站点标题', '', '', '0', '0', '#site_name#', '0');
+INSERT INTO `#none#_system` VALUES ('3', 'site_keywords', '站点关键字', '', '', '0', '0', '#site_name#', '0');
+INSERT INTO `#none#_system` VALUES ('4', 'site_description', '站点描述', '', '', '0', '0', '#site_name#', '0');
+INSERT INTO `#none#_system` VALUES ('5', 'site_address', '公司地址', '', '', '0', '0', '浙江省杭州市', '0');
+INSERT INTO `#none#_system` VALUES ('6', 'site_closed', '关闭网站', '', 'radio', '0', '0', '0', '0');
+INSERT INTO `#none#_system` VALUES ('7', 'site_icp', 'ICP备案证书号', '', '', '0', '0', '', '0');
+INSERT INTO `#none#_system` VALUES ('8', 'site_tel', '客服电话', '', '', '0', '0', '0571-11223311', '0');
+INSERT INTO `#none#_system` VALUES ('9', 'site_fax', '传真', '', '', '0', '0', '0571-112231111', '0');
+INSERT INTO `#none#_system` VALUES ('10', 'site_qq', '客服QQ号码', '多个客服的QQ号码请以半角逗号（,）分隔，如果需要设定昵称则在号码后跟 /昵称。', '', '0', '0', '553212320', '0');
+INSERT INTO `#none#_system` VALUES ('11', 'site_email', '邮件地址', '', '', '0', '0', '553212320@qq.com', '0');
+INSERT INTO `#none#_system` VALUES ('12', 'display_thumbw', '缩略图宽度', '', '', '0', '0', '300', '0');
+INSERT INTO `#none#_system` VALUES ('13', 'display_thumbh', '缩略图高度', '', '', '0', '0', '300', '0');
+INSERT INTO `#none#_system` VALUES ('14', 'site_editor', '编辑器选择', '如果选择Markdown编辑器，则前台展示页面需引入editor.md相关js；具体操作流程看文章：blog.5none.com', 'radio', '0', '0', 'markdown', '0');
+INSERT INTO `#none#_system` VALUES ('15', 'site_theme', '网站主题', '', 'select', '0', '0', '#site_theme#', '0');
+INSERT INTO `#none#_system` VALUES ('16', 'site_mobile_theme', '移动端主题', '', 'select', '0', '0', 'default', '0');

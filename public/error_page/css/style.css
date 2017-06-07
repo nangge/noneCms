@@ -1,0 +1,283 @@
+/*--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+--*/
+/* reset */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,dl,dt,dd,ol,nav ul,nav li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
+article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {display: block;}
+ol,ul{list-style:none;margin:0px;padding:0px;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+table{border-collapse:collapse;border-spacing:0;}
+/* start editing from here */
+a{text-decoration:none;}
+.txt-rt{text-align:right;}/* text align right */
+.txt-lt{text-align:left;}/* text align left */
+.txt-center{text-align:center;}/* text align center */
+.float-rt{float:right;}/* float right */
+.float-lt{float:left;}/* float left */
+.clear{clear:both;}/* clear float */
+.pos-relative{position:relative;}/* Position Relative */
+.pos-absolute{position:absolute;}/* Position Absolute */
+.vertical-base{	vertical-align:baseline;}/* vertical align baseline */
+.vertical-top{	vertical-align:top;}/* vertical align top */
+nav.vertical ul li{	display:block;}/* vertical menu */
+nav.horizontal ul li{	display: inline-block;}/* horizontal menu */
+img{max-width:100%;}
+/*end reset*/
+body{
+	background: url(../images/contentbg.jpg) no-repeat 0px 0px;
+	background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+	font-family: 'Open Sans', sans-serif;
+}
+.top-bar-agile{
+	 width: 62%;
+	 margin:0 auto;
+	 padding:40px 0;
+}
+.logo-agileits{
+	width:20%;
+	float:left;
+}
+.logo-agileits img {
+    width: 25%;
+}
+.nav-agileinfo{
+	width:80%;
+	float:right;
+	text-align:right;
+}
+.nav-agileinfo ul li{
+	display:inline;
+}
+.nav-agileinfo ul li a {
+    display: inline-block;
+    color: #fff;
+    font-size: 18px;
+    padding: 16px 15px;
+	 -webkit-transition: all 0.5s ease-out;
+  -moz-transition: all 0.5s ease-out;
+  -ms-transition: all 0.5s ease-out;
+  -o-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+}
+.nav-agileinfo ul li a:hover{
+	color:#71c1ff;
+}
+.content-w3{
+      background: url(../images/bg.jpg) no-repeat 0px -89px;
+    background-size: cover;
+    width: 62%;
+    margin: 0 auto;
+    min-height: 511px;
+}
+.content-w3 h1 {
+    font-size: 200px;
+    letter-spacing: 5px;
+    text-align: center;
+    font-weight: 700;
+    color: #fff;
+	font-family: 'Ravi Prakash', cursive;
+	text-shadow:9px 9px 3px hsl(206, 15%, 40%);
+}
+.content-w3 h2{
+	font-size:30px;
+	letter-spacing:3px;
+	text-align:center;
+	color:#fff;
+}
+.content-w3 p {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    width: 50%;
+    margin: 60px auto 0 auto;
+    line-height: 30px;
+}
+.footer-w3ls p {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    line-height: 30px;
+	margin:30px 0px 20px 0;
+}
+.footer-w3ls p a{
+	color:#fff;
+	 -webkit-transition: all 0.5s ease-out;
+  -moz-transition: all 0.5s ease-out;
+  -ms-transition: all 0.5s ease-out;
+  -o-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+}
+.footer-w3ls p a:hover{
+	text-decoration:underline;
+}
+@media(max-width:1366px){
+	.content-w3 h1 {
+		font-size: 175px;
+	}
+	.content-w3 p {
+		margin: 40px auto 0 auto;
+	}
+}
+@media(max-width:1080px){
+	.content-w3 {
+		background: url(../images/bg.jpg) no-repeat -94px -71px;
+	}
+	.content-w3 {
+		min-height: 563px;
+	}
+	.content-w3 p {
+		width: 65%;
+	}
+}
+@media(max-width:1024px){
+	.top-bar-agile {
+		width: 71%;
+	}
+	.content-w3 {
+		width: 71%;
+		min-height: 454px;
+	}
+}
+@media(max-width:768px){
+	.content-w3 {
+		background: url(../images/bg.jpg) no-repeat -193px -80px;
+	}
+	.content-w3 p {
+		width: 75%;
+	}
+}
+@media(max-width:736px){
+	.top-bar-agile {
+		padding: 25px 0;
+	}
+	.logo-agileits img {
+		width: 36%;
+	}
+	.logo-agileits {
+		margin-top:10px;
+	}
+	.content-w3 p {
+		width: 82%;
+	}
+}
+@media(max-width:667px){
+	.content-w3 {
+		background: url(../images/bg.jpg) no-repeat -242px -86px;
+	}
+	.content-w3 p {
+		width: 90%;
+	}
+}
+@media(max-width:600px){
+	.content-w3 {
+		background: url(../images/bg.jpg) no-repeat -263px -86px;
+	}
+	.nav-agileinfo ul li a {
+		font-size: 16px;
+		padding: 16px 12px;
+	}
+	.content-w3 h1 {
+		font-size: 160px;
+	}
+	.content-w3 p {
+		width: 92%;
+		font-size:15px;
+	}
+}
+@media(max-width:568px){
+	.content-w3 h2 {
+		font-size: 28px;
+	}
+}
+
+@media(max-width:480px){
+	.logo-agileits img {
+		width: 44%;
+	}
+	.nav-agileinfo ul li a {
+		font-size: 15px;
+		padding: 16px 9px;
+	}
+	.content-w3 {
+		background: url(../images/bg.jpg) no-repeat -293px -86px;
+	}
+	.content-w3 h1 {
+		font-size: 150px;
+	}
+	.content-w3 h2 {
+		font-size: 24px;
+		letter-spacing: 2px;
+	}
+	.footer-w3ls p {
+		color: #fff;
+		font-size: 14px;
+		width:90%;
+		margin:20px auto;
+	}
+}
+@media(max-width:414px){
+	.top-bar-agile {
+		width: 80%;
+	}
+	.logo-agileits img {
+		width: 48%;
+	}
+	.nav-agileinfo ul li a {
+		font-size: 15px;
+		padding: 16px 7px;
+	}
+	.content-w3 {
+		width: 80%;
+		min-height:425px;
+	}
+	.content-w3 h1 {
+		font-size: 140px;
+	}
+	.content-w3 h2 {
+		font-size: 22px;
+
+	}
+}
+@media(max-width:384px){
+	.nav-agileinfo ul li a {
+		font-size: 14px;
+		padding: 16px 6px;
+	}
+	.top-bar-agile {
+		width: 85%;
+	}
+	.content-w3 {
+		width: 85%;
+	}
+	.content-w3 h2 {
+		font-size: 20px;
+	}
+	.content-w3 p {
+		width: 100%;
+		font-size: 14px;	
+	}
+}
+@media(max-width:320px){
+	.top-bar-agile {
+		padding:15px 0;
+	}
+	.nav-agileinfo ul li a {
+		font-size: 13px;
+		padding: 16px 4px;
+	}
+	.content-w3 {
+		background: url(../images/bg.jpg) no-repeat -333px -86px;
+	}
+	.content-w3 h1 {
+		font-size: 135px;
+	}
+	.content-w3 h2 {
+		font-size: 18px;
+	}
+}

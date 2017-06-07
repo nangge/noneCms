@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -43,12 +43,31 @@ class Redirect extends Response
     }
 
     /**
+     * 重定向传值（通过Session）
+     * @access protected
+     * @param string|array  $name 变量名或者数组
+     * @param mixed         $value 值
+     * @return $this
+     */
+    public function with($name, $value = null)
+    {
+        if (is_array($name)) {
+            foreach ($name as $key => $val) {
+                Session::flash($key, $val);
+            }
+        } else {
+            Session::flash($name, $value);
+        }
+        return $this;
+    }
+
+    /**
      * 获取跳转地址
      * @return string
      */
     public function getTargetUrl()
     {
-        return preg_match('/^(https?:|\/)/', $this->data) ? $this->data : Url::build($this->data, $this->params);
+        return (strpos($this->data, '://') || 0 === strpos($this->data, '/')) ? $this->data : Url::build($this->data, $this->params);
     }
 
     public function params($params = [])
@@ -59,14 +78,17 @@ class Redirect extends Response
 
     /**
      * 记住当前url后跳转
+     * @return $this
      */
     public function remember()
     {
         Session::set('redirect_url', Request::instance()->url());
+        return $this;
     }
 
     /**
      * 跳转到上次记住的url
+     * @return $this
      */
     public function restore()
     {
@@ -74,5 +96,6 @@ class Redirect extends Response
             $this->data = Session::get('redirect_url');
             Session::delete('redirect_url');
         }
+        return $this;
     }
 }

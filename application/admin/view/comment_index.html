@@ -24,7 +24,7 @@
                     <td align="center">{$vo.tel}</td>
                     <td align="center">{$vo.content}</td>
                     <td align="center">{$vo.create_time}</td>
-                    <td align="center"><a data-url="{:url('comment/edit',['id' => $vo.id])}" class="btn btn-info edit-comment">编 辑</a> <a data-url="{:url('comment/add',['id' => $vo.id])}" class="btn reply-comment">回 复</a> <a class="del btn btn-danger" data-id="{$vo['id']}">删除</a></td>
+                    <td align="center"><a data-url="{:url('comment/edit',['id' => $vo.id])}" class="btn btn-info edit-comment">编 辑</a> <a data-url="{:url('comment/add',['id' => $vo.id])}" class="btn reply-comment">回 复</a> <a class="del btn btn-danger" data-id="{$vo['id']}">删 除</a></td>
                 </tr>
                 {/volist}
             </table>
@@ -61,10 +61,15 @@
     //删除
    $(".del").click(function(){
         var id= $(this).data('id');
+        var $this = $(this).parents('tr');
         confirms('','是否确认删除编号为【'+ id +'】的留言？','',function(){
-            $.get("{:url('comment/dele')}",{id:id},function(data){
-                alertw(data);
-            });
+            $.get("{:url('banner/dele')}",{id:id},function(data){
+               layer.msg(data.msg,{time: 1000}, function(){
+                  if (data.status == 1) {
+                    $this.remove();
+                  }
+                });
+            },'json');
         }); 
     })
 </script>

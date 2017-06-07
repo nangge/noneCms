@@ -1,4 +1,4 @@
-### NoneCms是基于Thinkphp5开发的内容管理系统，适用于企业站、个人博客，具有简便，灵活，开发快等优点。
+### NoneCMS是基于Thinkphp5开发的内容管理系统，适用于企业站、个人博客，具有简便，灵活，开发快等优点。
 
 
 ---
@@ -6,13 +6,13 @@
 
 - 1：下载
 
-    使用Git：git clone https://github.com/nangge/noneCms.git
+    使用Git：git clone https://github.com/nangge/NoneCMS.git
     
     百度云盘：http://pan.baidu.com/s/1o8z2N94
 - 2：安装
     在浏览器地址栏输入：
     ```
-    http://localhost/nonecms/public/install
+    http://localhost/NoneCMS/public/install
     ```
     按照安装步骤可快速进行安装。
     
@@ -38,16 +38,16 @@
 
 文档1：http://wiki.5none.com
 
-文档2：http://www.kancloud.cn/nango/nonecms
+文档2：http://www.kancloud.cn/nango/NoneCMS
 
 ---
 
  
 ### 使用许可
  
- NoneCms是基于MIT协议的开源系统，它完全免费。
+ NoneCMS是基于MIT协议的开源系统，它完全免费。
 
-你可以免费下载NoneCms，用来搭建自己的或者团体的网站。
+你可以免费下载NoneCMS，用来搭建自己的或者团体的网站。
 
 另外你也可以自由的进行二次开发。
 
