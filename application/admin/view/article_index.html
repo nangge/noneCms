@@ -47,7 +47,7 @@
                         <tr>
                             <td align="center"><input type="checkbox" name="checkbox[]" value="{$vo.id}"/></td>
                             <td align="center">{$vo.id}</td>
-                            <td><a href="{:url('index/show/index',['cid' => $vo.cid,'id' => $vo.id])}" target="_blank">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置顶</span>{/if}</td>
+                            <td><a href="{:url('index/show/index',['cid' => $vo.cid,'id' => $vo.id])}" target="_blank">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置 顶</span>{/if}</td>
                             <td align="center">{$vo.click}</td>
                             <td align="center"><a href="{:url('article/index',['id' => $vo.cid])}">{$vo.name}</a></td>
                             <td align="center">{$vo.publishtime|date="Y-m-d",###}</td>

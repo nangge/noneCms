@@ -102,6 +102,8 @@ class Product extends Common
                 exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
             }
             $params['publishtime'] = strtotime($params['publishtime']);
+            $flag = get_system_value('site_editor');
+            $params['flag'] = $flag == 'markdown'?9:8;
             //新增
             unset($params['id']);
             $flag = Db::name(self::$_table)->insert($params);
@@ -156,6 +158,8 @@ class Product extends Common
                 exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
             }
             $params['publishtime'] = strtotime($params['publishtime']);
+            $flag = get_system_value('site_editor');
+            $params['flag'] = $flag == 'markdown'?9:8;
             //更新
             $id = $params['id'];
             unset($params['id']);

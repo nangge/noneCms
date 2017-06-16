@@ -194,6 +194,7 @@ CREATE TABLE `#none#_category` (
   `sort` smallint(6) NOT NULL DEFAULT '100' COMMENT '排序',
   `position` varchar(6) NOT NULL DEFAULT '1' COMMENT '导航出现的位置，默认1：主导航；2：底部；3：侧边',
   `outurl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链url',
+  `flag` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '属性：0 百度富文本框编辑；1 Markdown编辑',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

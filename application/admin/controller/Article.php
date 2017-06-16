@@ -78,31 +78,21 @@ class Article extends Common
                 exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
             }
             $params['publishtime'] = strtotime($params['publishtime']);
-            if (!$params['id']) {
-                //新增
-                unset($params['id']);
-                //描述为空 则截取内容填补
-                if(!$params['description']){
-                    $content = strip_tags($params['content']);
-                    $params['description'] = mb_substr($content,0,180,'utf-8');
-                }
-                $flag = Db::name(self::$_table)->insert($params);
-                if ($flag) {
-                    exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('article/index',['id' => $params['cid']])]));
-                } else {
-                    exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
-                }
+            //增加flag属性 判断是哪个编辑器添加的内容
+            $flag = get_system_value('site_editor');
+            $params['flag'] = $flag == 'markdown'?9:8;
+           //新增
+            unset($params['id']);
+            //描述为空 则截取内容填补
+            if(!$params['description']){
+                $content = strip_tags($params['content']);
+                $params['description'] = mb_substr($content,0,180,'utf-8');
+            }
+            $flag = Db::name(self::$_table)->insert($params);
+            if ($flag) {
+                exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('article/index',['id' => $params['cid']])]));
             } else {
-                //更新
-                $id = $params['id'];
-                unset($params['id']);
-                $params['updatetime'] = strtotime("now");
-                $flag = Db::name(self::$_table)->where('id', $id)->update($params);
-                if ($flag) {
-                    exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => url('article/index',['id' => $params['cid']])]));
-                } else {
-                    exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
-                }
+                exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
             }
         }
     }
@@ -127,7 +117,8 @@ class Article extends Common
                 exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
             }
             $params['publishtime'] = strtotime($params['publishtime']);
-            
+            $flag = get_system_value('site_editor');
+            $params['flag'] = $flag == 'markdown'?9:8;
             //更新
             $id = $params['id'];
             unset($params['id']);

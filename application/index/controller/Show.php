@@ -16,6 +16,7 @@ class Show extends Common
             ->field('cat.*, mo.tablename, mo.template_show as origin_template_show')
             ->where('cat.modelid = mo.id')
             ->where('cat.id', $cid)
+            ->where('cat.status <> 1')
             ->find();
         //获取资源内容
         $data = Db::name($cat_info['tablename'])->find($id);
@@ -25,6 +26,7 @@ class Show extends Common
         if(isset($data['pictureurls'])){
             $data['pictureurls'] = explode('|',$data['pictureurls']);
         }
+        
         //获取模板文件
         $template_show = $cat_info['template_show']?:$cat_info['origin_template_show'];
 

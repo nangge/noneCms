@@ -57,25 +57,26 @@
 
         //根据modelid获取url 
         function get_url_by_modelid(modelid, url) {
+            var modelid = modelid + '';
             var url_cls = {};
             switch(modelid){
-                    case 0:
+                    case '0':
                         url_cls.url = url;
                         url_cls.cls = 'articleCat';
                         url_cls.status = 1;
                         break;
-                    case 1:
+                    case '1':
                         url_cls.url = "{:url('article/index')}";
                         url_cls.cls = 'articleCat';
                         url_cls.status = {:has_auth_by_route('article/index')};
                         break;
-                    case 2:
+                    case '2':
                         url_cls.url = "{:url('page/edit')}";
                         url_cls.cls = 'articleCat';
                         url_cls.status = {:has_auth_by_route('page/edit')};
                         break;
-                    case 3:
-                    case 4:
+                    case '3':
+                    case '4':
                         url_cls.url = "{:url('product/index')}";
                         url_cls.cls = 'productCat';
                         url_cls.status = {:has_auth_by_route('product/index')};

@@ -55,6 +55,8 @@ class Nav extends Common
             return $this->fetch();
         } elseif (request()->isPost()) {
             $data = input('post.');
+            $flag = get_system_value('site_editor');
+            $data['flag'] = $flag == 'markdown'?1:0;
             //新增导航
             $flag = Db::name(self::$_category)->insert($data);
             if ($flag) {
@@ -74,6 +76,8 @@ class Nav extends Common
             $data = input('post.');
             $id = $data['id'];
             unset($data['id']);
+            $flag = get_system_value('site_editor');
+            $data['flag'] = $flag == 'markdown'?1:0;
             $flag = Db::name(self::$_category)->where(['id' => $id])->update($data);
             if ($flag !== false) {
                  exit(json_encode(['status' => 1, 'msg' => '修改栏目成功','url' => url('nav/index'),'type' => 'nav']));
