@@ -151,7 +151,7 @@ CREATE TABLE `#none#_banner` (
 -- ----------------------------
 -- Records of #none#_banner
 -- ----------------------------
-INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0');
+INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', '', '', '0');
 
 -- ----------------------------
 -- Table structure for #none#_banner_detail
@@ -196,20 +196,20 @@ CREATE TABLE `#none#_category` (
   `sort` smallint(6) NOT NULL DEFAULT '100' COMMENT '排序',
   `position` varchar(6) NOT NULL DEFAULT '1' COMMENT '导航出现的位置，默认1：主导航；2：底部；3：侧边',
   `outurl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链url',
-  `flag` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '属性：0 百度富文本框编辑；1 Markdown编辑',
+  `flag` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '属性：8 百度富文本框编辑；9 Markdown编辑',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_category
 -- ----------------------------
-INSERT INTO `#none#_category` VALUES ('45', '文章模型', 'blog', '', '0', '1', '0', '', '', '', '', '', '', null, '0', '50', '1', '');
-INSERT INTO `#none#_category` VALUES ('46', '产品模型', 'product', '', '0', '3', '0', '', '', '', '', '', '', null, '0', '50', '1', '');
-INSERT INTO `#none#_category` VALUES ('47', '新闻', 'news', '', '0', '1', '0', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '50', '1', '');
-INSERT INTO `#none#_category` VALUES ('48', '我的博客', 'blog', '', '0', '0', '1', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '0', '1', 'http://5none.com');
-INSERT INTO `#none#_category` VALUES ('49', '关于我们', 'about', '', '0', '2', '0', '', '', '<p>发士大夫</p>', '', 'List_page.html', 'Show_article.html', '暗示法撒旦', '0', '0', '1', '');
-INSERT INTO `#none#_category` VALUES ('50', '意见反馈', 'feedback', '', '0', '6', '0', '', '', '', '', 'Guestbook_index.html', '', null, '0', '0', '1', '');
-INSERT INTO `#none#_category` VALUES ('51', '二级栏目', '', '', '46', '3', '0', '', '', '', '', 'List_product.html', 'Show_product.html', null, '0', '0', '1', '');
+INSERT INTO `#none#_category` VALUES ('45', '文章模型', 'blog', '', '0', '1', '0', '', '', '', '', '', '', null, '0', '50', '1', '', 0);
+INSERT INTO `#none#_category` VALUES ('46', '产品模型', 'product', '', '0', '3', '0', '', '', '', '', '', '', null, '0', '50', '1', '', 0);
+INSERT INTO `#none#_category` VALUES ('47', '新闻', 'news', '', '0', '1', '0', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '50', '1', '', 0);
+INSERT INTO `#none#_category` VALUES ('48', '我的博客', 'blog', '', '0', '0', '1', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '0', '1', 'http://5none.com', 0);
+INSERT INTO `#none#_category` VALUES ('49', '关于我们', 'about', '', '0', '2', '0', '', '', '<p>发士大夫</p>', '', 'List_page.html', 'Show_article.html', '暗示法撒旦', '0', '0', '1', '', 0);
+INSERT INTO `#none#_category` VALUES ('50', '意见反馈', 'feedback', '', '0', '6', '0', '', '', '', '', 'Guestbook_index.html', '', null, '0', '0', '1', '', 0);
+INSERT INTO `#none#_category` VALUES ('51', '二级栏目', '', '', '46', '3', '0', '', '', '', '', 'List_product.html', 'Show_product.html', null, '0', '0', '1', '', 0);
 
 -- ----------------------------
 -- Table structure for #none#_comment
