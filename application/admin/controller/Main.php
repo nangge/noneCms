@@ -5,11 +5,13 @@
 
 namespace app\admin\controller;
 
-use think\Config;
+use app\common\model\Category;
+use think\facade\Config;
 use think\Controller;
 use think\Db;
-use think\Request;
-use think\Session;
+use think\facade\Env;
+use think\facade\Request;
+use think\facade\Session;
 
 class Main extends Common
 {
@@ -48,7 +50,7 @@ class Main extends Common
         $this->assign('product_count',$product_count);
         $this->assign('article_count',$article_count);
         //获取单页栏目
-        $single_page = Db::name('category')->field('id,name,ename')->where('modelid', 2)->select();
+        $single_page = Category::where('modelid', 2)->field('id,name,ename')->select();
         $this->assign('single_page', $single_page);
         $this->assign('page_count',count($single_page));//单页数量
         $this->assign('flag', $flag);
@@ -64,19 +66,14 @@ class Main extends Common
         if (!input('?param.act')) {
             $file = request()->file('pic_url');
 
-            $info = $file->validate(['size'=> 1024*1024*2,'ext'=>['jpg', 'png', 'jpeg', 'gif', 'bmp']])->move(ROOT_PATH . 'public/uploads');
-            
+            $info = $file
+                ->validate(['size'=> 1024*1024*2,'ext'=>['jpg', 'png', 'jpeg', 'gif', 'bmp']])
+                ->move(Env::get('root_path') . 'public/uploads');
+
             if ($info) {
                 // 成功上传后 获取上传信息
-               
-                $path = $info->getPath();
-                $filename = $info->getFilename();
                 $save_name = $info->getSaveName();
-                if(__ROOT__){
-                    $realpath =  __ROOT__.'/uploads/' . $save_name;
-                }else{
-                    $realpath =  '/uploads/' . $save_name;
-                }
+                $realpath =  __ROOT__.'/uploads/' . $save_name;
                 exit(json_encode(['status' => 1, 'path' => $realpath, 'save_name' => $save_name]));
             } else {
                 // 上传失败获取错误信息
@@ -85,8 +82,8 @@ class Main extends Common
         } else {
             //删除图片
             $img_dir = input('param.path');
-            $real_path = str_replace(__ROOT__,'',$img_dir);
-            $path = str_replace(['/..\/','/../'],'/',ROOT_PATH.$real_path);  
+            $real_path = str_replace(Env::get('root_path'),'',$img_dir);
+            $path = str_replace(['/..\/','/../'],'/',Env::get('root_path').$real_path);
             if (@unlink($path)) {
                 exit(json_encode(['status' => 1, 'msg' => '删除成功']));
             } else {
@@ -101,18 +98,11 @@ class Main extends Common
 
     public function uploadEditor(){
         $file = request()->file('editormd-image-file');
-        $info = $file->validate(['size'=> 1024*1024*2,'ext'=>['jpg', 'png', 'jpeg', 'gif', 'bmp']])->move(ROOT_PATH . 'public/uploads');
+        $info = $file->validate(['size'=> 1024*1024*2,'ext'=>['jpg', 'png', 'jpeg', 'gif', 'bmp']])->move(Env::get('root_path') . 'public/uploads');
         if ($info) {
             // 成功上传后 获取上传信息
-            $path = $info->getPath();
-            $filename = $info->getFilename();
-            //$root = request()->domain();
             $save_name = $info->getSaveName();
-            if(__ROOT__){
-                $realpath =  __ROOT__.'/uploads/' . $save_name;
-            }else{
-                $realpath =  '/uploads/' . $save_name;
-            }
+            $realpath =  __ROOT__.'/uploads/' . $save_name;
             exit(json_encode(['error' => 0, 'success' => 1, 'url' => $realpath]));
         } else {
             // 上传失败获取错误信息

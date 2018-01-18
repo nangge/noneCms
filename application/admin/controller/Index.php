@@ -2,13 +2,15 @@
 
 namespace app\admin\controller;
 
-use think\Config;
+use app\common\model\System;
+use think\facade\Config;
 use think\Controller;
 use think\Db;
 use think\Exception;
-use think\Request;
-use think\Cache;
-use think\Session;
+use think\facade\Env;
+use think\facade\Session;
+use think\facade\Request;
+use think\facade\Cache;
 
 class Index extends Common
 {
@@ -20,7 +22,7 @@ class Index extends Common
     public function index()
     {
         $userid = Session::get('userinfo.id');
-        $this->assign('userid',$userid);
+        $this->assign('userid', $userid);
         return $this->fetch();
     }
 
@@ -31,27 +33,27 @@ class Index extends Common
     {
         if (!request()->isAjax()) {
             //获取系统设置项
-            $list = Db::name('system')->select();
+            $list = System::all();
             $slist = [];
             //获取pc端主题
-            $theme_list=scandir('template/index');
-            foreach($theme_list as $k => $vo){
-                if($vo == '.' || $vo == '..'){
+            $theme_list = scandir('template/index');
+            foreach ($theme_list as $k => $vo) {
+                if ($vo == '.' || $vo == '..') {
                     unset($theme_list[$k]);
                 }
             }
             //获取pc端主题
-            $theme_mobile_list=scandir('template/mobile');
-            foreach($theme_mobile_list as $k => $vo){
-                if($vo == '.' || $vo == '..'){
+            $theme_mobile_list = scandir('template/mobile');
+            foreach ($theme_mobile_list as $k => $vo) {
+                if ($vo == '.' || $vo == '..') {
                     unset($theme_mobile_list[$k]);
                 }
             }
-            foreach ($list as $key => $item){
-                list($pk,$ck) = explode('_',$item['name']);
-                $slist[$pk][$ck] = ['name' => $item['name'],'title' => $item['title'],'tvalue' => $item['tvalue'],'value' => $item['value'],'remark' => $item['remark']];
+            foreach ($list as $key => $item) {
+                list($pk, $ck) = explode('_', $item['name']);
+                $slist[$pk][$ck] = ['name' => $item['name'], 'title' => $item['title'], 'tvalue' => $item['tvalue'], 'value' => $item['value'], 'remark' => $item['remark']];
                 //如果select类型
-                switch($item['name']){
+                switch ($item['name']) {
                     case 'site_theme':
                         $slist[$pk][$ck]['svalue'] = $theme_list;
                         break;
@@ -63,16 +65,16 @@ class Index extends Common
                         break;
                 }
             }
-            $this->assign('slist',$slist);
+            $this->assign('slist', $slist);
             return $this->fetch();
         } else {
             //插入、更新操作
             try {
                 $params = input('post.');
                 foreach ($params as $name => $value) {
-                    $flag = Db::name('system')->where('name',$name)->update(['value' => $value]);
+                    $flag = Db::name('system')->where('name', $name)->update(['value' => $value]);
                 }
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 exit(json_encode(['status' => 0, 'msg' => '更新操作异常，请稍后重试', 'url' => '']));
             }
             exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => '']));
@@ -86,30 +88,22 @@ class Index extends Common
     function clear()
     {
         //临时文件
-        $temp = RUNTIME_PATH.'/temp/';
-        if(file_exists($temp)){
+        $temp = Env::get('runtime_path') . '/temp/';
+        if (file_exists($temp)) {
             if ($handle = opendir($temp)) {
                 while (false !== ($file = readdir($handle))) {
                     if ($file != "." && $file != "..") {
-                        $flag = unlink($temp.$file);
+                        $flag = unlink($temp . $file);
                     }
                 }
                 closedir($handle);
             }
 
-            if($flag) {
-                exit(json_encode(['status' => 1,'msg' => '清除缓存成功！']));
-            } else {
-                exit(json_encode(['status' => 0,'msg' => '清除缓存失败！']));
+            if (!$flag) {
+                return ['status' => 0, 'msg' => '缓存清除失败！'];
             }
         }
-        exit(json_encode(['status' => 1,'msg' => '清除缓存成功！']));
+        return ['status' => 1, 'msg' => '缓存清除成功！'];
     }
 
-    /*
-     * 测试
-     */
-    public function test(){
-
-    }
 }

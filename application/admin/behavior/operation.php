@@ -8,7 +8,8 @@
  */
 namespace app\admin\behavior;
 use think\Db;
-use think\Session;
+use think\facade\Env;
+use think\facade\Session;
 
 class Operation
 {
@@ -18,7 +19,7 @@ class Operation
     
     public function action_begin(){
         //获取可操作栏目
-        $rabc = include APP_PATH.'admin/rbac.php';
+        $rabc = include Env::get('app_path').'admin/rbac.php';
         //记录操作
         $controller = strtolower(request()->controller());
         $action = strtolower(request()->action());

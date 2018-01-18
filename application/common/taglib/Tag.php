@@ -23,12 +23,13 @@ class Tag extends TagLib
         'product' => ['attr' => 'cid,field,orderby,limit,pagesize'],
         'article' => ['attr' => 'cid,field,orderby,limit,pagesize,empty'],
         'archived' => ['close' => 1],
-        'anlink' => ['attr' => 'type,limit','close' => 1],
+        'anlink' => ['attr' => 'type,limit', 'close' => 1],
         'content' => ['attr' => 'id,field,length', 'close' => 0],
         'ann' => ['attr' => 'id,length', 'close' => 0],
         'banner' => ['attr' => 'id,limit'],
         'guestbook' => ['close' => 0],
-        'position' => ['close' => 0]
+        'position' => ['close' => 0],
+        'chat' => ['close' => 0]
 
     ];
 
@@ -36,9 +37,10 @@ class Tag extends TagLib
     /**
      * 获取网站基本配置
      * @param array $tag [属性]
-     * @return 
+     * @return
      */
-    public function tagWeb($tag){
+    public function tagWeb($tag)
+    {
         $name = $tag['name'];
         $parse = <<<EOF
         <?php
@@ -53,7 +55,8 @@ EOF;
      * 添加在线留言
      * @return string
      */
-    public function tagGuestbook(){
+    public function tagGuestbook()
+    {
         $parse = <<<EOF
         <?php
                 \$guestbook = url('guestbook/add');
@@ -64,10 +67,26 @@ EOF;
     }
 
     /**
+     * 聊天室
+     * @return string
+     */
+    public function tagChat()
+    {
+        $parse = <<<EOF
+        <?php
+                \$chat = url('index/chat');
+                echo \$chat;
+                ?>
+EOF;
+        return $parse;
+    }
+
+    /**
      * 获取当前位置
      * @return string
      */
-    public function tagPosition(){
+    public function tagPosition()
+    {
         $parse = <<<EOF
         <?php
             \$iurl = url('index/index');
@@ -97,10 +116,11 @@ EOF;
      * @param  [type] $tag [description]
      * @return [type]      [description]
      */
-    public function tagContent($tag){
+    public function tagContent($tag)
+    {
         $id = $tag['id'];
         $field = $tag['field'];
-        $length = isset($tag['length'])?$tag['length']:0;
+        $length = isset($tag['length']) ? $tag['length'] : 0;
         $parse = <<<EOF
         <?php
                 \$content = think\Db::name('category')->where(['id'=> $id])->value('$field');
@@ -118,9 +138,10 @@ EOF;
      * @param  [type] $tag [description]
      * @return [type]      [description]
      */
-    public function tagAnn($tag){
+    public function tagAnn($tag)
+    {
         $id = $tag['id'];
-        $length = isset($tag['length'])?$tag['length']:0;
+        $length = isset($tag['length']) ? $tag['length'] : 0;
         $parse = <<<EOF
         <?php
                 \$content = think\Db::name('flink')->where(['type' => 2,'id'=> $id])->value('description');
@@ -238,23 +259,25 @@ EOF;
         $field = isset($tag['field']) ? $tag['field'] : '';
         $empty = isset($tag['empty']) ? $tag['empty'] : '';
         $module = request()->module();
-        /*$children_ids = Db::name('category')->where('pid',$cid)->field('id')->select();
-        print_r(array_column($children_ids,'id'));die;*/
+
         $parse = <<<EOF
         <?php
                 \$condition['status'] = 0;
 
                 /*存在子类，则获取子类下的文章*/
-                if($cid){
+                if($cid != 0){
                     \$condition['cid'] = $cid;
                     \$children_ids = think\Db::name('category')->field('id')->where('pid',\$condition['cid'])->select();
                     \$children_ids = array_column(\$children_ids,'id');
                 }
                 \$list = think\Db::name('article')->where(\$condition);
+                
                 if(isset(\$children_ids) && \$children_ids){
-                     \$list = \$list->whereor(['cid' => ['in',\$children_ids], 'status' => 0]);
+                     \$children_ids = implode(',',\$children_ids);
+                     \$list = \$list->whereOr("cid in (\$children_ids) and status=0");
+                     unset(\$children_ids);//释放变量
                  }
-
+                 
                 if("$field" != ''){
                     \$list=\$list->field("$field");
                 }
@@ -313,7 +336,8 @@ EOF;
     /**
      * 获取banner列表
      */
-    public function tagBanner($tag,$content){
+    public function tagBanner($tag, $content)
+    {
         $pid = $tag['id'];
         $limit = isset($tag['limit']) ? $tag['limit'] : '';
         $parse = <<<EOF

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -20,12 +20,14 @@ class Xml
         } else {
             $content = simplexml_load_string($config);
         }
+
         $result = (array) $content;
         foreach ($result as $key => $val) {
             if (is_object($val)) {
                 $result[$key] = (array) $val;
             }
         }
+
         return $result;
     }
 }

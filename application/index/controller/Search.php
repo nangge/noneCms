@@ -15,7 +15,7 @@ class Search extends Common
         $list = Db::name('article')->where('status',0)->where('title','like','%'.$keywords.'%')->paginate(15);
         $this->assign('page',$list->render());
         $this->assign('list',$list);
-        $template = 'template/index/'. $this->theme .'/Search_index.html';
+        $template = 'template/' . request()->module() . '/'. $this->theme .'/Search_index.html';
         return $this->fetch($template);
     }
 
@@ -29,7 +29,7 @@ class Search extends Common
         $list = Db::name('article')->where('status',0)->whereTime('publishtime','between',[$stime,$etime])->paginate(15);
         $this->assign('page',$list->render());
         $this->assign('list',$list);
-        $template = 'template/index/'. $this->theme .'/Search_index.html';
+        $template = 'template/' . request()->module() . '/'. $this->theme .'/Search_index.html';
         return $this->fetch($template);
     }
 

@@ -5,6 +5,7 @@
 namespace app\admin\controller;
 
 use think\Db;
+use app\common\model\Flink as flinkModel;
 
 class Flink extends Common
 {
@@ -16,7 +17,7 @@ class Flink extends Common
 	 */
     public function index()
     {
-        $list = Db::name(self::$_table)->where(['status' => 0,'type' => 1])->order('id DESC')->paginate(20);
+        $list = flinkModel::where(['status' => 0,'type' => flinkModel::TYPE_LINK])->order('id DESC')->paginate(20);
         $this->assign('page',$list->render());
         $this->assign('list', $list);
         return $this->fetch();
@@ -28,7 +29,7 @@ class Flink extends Common
      */
 	public function annindex()
     {
-        $list = Db::name(self::$_table)->where(['status' => 0,'type' => 2])->order('id DESC')->paginate(20);
+        $list = flinkModel::where(['status' => 0,'type' => flinkModel::TYPE_COMMENT])->order('id DESC')->paginate(20);
         $this->assign('page',$list->render());
         $this->assign('list', $list);
         return $this->fetch();
@@ -50,35 +51,24 @@ class Flink extends Common
             $params = input('post.');
             if ($params['type'] == 2){
 				if ($params['title'] == '') {
-	            	exit(json_encode(['status' => 0, 'msg' => '请填写公告标题', 'url' => '']));
+	            	return ['status' => 0, 'msg' => '请填写公告标题', 'url' => ''];
 	            }
             }else{
             	if ($params['title'] == '') {
-            		exit(json_encode(['status' => 0, 'msg' => '请填写网站名称', 'url' => '']));
+            		return ['status' => 0, 'msg' => '请填写网站名称', 'url' => ''];
 	            }
 
 	            if ($params['url'] == '') {
-	            	exit(json_encode(['status' => 0, 'msg' => '请填写网站url', 'url' => '']));
+	            	return ['status' => 0, 'msg' => '请填写网站url', 'url' => ''];
 	            }
             }
             
 
-			if (isset($params['pic_url'])) {
-                $params['logo'] = implode('|',$params['pic_url']);
-                unset($params['pic_url']);
-            }else{
-            	$params['logo'] = '';
-            }
-            
-            //新增
-            unset($params['id']);
-            $params['create_time'] = strtotime("now");
-            
-            $flag = Db::name(self::$_table)->insert($params);
-            if ($flag) {
-                exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('flink/index')]));
+            $flink = new flinkModel();
+            if ($flink->data($params,true)->save()) {
+                return ['status' => 1, 'msg' => '添加成功', 'url' => url('flink/index')];
             } else {
-                exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
+                return ['status' => 0, 'msg' => '添加失败', 'url' => ''];
             }
         }
     }
@@ -92,8 +82,7 @@ class Flink extends Common
         //显示页面
         if (request()->isGet()) {
             $id = input('param.id/d',0);
-            $data = Db::name(self::$_table)->where(['id' => $id])->find();
-            $this->assign('item',$data);
+            $this->assign('item',flinkModel::get($id));
             if (input('?type') && input('param.type/d') == 2){
                 return $this->fetch('annedit');
             }else{
@@ -114,24 +103,13 @@ class Flink extends Common
                     exit(json_encode(['status' => 0, 'msg' => '请填写网站url', 'url' => '']));
                 }
             }
-            
 
-            if (isset($params['pic_url'])) {
-                $params['logo'] = implode('|',$params['pic_url']);
-                unset($params['pic_url']);
-            }else{
-                $params['logo'] = '';
-            }
-            
-             //更新
-            $id = $params['id'];
-            unset($params['id']);
             $url = $params['type'] == 1?url('flink/index'):url('flink/annindex');
-            $flag = Db::name(self::$_table)->where(['id' => $id])->update($params);
-            if ($flag !== false) {
-                exit(json_encode(['status' => 1, 'msg' => '更新成功', 'url' => $url]));
+            $flink = new flinkModel();
+            if (false !== $flink->save($params,['id' => $params['id']])) {
+                return ['status' => 1, 'msg' => '更新成功', 'url' => $url];
             } else {
-                exit(json_encode(['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => '']));
+                return ['status' => 0, 'msg' => '更新失败，请稍后重试', 'url' => ''];
             }
         }
     	
@@ -145,11 +123,11 @@ class Flink extends Common
     public function dele() {
         $id = input('param.id/d',0);
         //逻辑删除
-        $flag = Db::name(self::$_table)->where(['id' => $id])->update(['status' => 1]);
-        if ($flag) {
-            echo '删除成功';
+        $flink = new flinkModel();
+        if ($flink->save(['status' => 1],['id' => $id])) {
+            return ['status' => 1, 'msg' => '删除成功'];
         } else {
-            echo '删除失败';
+            return ['status' => 1, 'msg' => '删除失败'];
         }
     }
 

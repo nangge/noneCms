@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -13,158 +13,256 @@ namespace think;
 
 class Config
 {
-    // 配置参数
-    private static $config = [];
-    // 参数作用域
-    private static $range = '_sys_';
+    /**
+     * 配置参数
+     * @var array
+     */
+    private $config = [];
 
-    // 设定配置参数的作用域
-    public static function range($range)
+    /**
+     * 缓存前缀
+     * @var string
+     */
+    private $prefix = 'app';
+
+    /**
+     * 设置配置参数默认前缀
+     * @access public
+     * @param string    $prefix 前缀
+     * @return void
+     */
+    public function setDefaultPrefix($prefix)
     {
-        self::$range = $range;
-        if (!isset(self::$config[$range])) {
-            self::$config[$range] = [];
-        }
+        $this->prefix = $prefix;
     }
 
     /**
      * 解析配置文件或内容
-     * @param string    $config 配置文件路径或内容
-     * @param string    $type 配置解析类型
-     * @param string    $name 配置名（如设置即表示二级配置）
-     * @param string    $range  作用域
+     * @access public
+     * @param  string    $config 配置文件路径或内容
+     * @param  string    $type 配置解析类型
+     * @param  string    $name 配置名（如设置即表示二级配置）
      * @return mixed
      */
-    public static function parse($config, $type = '', $name = '', $range = '')
+    public function parse($config, $type = '', $name = '')
     {
-        $range = $range ?: self::$range;
         if (empty($type)) {
             $type = pathinfo($config, PATHINFO_EXTENSION);
         }
+
         $class = false !== strpos($type, '\\') ? $type : '\\think\\config\\driver\\' . ucwords($type);
-        return self::set((new $class())->parse($config), $name, $range);
+
+        return $this->set((new $class())->parse($config), $name);
     }
 
     /**
-     * 加载配置文件（PHP格式）
-     * @param string    $file 配置文件名
-     * @param string    $name 配置名（如设置即表示二级配置）
-     * @param string    $range  作用域
+     * 加载配置文件（多种格式）
+     * @access public
+     * @param  string    $file 配置文件名
+     * @param  string    $name 一级配置名
      * @return mixed
      */
-    public static function load($file, $name = '', $range = '')
+    public function load($file, $name = '')
     {
-        $range = $range ?: self::$range;
-        if (!isset(self::$config[$range])) {
-            self::$config[$range] = [];
-        }
         if (is_file($file)) {
             $name = strtolower($name);
             $type = pathinfo($file, PATHINFO_EXTENSION);
+
             if ('php' == $type) {
-                return self::set(include $file, $name, $range);
+                return $this->set(include $file, $name);
             } elseif ('yaml' == $type && function_exists('yaml_parse_file')) {
-                return self::set(yaml_parse_file($file), $name, $range);
+                return $this->set(yaml_parse_file($file), $name);
             } else {
-                return self::parse($file, $type, $name, $range);
+                return $this->parse($file, $type, $name);
             }
         } else {
-            return self::$config[$range];
+            return $this->config;
+        }
+    }
+
+    /**
+     * 自动加载配置文件（PHP格式）
+     * @access public
+     * @param  string    $name 配置名
+     * @return void
+     */
+    protected function autoLoad($name)
+    {
+        // 如果尚未载入 则动态加载配置文件
+        $module = Container::get('request')->module();
+        $module = $module ? $module . '/' : '';
+        $app    = Container::get('app');
+        $path   = $app->getAppPath() . $module;
+
+        if (is_dir($path . 'config')) {
+            $file = $path . 'config/' . $name . $app->getConfigExt();
+        } elseif (is_dir($app->getConfigPath() . $module)) {
+            $file = $app->getConfigPath() . $module . $name . $app->getConfigExt();
+        }
+
+        if (isset($file) && is_file($file)) {
+            $this->load($file, $name);
         }
     }
 
     /**
      * 检测配置是否存在
-     * @param string    $name 配置参数名（支持二级配置 .号分割）
-     * @param string    $range  作用域
+     * @access public
+     * @param  string    $name 配置参数名（支持多级配置 .号分割）
      * @return bool
      */
-    public static function has($name, $range = '')
+    public function has($name)
     {
-        $range = $range ?: self::$range;
-
         if (!strpos($name, '.')) {
-            return isset(self::$config[$range][strtolower($name)]);
-        } else {
-            // 二维数组设置和获取支持
-            $name = explode('.', $name, 2);
-            return isset(self::$config[$range][strtolower($name[0])][$name[1]]);
+            $name = $this->prefix . '.' . $name;
         }
+
+        return $this->get($name) ? true : false;
+    }
+
+    /**
+     * 获取一级配置
+     * @access public
+     * @param  string    $name 一级配置名
+     * @return array
+     */
+    public function pull($name)
+    {
+        $name = strtolower($name);
+
+        if (!isset($this->config[$name])) {
+            // 如果尚未载入 则动态加载配置文件
+            $this->autoLoad($name);
+        }
+
+        return isset($this->config[$name]) ? $this->config[$name] : [];
     }
 
     /**
      * 获取配置参数 为空则获取所有配置
-     * @param string    $name 配置参数名（支持二级配置 .号分割）
-     * @param string    $range  作用域
+     * @access public
+     * @param  string    $name 配置参数名（支持多级配置 .号分割）
      * @return mixed
      */
-    public static function get($name = null, $range = '')
+    public function get($name = null)
     {
-        $range = $range ?: self::$range;
         // 无参数时获取所有
-        if (empty($name) && isset(self::$config[$range])) {
-            return self::$config[$range];
+        if (empty($name)) {
+            return $this->config;
         }
 
         if (!strpos($name, '.')) {
-            $name = strtolower($name);
-            return isset(self::$config[$range][$name]) ? self::$config[$range][$name] : null;
-        } else {
-            // 二维数组设置和获取支持
-            $name    = explode('.', $name, 2);
-            $name[0] = strtolower($name[0]);
-            return isset(self::$config[$range][$name[0]][$name[1]]) ? self::$config[$range][$name[0]][$name[1]] : null;
+            $name = $this->prefix . '.' . $name;
+        } elseif ('.' == substr($name, -1)) {
+            return $this->pull(substr($name, 0, -1));
         }
+
+        $name    = explode('.', $name);
+        $name[0] = strtolower($name[0]);
+        $config  = $this->config;
+
+        if (!isset($config[$name[0]])) {
+            // 如果尚未载入 则动态加载配置文件
+            $this->autoLoad($name[0]);
+        }
+
+        // 按.拆分成多维数组进行判断
+        foreach ($name as $val) {
+            if (isset($config[$val])) {
+                $config = $config[$val];
+            } else {
+                return;
+            }
+        }
+
+        return $config;
     }
 
     /**
      * 设置配置参数 name为数组则为批量设置
-     * @param string|array  $name 配置参数名（支持二级配置 .号分割）
-     * @param mixed         $value 配置值
-     * @param string        $range  作用域
+     * @access public
+     * @param  string|array  $name 配置参数名（支持二级配置 .号分割）
+     * @param  mixed         $value 配置值
      * @return mixed
      */
-    public static function set($name, $value = null, $range = '')
+    public function set($name, $value = null)
     {
-        $range = $range ?: self::$range;
-        if (!isset(self::$config[$range])) {
-            self::$config[$range] = [];
-        }
         if (is_string($name)) {
             if (!strpos($name, '.')) {
-                self::$config[$range][strtolower($name)] = $value;
-            } else {
-                // 二维数组设置和获取支持
-                $name                                                 = explode('.', $name, 2);
-                self::$config[$range][strtolower($name[0])][$name[1]] = $value;
+                $name = $this->prefix . '.' . $name;
             }
-            return;
+
+            $name = explode('.', $name);
+
+            $this->config[strtolower($name[0])][$name[1]] = $value;
+            return $value;
         } elseif (is_array($name)) {
             // 批量设置
             if (!empty($value)) {
-                self::$config[$range][$value] = isset(self::$config[$range][$value]) ?
-                array_merge(self::$config[$range][$value], $name) :
-                self::$config[$range][$value] = $name;
-                return self::$config[$range][$value];
+                if (isset($this->config[$value])) {
+                    $result = array_merge($this->config[$value], $name);
+                } else {
+                    $result = $name;
+                }
+
+                $this->config[$value] = $result;
             } else {
-                return self::$config[$range] = array_merge(self::$config[$range], array_change_key_case($name));
+                $result = $this->config = array_merge($this->config, $name);
             }
         } else {
             // 为空直接返回 已有配置
-            return self::$config[$range];
+            $result = $this->config;
         }
+
+        return $result;
     }
 
     /**
      * 重置配置参数
+     * @access public
+     * @param  string    $prefix  配置前缀名
+     * @return void
      */
-    public static function reset($range = '')
+    public function reset($prefix = '')
     {
-        $range = $range ?: self::$range;
-        if (true === $range) {
-            self::$config = [];
+        if ('' === $prefix) {
+            $this->config = [];
         } else {
-            self::$config[$range] = [];
+            $this->config[$prefix] = [];
         }
     }
+
+    /**
+     * 设置配置
+     * @access public
+     * @param  string    $name  参数名
+     * @param  mixed     $value 值
+     */
+    public function __set($name, $value)
+    {
+        return $this->set($name, $value);
+    }
+
+    /**
+     * 获取配置参数
+     * @access public
+     * @param  string $name 参数名
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * 检测是否存在参数
+     * @access public
+     * @param  string $name 参数名
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return $this->has($name);
+    }
+
 }

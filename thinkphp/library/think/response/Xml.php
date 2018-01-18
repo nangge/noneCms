@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -11,6 +11,8 @@
 
 namespace think\response;
 
+use think\Collection;
+use think\Model;
 use think\Response;
 
 class Xml extends Response
@@ -34,7 +36,7 @@ class Xml extends Response
     /**
      * 处理数据
      * @access protected
-     * @param mixed $data 要处理的数据
+     * @param  mixed $data 要处理的数据
      * @return mixed
      */
     protected function output($data)
@@ -45,12 +47,13 @@ class Xml extends Response
 
     /**
      * XML编码
-     * @param mixed $data 数据
-     * @param string $root 根节点名
-     * @param string $item 数字索引的子节点名
-     * @param string $attr 根节点属性
-     * @param string $id   数字索引子节点key转换的属性名
-     * @param string $encoding 数据编码
+     * @access protected
+     * @param  mixed $data 数据
+     * @param  string $root 根节点名
+     * @param  string $item 数字索引的子节点名
+     * @param  string $attr 根节点属性
+     * @param  string $id   数字索引子节点key转换的属性名
+     * @param  string $encoding 数据编码
      * @return string
      */
     protected function xmlEncode($data, $root, $item, $attr, $id, $encoding)
@@ -62,25 +65,33 @@ class Xml extends Response
             }
             $attr = implode(' ', $array);
         }
+
         $attr = trim($attr);
         $attr = empty($attr) ? '' : " {$attr}";
         $xml  = "<?xml version=\"1.0\" encoding=\"{$encoding}\"?>";
         $xml .= "<{$root}{$attr}>";
         $xml .= $this->dataToXml($data, $item, $id);
         $xml .= "</{$root}>";
+
         return $xml;
     }
 
     /**
      * 数据XML编码
-     * @param mixed  $data 数据
-     * @param string $item 数字索引时的节点名称
-     * @param string $id   数字索引key转换为的属性名
+     * @access protected
+     * @param  mixed  $data 数据
+     * @param  string $item 数字索引时的节点名称
+     * @param  string $id   数字索引key转换为的属性名
      * @return string
      */
     protected function dataToXml($data, $item, $id)
     {
         $xml = $attr = '';
+
+        if ($data instanceof Collection || $data instanceof Model) {
+            $data = $data->toArray();
+        }
+
         foreach ($data as $key => $val) {
             if (is_numeric($key)) {
                 $id && $attr = " {$id}=\"{$key}\"";
@@ -90,6 +101,7 @@ class Xml extends Response
             $xml .= (is_array($val) || is_object($val)) ? $this->dataToXml($val, $item, $id) : $val;
             $xml .= "</{$key}>";
         }
+
         return $xml;
     }
 }

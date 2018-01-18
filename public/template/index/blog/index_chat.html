@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>基于workerman的聊天室</title>
+	<meta name="keyword" content="workerman+TP,TP整合workerman">
+	<link href="__COMMON__/css/chat.css" rel='stylesheet' type='text/css' />
+	<script src="__PUBLIC__/js/jquery-1.7.2.js"></script>
+	<link rel="stylesheet" href="__COMMON__/plugin/emoji/lib/css/jquery.mCustomScrollbar.min.css"/>
+    <link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/jquery.emoji.css"/>
+    <link rel="stylesheet" href="__COMMON__/plugin/emoji/lib/css/railscasts.css"/>
+    <link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/index.css"/>
+	<style type="text/css">
+		.load{
+			display: block;
+		    width: 76px;
+		    height: 20px;
+		    background: #000;
+		    color: #fff;
+		    line-height: 20px;
+		    border-radius: 5px;
+		    margin: 0px auto;
+		    text-align: center;
+		    cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+<div id="chat">
+    <div class="sidebar">
+        <div class="m-card">
+            <header>
+                <img class="avatar" width="40" height="40" alt="Coffce" src="__PUBLIC__/images/nango.jpg">
+                <p class="name">nango</p>
+            </header>
+            <footer>
+                <input class="search" placeholder="search room...//TODO">
+            </footer>
+        </div>
+        <!--v-component-->
+        <div class="m-list">
+            <ul>
+                <li class="active">
+                    <img class="avatar" width="30" height="30" alt="房间" src="__PUBLIC__/images/nango.jpg">
+                    <p class="name">nango's room</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main">
+        <div class="m-message">
+            <ul>
+                <li>
+                    <p class="time"><span></span>
+                    </p>
+                    <div class="main">
+                        <img class="avatar" width="30" height="30" src="__PUBLIC__/images/nango.jpg">
+                        <div class="nick">nango</div>
+                        <div class="text">Hello，这是一个基于Workerman的聊天室，整合了TP5.0，实现实时显示，支持私聊，非轮询。---请文明发言</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!--send-->
+        <div class="users">
+			在线用户
+			<select name="client" class="client">
+				
+			</select>
+			<input type="image" class="emoji_btn" id="btn" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAkUExURUxpcfTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAOfx6yUAAAALdFJOUwAzbVQOoYrzwdwkAoU+0gAAAM1JREFUGNN9kK0PQWEUxl8fM24iCYopwi0muuVuzGyKwATFZpJIU01RUG/RBMnHxfz+Oef9uNM84d1+23nO+zxHKVG2WWupRJkdcAwtpCK0lpbqWE01pB0QayonREMoIp7AawQrWSgGGb4pn6dSeSh68FAVXqHqy3wKrkJiDGDTg3dnp//w+WnwlwIOJauF+C7sXRVfdha4O4oIJfTbtdSxs2uqhs585A0ko8iLTMEcDE1n65A+29pYAlr72nz9dKu7GuNTcsL2fDQzB/wCPVJ69nZGb3gAAAAASUVORK5CYII=" style="margin: -2px 0 0 5px;">
+		</div>
+        <div class="m-text">
+            <div id="editor" class="input" contenteditable="true">按 Ctrl + Enter 发送</div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="__COMMON__/plugin/emoji/lib/script/jquery.mousewheel-3.0.6.min.js"></script>
+<script src="__COMMON__/plugin/emoji/lib/script/jquery.mCustomScrollbar.min.js"></script>
+<script src="__COMMON__/plugin/emoji/dist/js/jquery.emoji.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+			//表情初始化
+	$("#editor").emoji({
+        button: "#btn",
+        showTab: false,
+        animation: 'slide',
+        icons: [{
+            name: "QQ表情",
+            path: "__COMMON__/plugin/emoji/dist/img/qq/",
+            maxNum: 91,
+            excludeNums: [41, 45, 54],
+            file: ".gif"
+        }]
+    });
+    $("#editor").one('click',function(){
+
+    	$(this).html('');
+    })
+
+
+	//连接
+	ws = new WebSocket("ws://{$Request.host}:2345");
+	var name = sessionStorage.name;
+	var oldHeight,newHeight;//记录可滚动区域高度
+	function connect(){
+		if(name == 'undefined' || name == 'null' || name == ''  || !name){
+			inputName();
+		}
+
+		var content = {
+		    content:'',
+            type:'login',
+            name:name,
+            to_client_id:'all'
+        };
+		ws.onopen = function() {
+		    ws.send(JSON.stringify(content));
+		};
+		
+	}
+
+	//输入名称
+	function inputName(){
+		var tempName = 'nango'+Math.floor(Math.random()*10000);
+		name = prompt('输入你的名字：', tempName);
+
+		if(name != 'undefined' && name != 'null' && name != ''){
+			sessionStorage.name=name;
+		}else{
+			alert('请输入你的昵称！');
+			inputName();
+		}
+	}
+	//发送消息
+	$(".input").keypress(function(e) {
+		//firefox enter code=13 ; chrome = 10		
+		if (e.ctrlKey && (e.which == 13 || e.which == 10)){
+			var text = $(".input").html();
+			var to_client_id = $(".client option:selected").val();
+			if(text == ''){
+				alert('不能发送空内容！');
+				return;
+			}
+
+			var type = to_client_id == 'all'?"say":"prisay";	
+			//发送者client_id
+			var client_id = sessionStorage.client_id;
+			var content = {
+				'type' : type,
+				'content' : text,
+				'name' : name,
+				'to_client_id' : to_client_id,
+				'client_id' : client_id
+			};
+
+			ws.send(JSON.stringify(content));
+			$(".input").html('').focus();
+		}
+	});
+
+	//图灵回复 ps：这里为了通过tp来将数据存入数据库，因此过程比较繁琐；若不存数据库，可以直接在workerman中进行回复
+	function tuling(text){
+		var con = {};
+		con.content = text;
+		$.ajax({
+				url : "{:url('index/sendMessageToTuling')}",
+				datatype : 'text',
+				method : 'get',
+				data : con,
+				success : function(data){
+					console.log(data);
+				},
+				error : function(data){
+					console.log(data);
+				}
+			});
+	}
+	//图灵回复end
+	//服务端消息返回
+	ws.onmessage = function(e) {
+		var data = JSON.parse(e.data);
+		var con = data.content;
+		
+		if (data.content == null) {
+			con = '这句话说得没毛病';
+		}
+		var str = '<li>'
+                 +    '<p class="time"><span>'+ data.time +'</span>'
+                 +   '</p>';
+                 if(data.nick != name){
+                 	str +=   '<div class="main">';
+                 }else{
+                 	str +=   '<div class="main self">';
+                 }
+                 
+             str +=       '<img class="avatar" width="30" height="30" src="http://lorempixel.com/30/30/">'
+                 +       '<div class="nick">'+ data.nick +'</div>'
+                 +       '<div class="text">'+ con +'</div>'
+                 +   '</div>'
+                 +'</li>';
+		
+		if(data.type == 'login' || data.type == 'logout'){
+			//将客户端client_id 存储在本地
+			sessionStorage.client_id=data.client_id;
+			//已连接服务的客户端对象
+			var client_list = {};
+			client_list = data.clients;
+			//遍历所有已连接客户端
+			html = '<option value="all" selected="selected">所有人</option>';
+			for (var key in client_list) {
+				html += '<option value="'+ client_list[key].id +'">'+ client_list[key].name +'</option>';
+			}
+			$('.client').html(html);
+		}
+	    $(".m-message ul").append(str);
+	    //滚动到底部
+	    $(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
+	};	
+	if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){
+			alert('暂不支持移动端访问，请移步PC端！');
+			return false;
+		}
+		//异步拉取历史消息
+		var page = 1;
+		var getMess = function(){
+			$.ajax({
+				url : "{:url('index/getMessageHis')}",
+				datatype : 'json',
+				type : 'get',
+				data : {page:page},
+				success : function(data){
+					var message = JSON.parse(data);
+					var str = '<li><p class="load">加载更多</p></li>';
+					for (var key in message) {
+						str += '<li>'
+				                 +    '<p class="time"><span>'+ message[key].send_date +'</span>'
+				                 +   '</p>';
+				                 if(message[key].name != name){
+				                 	str +=   '<div class="main">';
+				                 }else{
+				                 	str +=   '<div class="main self">';
+				                 }
+				                 
+				             str +=       '<img class="avatar" width="30" height="30" src="http://lorempixel.com/30/30/">'
+				                 +       '<div class="nick">'+ message[key].name +'</div>'
+				                 +       '<div class="text">'+ message[key].content +'</div>'
+				                 +   '</div>'
+				                 +'</li>';
+					}
+					$(".m-message ul").prepend(str);
+					if (page == 1) {
+						//滚动到底部
+				    	$(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
+					}else{
+						newHeight = $('.m-message ul')[0].scrollHeight;
+						$(".m-message").scrollTop(newHeight - oldHeight);
+					}
+					page++;
+				},
+				error : function(data){
+					console.log(data);
+				}
+			});
+		}
+
+		getMess();
+		//建立连接
+		connect();
+		//消息翻页
+		$('ul').on('click','.load',function(){
+			oldHeight = $('.m-message ul')[0].scrollHeight;
+			$(this).parent('li').remove();
+			getMess();
+		});
+	
+	})
+</script>
+</html>

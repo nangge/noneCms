@@ -68,7 +68,7 @@
     $(".del").click(function(){
         var id= $(this).data('id');
         var $this = $(this).parents('tr');
-        confirms('','是否确认删除id为【'+ id +'】的栏目？','',function(){
+        confirms('','是否确认删除id为【'+ id +'】的栏目以及栏目下的所有记录？','',function(){
             $.get("{:url('nav/dele')}",{id:id},function(data){
                 layer.msg(data.msg,{time: 1000}, function(){
                   if (data.status == 1) {

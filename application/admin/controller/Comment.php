@@ -5,7 +5,8 @@
 namespace app\admin\controller;
 
 use think\Db;
-use think\request;
+use think\facade\Request;
+use app\common\model\Comment as commentModel;
 
 class Comment extends Common
 {
@@ -22,7 +23,7 @@ class Comment extends Common
 
     public function index()
     {
-        $list = Db::name('comment')->where(['status' => 0])->order('id DESC')->paginate(20);
+        $list = commentModel::where(['status' => 0])->order('id DESC')->paginate(20);
         $this->assign('page',$list->render());
         $this->assign('list', $list);
         return $this->fetch();
@@ -35,34 +36,33 @@ class Comment extends Common
         if (request()->isPost()) {
             //新增处理
             $params = input('post.');
-            $params['create_time'] = date('Y-m-d H:i');
-            $flag = Db::name('comment')->insert($params);
-            if ($flag) {
-                exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('comment/index')]));
+            $comment = new commentModel();
+            if ($comment->data($params,true)->save()) {
+                return ['status' => 1, 'msg' => '添加成功', 'url' => url('comment/index')];
             }else{
-                exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
+                return ['status' => 0, 'msg' => '添加失败', 'url' => ''];
             }
         }else{
 
             $id = input('param.id/d',0);
-            $item = Db::name('comment')->field('id,username,title')->find($id);
-            $this->assign('item',$item);
+            $this->assign('item',commentModel::get($id));
             return $this->fetch();
         }
     }
 
     /**
-     * 删除友链、公告
+     * 删除留言
      * @return [type] [description]
      */
     public function dele() {
         $id = input('param.id/d',0);
+
+        $comment = new commentModel();
         //逻辑删除
-        $flag = Db::name('comment')->where(['id' => $id])->update(['status' => 1]);
-        if ($flag !== false) {
-            exit(json_encode(['status' => 1, 'msg' => '删除成功']));
+        if ($comment->save(['status' => 1],['id' => $id])) {
+            return ['status' => 1, 'msg' => '删除成功'];
         }else{
-            exit(json_encode(['status' => 0, 'msg' => '删除失败']));
+            return ['status' => 0, 'msg' => '删除失败'];
         }
     }
 

@@ -18,10 +18,10 @@
 			<div class="z_con">
 				<table width="100%">
 				{article cid='$cid' pagesize='15'}
-					<tr><td width="80%"><a href="{$article.url}">{$article.title}</a></td><td>{$article.publishtime|date='Y-m-d',###}</td></tr>
+					<tr><td width="80%"><a href="{$article.url}">{$article.title}</a></td><td>{$article.publishtime|date='Y-m-d'}</td></tr>
 				{/article}
 				</table>
-				<div class="my_page">{$page}</div>
+				<div class="my_page">{$page|raw}</div>
 			</div>
 		</div>
 	</div>

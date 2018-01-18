@@ -1,6 +1,7 @@
 <?php
 namespace app\index\controller;
 
+use app\common\model\Category;
 use think\Db;
 use think\View;
 
@@ -12,25 +13,22 @@ class Show extends Common
         $id = input('param.id');//资源id
 
         //根据cid来获取表模型
-        $cat_info = Db::table($this->prefix . 'category cat,' . $this->prefix . 'model mo')
-            ->field('cat.*, mo.tablename, mo.template_show as origin_template_show')
-            ->where('cat.modelid = mo.id')
-            ->where('cat.id', $cid)
-            ->where('cat.status <> 1')
-            ->find();
+        $cat_info = Category::get(['id' => $cid]);
+        $modeln = $cat_info->modeln;
+
         //获取资源内容
-        $data = Db::name($cat_info['tablename'])->find($id);
-        Db::name($cat_info['tablename'])->where('id',$id)->setInc('click');//点击+1
+        $data = Db::name($modeln['tablename'])->find($id);
+        Db::name($modeln['tablename'])->where('id',$id)->setInc('click');//点击+1
 
         //图片处理
         if(isset($data['pictureurls'])){
             $data['pictureurls'] = explode('|',$data['pictureurls']);
         }
-        
-        //获取模板文件
-        $template_show = $cat_info['template_show']?:$cat_info['origin_template_show'];
 
-        $template = 'template/index/'. $this->theme .'/'.$template_show;
+        //获取模板文件
+        $template_show = $cat_info['template_show']?:$modeln['template_show'];
+
+        $template = 'template/' . request()->module() . '/'. $this->theme .'/'.$template_show;
         $this->assign('content',$data);
         $this->assign('title',$data['title']);
         $this->assign('keywords',$data['keywords']);

@@ -1,17 +1,16 @@
 <?php
 /**
- * 单页控制器
+ * 操作日志
  */
 namespace app\admin\controller;
 
-use think\Db;
 
 class Log extends Common
 {
 
     public function index()
     {
-        $list = Db::name('log')->order('id DESC')->paginate(20);
+        $list = \app\common\model\Log::where('1=1')->order('id DESC')->paginate(50);
         $this->assign('page',$list->render());
         $this->assign('list', $list);
         return $this->fetch();

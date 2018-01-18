@@ -112,13 +112,14 @@ p.cue {
 #head {
  background-color: #0072C6;
  float: left;
- height: 40px;
+ height: 60px;
  width: 100%;
  position: relative;
 }
 .left {
  float: left;
  width: 179px;
+ margin-top:20px;
 }
 #main {
  background-color: #FFFFFF;
@@ -136,12 +137,12 @@ p.cue {
  position: absolute;
  right: 0;
  left:179px;
- top: 40px;
+ top: 60px;
  bottom: 0px;
  z-index: 7;
 }
 /*- form -*/
-.btn {
+.btn,.execute_btn {
  display: inline-block;
  background-color: #0072C6;
  -moz-border-radius: 2px;
@@ -280,8 +281,9 @@ select {
  border-bottom: 1px solid #ddd;
 }
 .tableBasic th {
- background-color: #EEEEEE;
+ background-color: #6fb737;
  height: 16px;
+ color: #fff;
 }
 .tableBasic .child {
  background-color: #FFFFFF;
@@ -339,7 +341,7 @@ select {
  border-right: 1px solid #0065B0;
  float: left;
  width: 179px;
- height: 40px;
+ height: 60px;
  font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
 }
 /*#head .logo img {
@@ -347,10 +349,10 @@ select {
 }*/
 #head .nav {
  margin-left: 180px;
- height: 40px;
- line-height: 40px;
+ height: 60px;
+ line-height: 60px;
  color: #D9D9D9;
- font-size: 13px;
+ font-size: 14px;
 }
 #head .nav ul {
  float: left;
@@ -371,6 +373,9 @@ select {
 #head .nav a.topAdd {
  background: url(../images/top_add.gif) no-repeat 15px top;
  padding-left: 35px;
+ height: 40px;
+ margin-top: 10px;
+ line-height: 40px;
 }
 #head .nav a:hover, #head .nav a.cur {
  background-color: #60BBFF;
@@ -640,10 +645,11 @@ select {
  margin: 10px 0 0 -2px;
 }
 .mainBox .warning {
- border: 1px solid #E6DB55;
- background: #FFFBCC;
+ border: 1px solid #e655a7;
+ background: #d81a18;
  padding: 10px;
  margin-bottom: 20px;
+ color: #fff;
 }
 #main body{
 	background: #fff;
@@ -720,8 +726,8 @@ select {
 }
 #index .indexBox .ipage a {
  display: block;
- background-color: #28b779;
- color: #555555;
+ background-color: #84c255;
+ color: #f4f8fa;
  font-weight: bold;
  border: 1px dotted #CCCCCC;
  float: left;
@@ -1405,13 +1411,14 @@ select {
 
 .top-it{
     display: inline-block;
-    width: 24px;
+    width: 40px;
     height: 16px;
     border: 1px solid red;
     color: red;
     border-radius: 3px;
     line-height: 16px;
     margin-left: 5px;
+ text-align: center;
 }
 .del{
 	cursor: pointer;

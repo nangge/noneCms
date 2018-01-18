@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcd2c723248449771aa08fb64edf390ec
+class ComposerStaticInitc54553c651644c6e31c19d13318b91ff
 {
     public static $files = array (
         '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
@@ -13,13 +13,26 @@ class ComposerStaticInitcd2c723248449771aa08fb64edf390ec
     public static $prefixLengthsPsr4 = array (
         't' => 
         array (
+            'think\\worker\\' => 13,
             'think\\composer\\' => 15,
             'think\\captcha\\' => 14,
             'think\\' => 6,
         ),
+        'a' => 
+        array (
+            'app\\' => 4,
+        ),
+        'W' => 
+        array (
+            'Workerman\\' => 10,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'think\\worker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-worker/src',
+        ),
         'think\\composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-installer/src',
@@ -31,7 +44,15 @@ class ComposerStaticInitcd2c723248449771aa08fb64edf390ec
         'think\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-image/src',
-            1 => __DIR__ . '/../..' . '/thinkphp/library/think',
+        ),
+        'app\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/application',
+        ),
+        'Workerman\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/workerman',
+            1 => __DIR__ . '/..' . '/workerman/workerman-for-win',
         ),
     );
 
@@ -60,9 +81,9 @@ class ComposerStaticInitcd2c723248449771aa08fb64edf390ec
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcd2c723248449771aa08fb64edf390ec::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcd2c723248449771aa08fb64edf390ec::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitcd2c723248449771aa08fb64edf390ec::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -4,9 +4,9 @@
     {include file="public/lefter" /}
     <div id="dcMain">
         <!-- 当前位置 -->
-        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong>单页面列表</strong></div>
+        <div id="urHere"><a href="{:url('index/index')}">管理中心</a><b>></b><strong><a href="{:url('page/index')}" class="actionBtn">单页面列表</a></strong><b>></b><strong>修改内容</strong></div>
         <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
-            <h3><a href="{:url('page/index')}" class="actionBtn">单页面列表</a>更新内容</h3>
+            <h3><a href="{:url('page/index')}" class="actionBtn">单页面列表</a>修改内容</h3>
 
             <form action="{:url('page/add')}" method="post">
                 <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">

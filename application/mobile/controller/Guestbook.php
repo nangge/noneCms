@@ -1,6 +1,9 @@
 <?php
 namespace app\mobile\controller;
 
+use app\common\model\Category;
+use app\common\model\Comment;
+use app\common\model\Modeln;
 use think\Db;
 use think\View;
 
@@ -11,21 +14,21 @@ class Guestbook extends Common
      * *
     **/
     public function index($cid = 0){
-        $cat_info = Db::name('category')->find($cid);
+        $cat_info = Category::get($cid);
 
         $template_list = $cat_info['template_list'];
         if(!$template_list) {
-            $model = Db::name('model')->field('template_list')->where('id',$cat_info['modelid'])->find();
+            $model = Modeln::where(['id' => $cat_info['modelid']])->value('template_list');
             $template_list = $model['template_list'];
         }
-        $template = 'template/mobile/'. $this->theme .'/'.$template_list;
+        $template = 'template/index/'. $this->theme .'/'.$template_list;
         $this->assign('cate',$cat_info);
         $this->assign('title',empty($cat_info['seotitle'])?$cat_info['name']:$cat_info['seotitle']);
         $this->assign('keywords',$cat_info['keywords']);
         $this->assign('description',$cat_info['description']);
         $this->assign('cid',$cid);
         return $this->fetch($template);
-        $list = Db::name('comment')->where('status',0)->paginate(15);
+        $list = Comment::where('status',0)->paginate(15);
         $this->assign([
             'list' => $list,
             'page' => $list->render()
@@ -51,9 +54,10 @@ class Guestbook extends Common
             $this->error('请填写留言内容');
         }
 
-        $data['create_time'] = date('Y-m-d H:i');
-        $flag = Db::name('comment')->insert($data);
-        if($flag){
+        $params = input('post.');
+        $comment = new Comment();
+
+        if($comment->data($params,true)->save()){
             $this->success('留言成功');
         }else{
             $this->error('留言失败，请稍后重试');

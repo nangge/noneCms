@@ -284,8 +284,8 @@ switch ($step ) {
 		
 
 		$dbStr="<?php return " . var_export($db,true) . ";?>";			
-		file_put_contents('../../application/database.php',$dbStr);//写文件
-		copy('./inc/conf/config.php', '../../application/config.php');
+		file_put_contents('../../config/database.php',$dbStr);//写文件
+		//copy('./inc/conf/config.php', '../../config/app.php');
 
 
 		

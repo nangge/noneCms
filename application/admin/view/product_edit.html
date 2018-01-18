@@ -8,9 +8,9 @@
     <div id="dcMain">
         <!-- 当前位置 -->
         {js href="__PUBLIC__/js/jquery.autotextarea.js" /}
-        <div id="urHere"><a>管理中心</a><b>></b><strong>添加产品</strong></div>
+        <div id="urHere"><a>管理中心</a><b>></b><strong>修改产品</strong></div>
         <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
-            <h3><a href="{:url('product/index')}" class="actionBtn">产品列表</a>添加产品</h3>
+            <h3><a href="{:url('product/index')}" class="actionBtn">产品列表</a>修改产品</h3>
 
             <form>
                 <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
@@ -58,7 +58,7 @@
                     <tr>
                         <td align="right">简单描述</td>
                         <td>
-                            <textarea type="text" name="description" value="{$item.description}" cols="80" rows="5" class="inpMain"></textarea>
+                            <textarea type="text" name="description" cols="80" rows="5" class="inpMain">{$item.description}</textarea>
                         </td>
                     </tr>
                     <tr>
@@ -94,7 +94,7 @@
                     <tr>
                         <td width="80" height="35" align="right">发布时间</td>
                         <td>
-                            <input type="text" name="publishtime" value="{$item.publishtime|date='Y-m-d H:i',###}" size="19" class="inpMain date-picker" />
+                            <input type="text" name="publishtime" value="{$item.publishtime||date='Y-m-d H:i'}" size="19" class="inpMain date-picker" />
                         </td>
                     </tr>
                         <td></td>

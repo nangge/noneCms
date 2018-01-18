@@ -10,7 +10,7 @@
                     <tr>
                         <td width="100" align="right">管理员名称</td>
                         <td>
-                            <input type="text" name="user_name" size="40" class="inpMain"/>
+                            <input type="text" name="username" size="40" class="inpMain"/>
                         </td>
                     </tr>
                     <tr>
@@ -35,7 +35,7 @@
                         <td align="right">角色</td>
                         <td>
                             <select name="role_id">
-                            <option>---- 请选择 ----</option>
+                            <option value="">---- 请选择 ----</option>
                             {volist name="role" id="r"}
                             <option value="{$r.id}">{$r.name}</option>
                             {/volist}

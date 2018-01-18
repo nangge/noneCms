@@ -16,18 +16,18 @@
                 {volist name="list" id="vo"}
                 <tr>
                     <td align="center">{$vo.id}</td>
-                    <td>{$vo.datetime|date='Y-m-d H:i:s',###}</td>
+                    <td>{$vo.datetime|date='Y-m-d H:i:s'}</td>
                     <td align="center">{$vo.username}</td>
                     <td align="left">{$vo.content}</td>
                     <td align="center">{$vo.ip}</td>
                 </tr>
                 {/volist}
             </table>
-            <div class="pager">{$page}</div>
+            <div class="pager">{$page|raw}</div>
         </div>
     </div>
     <div class="clear"></div>
-    {include file="public/footer" /}<!-- dcFooter 结束 -->
+    {include file="public/footer" /}
     <div class="clear"></div>
 </div>
 </body>

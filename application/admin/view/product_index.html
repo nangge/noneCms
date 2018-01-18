@@ -56,7 +56,7 @@
                             <td><a href="{:url('index/show/index',['cid' => $vo.cid,'id' => $vo.id])}" target="_blank">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置顶</span>{/if}</td>
                             <td align="center">{$vo.click}</td>
                             <td align="center"><a href="{:url('product/index',['id' => $vo.cid])}">{$vo.name}</a></td>
-                            <td align="center">{$vo.publishtime|date="Y-m-d",###}</td>
+                            <td align="center">{$vo.publishtime|date="Y-m-d"}</td>
                             <td align="center">
                             <a href="javascript:;" class="topit btn" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="$vo.flag eq 1"}取消置顶{else/}置 顶{/if}</a> 
                                 <a href="{:url('product/edit',['id' => $vo.id])}" class="btn btn-info">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo.id}">删 除</a>
@@ -88,12 +88,12 @@
                             {/if}
                             {/volist}
                         </select>
-                        <span  class="btn execute" >执行</span>
+                        <span  class="execute_btn execute" >执行</span>
                     </div>
                 </form>
             </div>
             <div class="clear"></div>
-            <div class="pager">{$page}</div>
+            <div class="pager">{$page|raw}</div>
         </div>
     </div>
     <div class="clear"></div>
@@ -121,7 +121,9 @@
         }else if(action == 'del_all'){
             confirms('警告','确定要删除所选产品吗？','',function(){
                 $.get("{:url('product/dele')}",$form.serialize(),function(data){
-                    alertw(data);
+                    layer.msg(data.msg,function () {
+                        location.reload();
+                    })
                 });
             });
         }else if(action == 'category_move'){
@@ -129,7 +131,9 @@
                  var id = $("select[name='new_cat_id']").val();
                 if(id == 0){alert('请选择分类');return false;}
                 $.get("{:url('product/move')}",$form.serialize(),function(data){
-                    alertw(data);
+                    layer.msg(data.msg,function () {
+                        location.reload();
+                    })
                 });
             });
         }

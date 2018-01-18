@@ -24,7 +24,7 @@
                         <td align="right">文章分类</td>
                         <td>
                             <select name="cid">
-                                <option value="0">未分类</option>
+                                <option value="">未分类</option>
                                 {volist name="category" id="fcat"}
                                 <option value="{$fcat.id}" {if condition="$fcat.id eq $item.cid"}selected{/if}> {$fcat.name}</option>
                                 <!--二级分类-->
@@ -68,7 +68,7 @@
                     <tr>
                         <td width="80" height="35" align="right">发布时间</td>
                         <td>
-                            <input type="text" name="publishtime" value="{$item.publishtime|date='Y-m-d H:i',###}" size="19" class="inpMain date-picker" />
+                            <input type="text" name="publishtime" value="{$item.publishtime||date='Y-m-d H:i'}" size="19" class="inpMain date-picker" />
                         </td>
                     </tr>
                     <tr>

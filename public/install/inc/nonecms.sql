@@ -12,8 +12,8 @@ CREATE TABLE `#none#_admin` (
   `realname` varchar(20) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `usertype` tinyint(4) NOT NULL DEFAULT '0',
-  `logintime` int(10) unsigned NOT NULL COMMENT '登录时间',
-  `loginip` varchar(30) NOT NULL COMMENT '登录IP',
+  `logintime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '登录时间',
+  `loginip` varchar(30) NOT NULL DEFAULT '' COMMENT '登录IP',
   `islock` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '锁定状态',
   `createtime` int(10) NOT NULL DEFAULT '0' COMMENT '管理员创建时间',
   `role_id` int(10) DEFAULT '0' COMMENT '角色id',
@@ -140,8 +140,8 @@ CREATE TABLE `#none#_banner` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'banner 标题',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'banner 类型 1：banner大图；2：广告',
-  `start_time` datetime DEFAULT NULL COMMENT '广告开始时间',
-  `end_time` datetime DEFAULT NULL COMMENT '广告结束时间',
+  `start_time` int DEFAULT NULL COMMENT '广告开始时间',
+  `end_time` int DEFAULT NULL COMMENT '广告结束时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0：否；1：是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -149,7 +149,7 @@ CREATE TABLE `#none#_banner` (
 -- ----------------------------
 -- Records of #none#_banner
 -- ----------------------------
-INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', '', '', '0');
+INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', 1484512321, 1645710511, '0');
 
 -- ----------------------------
 -- Table structure for #none#_banner_detail
@@ -214,7 +214,7 @@ CREATE TABLE `#none#_comment` (
   `email` varchar(255) DEFAULT '' COMMENT 'email',
   `qq` varchar(15) DEFAULT '' COMMENT 'qq',
   `content` varchar(255) NOT NULL COMMENT '留言内容',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_time` int NOT NULL COMMENT '创建时间',
   `rid` int(10) DEFAULT '0' COMMENT '回复id',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '评论状态 1：已删除',
   `uid` int(10) DEFAULT '0' COMMENT '用户id',
@@ -265,11 +265,11 @@ CREATE TABLE `#none#_log` (
 
 
 -- ----------------------------
--- Table structure for #none#_model
+-- Table structure for #none#_modeln
 -- ----------------------------
-DROP TABLE IF EXISTS `#none#_model`;
-CREATE TABLE `#none#_model` (
-  `id` int(10) unsigned NOT NULL DEFAULT '0',
+DROP TABLE IF EXISTS `#none#_modeln`;
+CREATE TABLE `#none#_modeln` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(30) NOT NULL DEFAULT '',
   `description` varchar(255) NOT NULL DEFAULT '',
   `tablename` varchar(30) NOT NULL DEFAULT '',
@@ -277,16 +277,17 @@ CREATE TABLE `#none#_model` (
   `template_category` varchar(60) NOT NULL DEFAULT '',
   `template_list` varchar(60) NOT NULL DEFAULT '',
   `template_show` varchar(60) NOT NULL DEFAULT '',
-  `sort` int(10) unsigned NOT NULL DEFAULT '0'
+  `sort` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_model
 -- ----------------------------
-INSERT INTO `#none#_model` VALUES ('1', '文章模型', '', 'article', '1', '', 'List_article.html', 'Show_article.html', '1');
-INSERT INTO `#none#_model` VALUES ('2', '单页模型', '', 'category', '1', '', 'List_page.html', 'Show_page.html', '2');
-INSERT INTO `#none#_model` VALUES ('3', '产品模型', '', 'product', '1', '', 'List_product.html', 'Show_product.html', '3');
-INSERT INTO `#none#_model` VALUES ('6', '留言本模型', '', 'comment', '1', '', 'Guestbook_index.html', 'Guestbook_detail.html', '6');
+INSERT INTO `#none#_modeln` VALUES ('1', '文章模型', '', 'article', '1', '', 'List_article.html', 'Show_article.html', '1');
+INSERT INTO `#none#_modeln` VALUES ('2', '单页模型', '', 'category', '1', '', 'List_page.html', 'Show_page.html', '2');
+INSERT INTO `#none#_modeln` VALUES ('3', '产品模型', '', 'product', '1', '', 'List_product.html', 'Show_product.html', '3');
+INSERT INTO `#none#_modeln` VALUES ('6', '留言本模型', '', 'comment', '1', '', 'Guestbook_index.html', 'Guestbook_detail.html', '6');
 
 -- ----------------------------
 -- Table structure for #none#_product

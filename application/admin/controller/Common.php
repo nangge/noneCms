@@ -3,10 +3,7 @@
 namespace app\admin\controller;
 
 use think\Controller;
-use think\Db;
-use think\Session;
-use think\Config;
-use think\Hook;
+use think\facade\Session;
 
 class Common extends Controller
 {
@@ -18,7 +15,7 @@ class Common extends Controller
     function __construct()
     {
         parent::__construct();
-        $this->prefix = Config::get('database.prefix');
+        $this->prefix = config('database.prefix');
         $this->checkLogin();
         if (!has_auth_by_route()) {
             if (request()->isAjax()) {

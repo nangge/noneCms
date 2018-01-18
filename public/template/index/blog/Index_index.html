@@ -10,7 +10,7 @@
                         <img src="{$article.litpic}" alt=""/>
 
                         <div class="post-info">
-                            <h4><a href="{$article.url}">{$article.title}</a> {$article.publishtime|date='Y-m-d',###} / {$article.click} 阅</h4>
+                            <h4><a href="{$article.url}">{$article.title}</a> {$article.publishtime|date='Y-m-d'} / {$article.click} 阅</h4>
 
                             <p>{$article.description}</p>
                             <a href="{$article.url}"><span></span>READ MORE</a>
@@ -18,7 +18,7 @@
                     </div>
                     {/article}
                 </div>
-                <div class="my_page">{$page}</div>
+                <div class="my_page">{$page|raw}</div>
             </div>
             {include file="Public/right" /}
             <div class="clearfix"></div>

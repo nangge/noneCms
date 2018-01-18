@@ -12,8 +12,8 @@ CREATE TABLE `#none#_admin` (
   `realname` varchar(20) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `usertype` tinyint(4) NOT NULL DEFAULT '0',
-  `logintime` int(10) unsigned NOT NULL COMMENT '登录时间',
-  `loginip` varchar(30) NOT NULL COMMENT '登录IP',
+  `logintime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '登录时间',
+  `loginip` varchar(30) NOT NULL DEFAULT '' COMMENT '登录IP',
   `islock` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '锁定状态',
   `createtime` int(10) NOT NULL DEFAULT '0' COMMENT '管理员创建时间',
   `role_id` int(10) DEFAULT '0' COMMENT '角色id',
@@ -274,11 +274,11 @@ CREATE TABLE `#none#_log` (
 
 
 -- ----------------------------
--- Table structure for #none#_model
+-- Table structure for #none#_modeln
 -- ----------------------------
-DROP TABLE IF EXISTS `#none#_model`;
-CREATE TABLE `#none#_model` (
-  `id` int(10) unsigned NOT NULL DEFAULT '0',
+DROP TABLE IF EXISTS `#none#_modeln`;
+CREATE TABLE `#none#_modeln` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(30) NOT NULL DEFAULT '',
   `description` varchar(255) NOT NULL DEFAULT '',
   `tablename` varchar(30) NOT NULL DEFAULT '',
@@ -286,16 +286,17 @@ CREATE TABLE `#none#_model` (
   `template_category` varchar(60) NOT NULL DEFAULT '',
   `template_list` varchar(60) NOT NULL DEFAULT '',
   `template_show` varchar(60) NOT NULL DEFAULT '',
-  `sort` int(10) unsigned NOT NULL DEFAULT '0'
+  `sort` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_model
 -- ----------------------------
-INSERT INTO `#none#_model` VALUES ('1', '文章模型', '', 'article', '1', '', 'List_article.html', 'Show_article.html', '1');
-INSERT INTO `#none#_model` VALUES ('2', '单页模型', '', 'category', '1', '', 'List_page.html', 'Show_page.html', '2');
-INSERT INTO `#none#_model` VALUES ('3', '产品模型', '', 'product', '1', '', 'List_product.html', 'Show_product.html', '3');
-INSERT INTO `#none#_model` VALUES ('6', '留言本模型', '', 'comment', '1', '', 'Guestbook_index.html', 'Guestbook_detail.html', '6');
+INSERT INTO `#none#_modeln` VALUES ('1', '文章模型', '', 'article', '1', '', 'List_article.html', 'Show_article.html', '1');
+INSERT INTO `#none#_modeln` VALUES ('2', '单页模型', '', 'category', '1', '', 'List_page.html', 'Show_page.html', '2');
+INSERT INTO `#none#_modeln` VALUES ('3', '产品模型', '', 'product', '1', '', 'List_product.html', 'Show_product.html', '3');
+INSERT INTO `#none#_modeln` VALUES ('6', '留言本模型', '', 'comment', '1', '', 'Guestbook_index.html', 'Guestbook_detail.html', '6');
 
 -- ----------------------------
 -- Table structure for #none#_product

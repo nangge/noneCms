@@ -11,5 +11,5 @@
 <div class="header">
 	<div class="logo">NoneCMS <span class="motto">-- 简简单单！</span></div>
 
-	<div class="version">V1.2</div>
+	<div class="version">V1.3</div>
 </div>

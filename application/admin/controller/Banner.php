@@ -4,7 +4,8 @@
  */
 namespace app\admin\controller;
 
-use app\admin\model\Category;
+use app\common\model\Banner as bannerModel;
+use app\common\model\BannerDetail;
 use think\Db;
 
 class Banner extends Common
@@ -12,47 +13,67 @@ class Banner extends Common
 
     public function index()
     {
-        $banner = Db::name('banner')->where(['status' => 0])->select();
+        $banner = bannerModel::all(['status' => 0]);
         $this->assign('banner', $banner);
         return $this->fetch();
     }
 
-    /*
-     * 添加内容
+    /**
+     * 幻灯片、广告添加
+     * @return array|mixed
      */
-    public function add(){
+    public function add()
+    {
         if (request()->isPost()) {
             //新增处理
             $params = input('post.');
-            
-            $flag = Db::name('banner')->insert($params);
-            if ($flag !== false) {
-                exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('banner/index')]));
-            }else{
-                exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
+            $result = $this->validate($params, 'app\admin\validate\Banner');
+
+            if (true !== $result) {
+                return ['status' => 0, 'msg' => $result, 'url' => ''];
             }
-        }else{
+
+            $banner = new bannerModel();
+            if ($banner->data($params, true)->save()) {
+                return ['status' => 1, 'msg' => '添加成功', 'url' => url('banner/index')];
+            } else {
+                return ['status' => 0, 'msg' => '添加失败', 'url' => ''];
+            }
+        } else {
             return $this->fetch();
         }
     }
 
     /**
      * 修改
+     * @return array|mixed
      */
-    public function edit(){
-        $id = input('param.id');
+    public function edit()
+    {
+        $id = input('param.id/d');
+        $banner = bannerModel::get(['id' => $id, 'status' => 0]);
+
         if (request()->isPost()) {
+
             $params = input('post.');
-            unset($params['id']);
-            $flag = Db::name('banner')->where('id', $id)->update($params);
-            if ($flag !== false) {
-                exit(json_encode(['status' => 1, 'msg' => '修改成功', 'url' => url('banner/index')]));
-            }else{
-                exit(json_encode(['status' => 0, 'msg' => '修改失败', 'url' => '']));
+            $result = $this->validate($params, 'app\admin\validate\Banner');
+
+            if (true !== $result) {
+                return ['status' => 0, 'msg' => $result, 'url' => ''];
+            }
+
+            $banner->title = $params['title'];
+            $banner->type = $params['type'];
+            $banner->start_time = $params['start_time'];
+            $banner->end_time = $params['end_time'];
+
+            if (false !== $banner->save()) {
+                return ['status' => 1, 'msg' => '修改成功', 'url' => url('banner/index')];
+            } else {
+                return ['status' => 0, 'msg' => '修改失败', 'url' => ''];
             }
         } else {
-            $data = Db::name('banner')->find($id);
-            $this->assign('item',$data);
+            $this->assign('item', $banner);
             return $this->fetch();
         }
     }
@@ -60,53 +81,47 @@ class Banner extends Common
     /**
      * 删除
      */
-    public function dele($id){
-        $flag = Db::name('banner')->where(['id' => $id])->update(['status' => 1]);
-        if ($flag !== false) {
-            exit(json_encode(['status' => 1, 'msg' => '删除成功']));
-        }else{
-            exit(json_encode(['status' => 0, 'msg' => '删除失败']));
+    public function dele($id)
+    {
+        $banner = bannerModel::get($id);
+        $banner->status = 1;
+        if ($banner->save()) {
+            return ['status' => 1, 'msg' => '删除成功'];
+        } else {
+            return ['status' => 0, 'msg' => '删除失败'];
         }
     }
 
     /**
      * Banner 已添加图片列表
-     * @return 
+     * @return
      */
     public function banlist($id)
     {
-        $cate = Db::name('banner')->field('title,type,id')->find($id);
-        $list = Db::name('banner_detail')->where(['pid' => $id])->select();
-        
+        $cate = bannerModel::get($id);
         $this->assign([
-            'list' => $list,
+            'list' => $cate->lists,
             'cate' => $cate
-            ]);
+        ]);
         return $this->fetch();
     }
 
     /**
      * 添加banner内容
      */
-    public function addDetail($id = 0){
+    public function addDetail($id = 0)
+    {
         if (request()->isAjax()) {
             //新增处理
             $params = input('post.');
-            if (isset($params['pic_url'])) {
-                $params['img'] = implode('|',$params['pic_url']);
-                unset($params['pic_url']);
-            }else{
-                $params['img'] = '';
+            $bannerDetail = new BannerDetail();
+            if ($bannerDetail->data($params, true)->save()) {
+                return ['status' => 1, 'msg' => '添加成功', 'url' => url('banner/banlist')];
+            } else {
+                return ['status' => 0, 'msg' => '添加失败', 'url' => ''];
             }
-            $flag = Db::name('banner_detail')->insert($params);
-            if ($flag) {
-                exit(json_encode(['status' => 1, 'msg' => '添加成功', 'url' => url('banner/banlist')]));
-            }else{
-                exit(json_encode(['status' => 0, 'msg' => '添加失败', 'url' => '']));
-            } 
-            
-        }else{
-            $this->assign('pid',$id);
+        } else {
+            $this->assign('pid', $id);
             return $this->fetch();
         }
     }
@@ -116,34 +131,33 @@ class Banner extends Common
      * @param  [type] $id [description]
      * @return [type]     [description]
      */
-    public function editDetail(){
+    public function editDetail()
+    {
         if (request()->isPost()) {
             $params = input('post.');
-            if (isset($params['pic_url'])) {
-                $params['img'] = implode('|',$params['pic_url']);
-                unset($params['pic_url']);
-            }else{
-                $params['img'] = '';
-            }
-            $flag = Db::name('banner_detail')->where(['id' => $params['id']])->update($params);
-            if ($flag) {
-                exit(json_encode(['status' => 1, 'msg' => '修改成功', 'url' => url('banner/banlist')]));
-            }else{
-                exit(json_encode(['status' => 0, 'msg' => '修改失败', 'url' => '']));
+
+            $bannerDetail = new BannerDetail();
+            if (false !== $bannerDetail->save($params,['id' => $params['id']])) {
+                return ['status' => 1, 'msg' => '修改成功', 'url' => url('banner/banlist')];
+            } else {
+                return ['status' => 0, 'msg' => '修改失败', 'url' => ''];
             }
         } else {
-            $id = input('param.id/d',0);
-            $item = Db::name('banner_detail')->find($id);
-            $this->assign('item',$item);
+            $id = input('param.id/d', 0);
+            $this->assign('item', BannerDetail::get($id));
             return $this->fetch();
         }
     }
 
-    public function deleDetail($id){
-        $flag = Db::name('banner_detail')->delete($id);
-        if ($flag) {
+    /**
+     * 删除幻灯片图片
+     * @param $id
+     */
+    public function deleDetail($id)
+    {
+        if (BannerDetail::destroy($id)) {
             echo '删除成功！';
-        }else{
+        } else {
             echo '删除失败！';
         }
     }

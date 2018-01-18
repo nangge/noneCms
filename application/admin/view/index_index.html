@@ -96,11 +96,11 @@
 <body style="height: 100%;overflow: hidden;background-color: #EEEEEE;">
     <div class="head">
         <div id="head">
-            <div class="logo" style="background-color: #FFF;"><a target="main" style="margin-left: 40px;"><img style="height: 100%;width: 80px;" src="__PUBLIC__/images/logo.png" /></a></div>
+            <div class="logo" style="background-color: #FFF;"><a target="main" style="margin-left: 40px;"><img style="height: 100%;width: 100px;" src="__PUBLIC__/images/logo.png" /></a></div>
             <div class="nav">
                 <ul>
                     <li class="M"><a href="JavaScript:void(0);" class="topAdd">新建</a>
-                        <div class="drop mTopad"><a href="{:url('product/add')}" target="main">产品</a> <a href="{:url('article/add')}" target="main">文章</a> <a href="{:url('nav/add')}" target="main">自定义导航</a> <!--<a href="../show.html">首页幻灯</a>--> <a href="{:url('page/add')}" target="main">单页面</a> <a href="{:url('admin/add')}" target="main">管理员</a> <a href="#"></a> </div>
+                        <div class="drop mTopad"><a href="{:url('product/add')}" target="main">产品</a> <a href="{:url('article/add')}" target="main">文章</a> <a href="{:url('nav/add')}" target="main">自定义导航</a> <!--<a href="../show.html">首页幻灯</a> <a href="{:url('page/add')}" target="main">单页面</a>--> <a href="{:url('admin/add')}" target="main">管理员</a> <a href="#"></a> </div>
                     </li>
                     <li><a href="{$web_site}" target="_blank">查看站点</a></li>
                     {if condition="has_auth_by_route('index/clear')"}<li><a id="clear-cache" href="javascript:void(0);">清除缓存</a></li>{/if}

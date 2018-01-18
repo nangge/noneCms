@@ -2,11 +2,13 @@
 
 namespace app\admin\controller;
 
+use app\common\model\Admin;
+use app\common\model\Log;
 use think\Controller;
 use think\Db;
-use think\Request;
-use think\Session;
-use think\Cache;
+use think\facade\Request;
+use think\facade\Session;
+use think\facade\Cache;
 
 class Login extends Controller
 {
@@ -29,15 +31,15 @@ class Login extends Controller
         $captcha = input('post.captcha');
 
         if (!$name || !$passwd) {
-            exit(json_encode(array('status' => 0, 'msg' => '用户名和密码不能为空')));
+            return array('status' => 0, 'msg' => '用户名和密码不能为空');
         }
 
         if(!captcha_check($captcha)){
-            exit(json_encode(array('status' => 0, 'msg' => '请输入正确的验证码')));
+            return array('status' => 0, 'msg' => '请输入正确的验证码');
         }
 
-        $info = Db::name('admin')->where('username',$name)->find();
-        $md5_passwd = md5(md5(trim($passwd)).$info['encrypt']);
+        $info = Admin::where(['username' => $name])->find();
+        $md5_passwd = get_password($passwd,$info['encrypt']);
 
         if (!$info || $md5_passwd != $info['password']) {
             exit(json_encode(array('status' => 0, 'msg' => '用户名或密码错误，请重新输入')));
@@ -48,18 +50,18 @@ class Login extends Controller
         }
 
         //写入日志
-        $data['ip'] = $login['loginip'] = request()->ip();
         $data['userid'] = $info['id'];
-        $data['datetime'] = $login['logintime'] = time();
-        Db::name('log')->insert($data);
-        Db::name('admin')->where('id',$info['id'])->update($login);
+        $log = new Log();
+        $log->data($data,true)->save();
+        $admin = new Admin();
+        $admin->save(['logintime' => time()],['id' => $info['id']]);//数据通过模型自动完成更新
 
         //登入成功，存入session
         Session::set('userinfo',['name' => $name,'role_id' => $info['role_id'],'id' => $info['id'],'usertype' => $info['usertype'],'login_time' => time()]);
         //权限存入缓存并设置auth标签
         Cache::tag('auth')->set('auth_'.$info['id'], get_power_by_uid($info['role_id']));
 
-        exit(json_encode(array('status' => 1, 'msg' => '登录成功', 'url' => url('index/index'))));
+        return ['status' => 1, 'msg' => '登录成功', 'url' => url('index/index')];
 
     }
 

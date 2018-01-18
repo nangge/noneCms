@@ -47,13 +47,14 @@
                         <tr>
                             <td align="center"><input type="checkbox" name="checkbox[]" value="{$vo.id}"/></td>
                             <td align="center">{$vo.id}</td>
-                            <td><a href="{:url('index/show/index',['cid' => $vo.cid,'id' => $vo.id])}" target="_blank">{$vo.title}</a> {if condition="$vo.flag eq 1"}<span class="top-it">置 顶</span>{/if}</td>
+                            <td><a href="{:url('index/show/index',['cid' => $vo.cid,'id' => $vo.id])}" target="_blank">{$vo.title}</a> {if condition="$vo.flag neq 0"}<span class="top-it">{:$article::$flag_desc[$vo.flag]}</span>{/if}</td>
                             <td align="center">{$vo.click}</td>
                             <td align="center"><a href="{:url('article/index',['id' => $vo.cid])}">{$vo.name}</a></td>
-                            <td align="center">{$vo.publishtime|date="Y-m-d",###}</td>
+                            <td align="center">{$vo.publishtime|date="Y-m-d"}</td>
                             <td align="center">
-                            <a href="javascript:;" class="topit btn" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="$vo.flag eq 1"}取消置顶{else/}置 顶{/if}</a> 
-                                <a href="{:url('article/edit',['id' => $vo.id])}" class="btn btn-info">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo.id}">删 除</a>
+                            <a href="javascript:;" class="topit btn" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="{:$article::FLAG_TOP == $vo.flag"}取消置顶{else/}置 顶{/if}</a>
+                                <a href="{:url('article/edit',['id' => $vo.id])}" class="btn btn-info">编 辑</a>
+                                <a class="del btn btn-danger" data-id="{$vo.id}">删 除</a>
                             </td>
                         </tr>
                         {/volist}
@@ -82,12 +83,12 @@
                             {/if}
                             {/volist}
                         </select>
-                        <span class="btn execute">执行</span>
+                        <span class="execute_btn execute">执行</span>
                     </div>
                 </form>
             </div>
             <div class="clear"></div>
-            <div class="pager">{$page}</div>
+            <div class="pager">{$page|raw}</div>
         </div>
     </div>
     <div class="clear"></div>
@@ -111,19 +112,23 @@ var topit_url = "{:url('article/topit')}";
         var action = $("select[name='action']").val();
         var $form = $(this).parents('form');
         if (action == 0) {
-            alert('请先选择执行操作');
+            layer.msg('请先选择执行操作');
         } else if (action == 'del_all') {
             confirms('警告','确定要删除所选文章吗？','',function(){
                 $.get("{:url('article/dele')}",$form.serialize(),function(data){
-                    alertw(data);
+                    layer.msg(data.msg,function () {
+                        location.reload();
+                    })
                 });
             });
         } else if (action == 'category_move') {
-            confirms('警告','确定要移动所选产品的分类吗？','',function(){
+            confirms('警告','确定要移动所选文章的分类吗？','',function(){
                  var id = $("select[name='new_cat_id']").val();
                 if(id == 0){alert('请选择分类');return false;}
                 $.get("{:url('article/move')}",$form.serialize(),function(data){
-                    alertw(data);
+                    layer.msg(data.msg,function () {
+                        location.reload();
+                    })
                 });
             });
         }

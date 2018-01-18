@@ -18,7 +18,7 @@
                     <td align="center">{$vo.id}</td>
                     <td>{$vo.name}</td>
                     <td>{$vo.remark}</td>
-                    <td align="center">{$vo.createtime|date='Y-m-d H:i',###}</td>
+                    <td align="center">{$vo.createtime|date='Y-m-d H:i'}</td>
                     <td align="center"><a href="{:url('role/edit',['id' => $vo.id])}" class="btn btn-info edit-flink">编 辑</a>  <a class="del btn btn-danger" data-id="{$vo['id']}">删 除</a></td>
                 </tr>
                 {/volist}
