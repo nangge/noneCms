@@ -100,7 +100,7 @@ $(document).ready(function(){
 
 
 	//连接
-	ws = new WebSocket("ws://192.168.1.111:2345");
+	ws = new WebSocket("ws://{$Request.host}:2345");
 	var name = sessionStorage.name;
 	var oldHeight,newHeight;//记录可滚动区域高度
 	function connect(){
