@@ -23,6 +23,8 @@ class Email
 
     protected $mail;
 
+    protected $content;
+
     public function __construct($config)
     {
         $this->config = array_merge($this->config,$config);
@@ -40,7 +42,7 @@ class Email
         }
     }
 
-    public function create(){
+    public function create($content){
         $this->mail = new PHPMailer(true);
         $this->mail->CharSet=$this->charset;// Passing `true` enables exceptions
             //Server settings
@@ -52,11 +54,13 @@ class Email
         $this->mail->Password = $this->password;                           // SMTP password
         $this->mail->SMTPSecure = $this->secure;                            // Enable TLS encryption, `ssl` also accepted
         $this->mail->Port = $this->port;                                    // TCP port to connect to
+        $this->content = $content;
         return $this;
     }
-    public function setRecipient($recipient){
-        if(isset($recipient['from']['email'])&&isset($recipient['from']['username'])){
-            $this->mail->setFrom($recipient['from']['email'],$recipient['from']['username']);
+    public function setRecipient(){
+        $recipient = $this->content;
+        if($this->fromemail&&$this->fromuser){
+            $this->mail->setFrom($this->fromemail,$this->fromuser);
         }else{
             throw new EmailException(['msg'=>'必须填写发件人邮箱地址和发件人']);
         }
@@ -82,21 +86,21 @@ class Email
         return $this;
     }
 
-    public function attachment($attachments = []){
+    public function attachment(){
+        if(isset($this->content['attachment'])){
+            $attachments = $this->content['attachment'];
+            //Attachments
+            if(!is_array($attachments)||empty($attachments)){
 
-        //Attachments
-        if(!is_array($attachments)||empty($attachments)){
-
-        }else{
-            foreach($attachments as $attachment){
-                $this->mail->addAttachment($attachment['path']);
+            }else{
+                $this->mail->addAttachment($attachments['path']);
             }
         }
         return $this;
     }
 
-    public function body($content,$ishtml = true){
-
+    public function body($ishtml = true){
+        $content = $this->content['content'];
         if($ishtml){
             $this->mail->isHTML(true);                                  // Set email format to HTML
             $this->mail->Subject = $content['subject'];

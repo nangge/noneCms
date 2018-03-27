@@ -227,3 +227,29 @@ if(!function_exists("array_column"))
     }
 
 }
+/**
+ * @param $content  [
+'to'=>[ //必须配置
+'email'=>'1763557067@qq.com'//收件人地址
+],
+'cc'=> [
+'email'=>'18321612551@163.com'//抄送人地址
+],
+'content'=>[//必须配置
+'subject'=>'',//邮件主题
+'body'=>$body//邮件内容
+],
+'attachment'=> [
+'path'=>'',//附件路径地址
+]
+
+]
+ * @return bool
+ * @throws \app\common\lib\exception\EmailException
+ * @throws \think\Exception
+ */
+function sendEmail($content){
+    $config = \app\common\model\System::getConfigByType('email');
+    $mail = new \app\common\lib\email\Email($config);
+    return $mail->create($content)->setRecipient()->attachment()->body()->send();
+}

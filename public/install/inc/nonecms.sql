@@ -357,3 +357,10 @@ INSERT INTO `#none#_system` VALUES ('13', 'display_thumbh', '缩略图高度', '
 INSERT INTO `#none#_system` VALUES ('14', 'site_editor', '编辑器选择', '如果选择Markdown编辑器，则前台展示页面需引入editor.md相关js；具体操作流程看文章：blog.5none.com', 'radio', '0', '0', 'markdown', '0');
 INSERT INTO `#none#_system` VALUES ('15', 'site_theme', '网站主题', '', 'select', '0', '0', '#site_theme#', '0');
 INSERT INTO `#none#_system` VALUES ('16', 'site_mobile_theme', '移动端主题', '', 'select', '0', '0', 'default', '0');
+INSERT INTO `#none#_system` VALUES ('17', 'email_host', '邮箱服务器主机地址', '', '', '0', '0', 'default', '0');
+INSERT INTO `#none#_system` VALUES ('18', 'email_port', '端口号', '', '', '0', '0', '25', '0');
+INSERT INTO `#none#_system` VALUES ('19', 'email_username', '邮箱用户名', '', '', '0', '0', 'default', '0');
+INSERT INTO `#none#_system` VALUES ('20', 'email_password', '邮箱授权码', '', '', '0', '0', 'default', '0');
+INSERT INTO `#none#_system` VALUES ('21', 'email_fromemail', '发件人邮箱', '', '', '0', '0', 'default', '0');
+INSERT INTO `#none#_system` VALUES ('22', 'email_fromuser', '发件人用户名', '', '', '0', '0', 'default', '0');
+INSERT INTO `none_system` VALUES ('23', 'email_debug', '开启调试模式', ' 0 No output  1 Commands 2 Data and commands 3 As 2 plus connection status 4 Low-level data output.', '', '0', '0', 0, '0');
