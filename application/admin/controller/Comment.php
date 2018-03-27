@@ -61,7 +61,6 @@ class Comment extends Common
      */
     public function dele() {
         $id = input('param.id/d',0);
-        echo $id;
 
         $comment = new commentModel();
         //逻辑删除
