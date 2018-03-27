@@ -10,7 +10,7 @@ use think\Validate;
 
 class Admin extends Validate {
     protected $rule =   [
-        'username'  => 'require|max:25',
+        'username'  => 'require|max:25|token',
         'email' => 'email',
         'password' => 'require|min:6',
         'repassword'=>'require|confirm:password'
@@ -26,15 +26,19 @@ class Admin extends Validate {
         'repassword.confirm' => '两次密码必须一致'
     ];
 
-    /**
-     * 验证场景
-     */
-    protected $scene = [
-        'edit'  =>  [
-            'username' => 'require|max:25', 
-            'email' => 'email', 
-            'password' => 'min:6', 
-            'repassword' => 'confirm:password'
-            ],
-    ];
+//    /**
+//     * 验证场景
+//     */
+//    protected $scene = [
+//        'edit'  =>  [
+//            'username','email',
+//            'password'=>'min:6',
+//            'repassword'=>'confirm:password'
+//            ],
+//    ];
+// edit 验证场景定义
+    public function sceneEdit()
+    {
+        return $this->remove('password', 'require')->remove('repassword','require');
+    }
 }

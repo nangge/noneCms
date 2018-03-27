@@ -7,6 +7,7 @@ namespace app\admin\controller;
 use think\Db;
 use think\facade\Request;
 use app\common\model\Comment as commentModel;
+use think\facade\Validate;
 
 class Comment extends Common
 {
@@ -37,6 +38,10 @@ class Comment extends Common
             //新增处理
             $params = input('post.');
             $comment = new commentModel();
+            $validate = new Validate([
+                'name'=>'require|token',
+                'content'=>'require'
+            ]);
             if ($comment->data($params,true)->save()) {
                 return ['status' => 1, 'msg' => '添加成功', 'url' => url('comment/index')];
             }else{
@@ -56,6 +61,7 @@ class Comment extends Common
      */
     public function dele() {
         $id = input('param.id/d',0);
+        echo $id;
 
         $comment = new commentModel();
         //逻辑删除

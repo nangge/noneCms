@@ -10,7 +10,7 @@ use think\Validate;
 
 class Article extends Validate {
     protected $rule =   [
-        'title'  => 'require|max:60',
+        'title'  => 'require|max:60|token',
         'cid' => 'require',
         'content' => 'require',
     ];

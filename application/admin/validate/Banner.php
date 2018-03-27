@@ -12,7 +12,7 @@ use think\Validate;
 
 class Banner extends Validate {
     protected $rule = [
-        'title' => 'require|max:25',
+        'title' => 'require|max:25|token',
     ];
 
     protected $message = [
