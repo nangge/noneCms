@@ -6,6 +6,7 @@ namespace app\admin\controller;
 
 use think\Db;
 use app\common\model\Flink as flinkModel;
+use think\Validate;
 
 class Flink extends Common
 {
@@ -50,19 +51,21 @@ class Flink extends Common
         } elseif (request()->isPost()) {
             $params = input('post.');
             if ($params['type'] == 2){
-				if ($params['title'] == '') {
-	            	return ['status' => 0, 'msg' => '请填写公告标题', 'url' => ''];
-	            }
+                $validate = new Validate([
+                   'title'=>'require|token'
+                ]);
+                if(!$validate->check($params)){
+                    return ['status' => 0, 'msg' => '请填写公告标题', 'url' => ''];
+                }
             }else{
-            	if ($params['title'] == '') {
-            		return ['status' => 0, 'msg' => '请填写网站名称', 'url' => ''];
-	            }
-
-	            if ($params['url'] == '') {
-	            	return ['status' => 0, 'msg' => '请填写网站url', 'url' => ''];
-	            }
+                $validate = new Validate([
+                    'title'=>'require|token',
+                    'url'=>'require'
+                ]);
+                if(!$validate->check($params)){
+                    return ['status' => 0, 'msg' => $validate->getError(), 'url' => ''];
+                }
             }
-            
 
             $flink = new flinkModel();
             if ($flink->data($params,true)->save()) {
@@ -91,16 +94,19 @@ class Flink extends Common
         } elseif (request()->isPost()) {
             $params = input('post.');
             if ($params['type'] == 2){
-                if ($params['title'] == '') {
-                    exit(json_encode(['status' => 0, 'msg' => '请填写公告标题', 'url' => '']));
+                $validate = new Validate([
+                    'title'=>'require|token'
+                ]);
+                if(!$validate->check($params)){
+                    return ['status' => 0, 'msg' => '请填写公告标题', 'url' => ''];
                 }
             }else{
-                if ($params['title'] == '') {
-                    exit(json_encode(['status' => 0, 'msg' => '请填写网站名称', 'url' => '']));
-                }
-
-                if ($params['url'] == '') {
-                    exit(json_encode(['status' => 0, 'msg' => '请填写网站url', 'url' => '']));
+                $validate = new Validate([
+                    'title'=>'require|token',
+                    'url'=>'require'
+                ]);
+                if(!$validate->check($params)){
+                    return ['status' => 0, 'msg' => $validate->getError(), 'url' => ''];
                 }
             }
 

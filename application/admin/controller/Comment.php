@@ -7,7 +7,7 @@ namespace app\admin\controller;
 use think\Db;
 use think\facade\Request;
 use app\common\model\Comment as commentModel;
-use think\facade\Validate;
+use think\Validate;
 
 class Comment extends Common
 {
@@ -39,9 +39,12 @@ class Comment extends Common
             $params = input('post.');
             $comment = new commentModel();
             $validate = new Validate([
-                'name'=>'require|token',
+                'title'=>'require|token',
                 'content'=>'require'
             ]);
+            if(!$validate->check($params)){
+                return ['status' => 0, 'msg' => '添加失败,'.$validate->getError(), 'url' => ''];
+            }
             if ($comment->data($params,true)->save()) {
                 return ['status' => 1, 'msg' => '添加成功', 'url' => url('comment/index')];
             }else{
