@@ -11,6 +11,7 @@ use think\facade\Config;
 use think\Db;
 use think\Loader;
 use think\facade\Cache;
+use think\Validate;
 
 class Role extends Common
 {
@@ -29,8 +30,11 @@ class Role extends Common
     {
         if (request()->isPost()) {
             $data = input('param.');
-            if (!$data['name']) {
-                exit(json_encode(['status' => 0, 'msg' => '角色名称不能为空']));
+            $validate = new Validate([
+               'name'=>'require|token',
+            ]);
+            if (!$validate->check($data)) {
+                exit(json_encode(['status' => 0, 'msg' => $validate->getError()]));
             }
 
             $role = new AdminRole();
@@ -62,10 +66,12 @@ class Role extends Common
     {
         if (request()->isPost()) {
             $data = input('param.');
-            if (!$data['name']) {
-                exit(json_encode(['status' => 0, 'msg' => '角色名称不能为空']));
+            $validate = new Validate([
+                'name'=>'require|token',
+            ]);
+            if (!$validate->check($data)) {
+                exit(json_encode(['status' => 0, 'msg' => $validate->getError()]));
             }
-
 
             $role = new AdminRole();
             if (false !== $role->save($data,['id' => $data['id']])) {

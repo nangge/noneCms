@@ -115,5 +115,10 @@ return [
     'show_error_msg'         => false,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
-
+    'email' => [
+        'host'=>'smtp.163.com',
+        'username'=>'18321612551@163.com',
+        'password'=>'as66502201',
+        'port'=>'25'
+    ]
 ];

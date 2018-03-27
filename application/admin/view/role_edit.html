@@ -8,7 +8,8 @@
         <div id="urHere">管理中心<b>></b><strong>角色管理</strong></div>
          <div class="mainfff">
             <form class=" role_add">
-            <ul>
+                {:token()}
+                <ul>
                 <li><span>角色：</span><input type="text" name="name" value="{$find.name}" maxlength="20"></li>
                 <li><span>备注：</span><textarea name="description" class="roleinput_all" maxlength="100">{$find.remark}</textarea></li>
             </ul>
