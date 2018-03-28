@@ -377,4 +377,4 @@ INSERT INTO `#none#_system` VALUES ('19', 'email_username', '邮箱用户名', '
 INSERT INTO `#none#_system` VALUES ('20', 'email_password', '邮箱授权码', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('21', 'email_fromemail', '发件人邮箱', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('22', 'email_fromuser', '发件人用户名', '', '', '0', '0', 'default', '0');
-INSERT INTO `none_system` VALUES ('23', 'email_debug', '开启调试模式', ' 0 No output  1 Commands 2 Data and commands 3 As 2 plus connection status 4 Low-level data output.', '', '0', '0', 0, '0');
+INSERT INTO `#none#_system` VALUES ('23', 'email_debug', '开启调试模式', ' 0 No output  1 Commands 2 Data and commands 3 As 2 plus connection status 4 Low-level data output.', '', '0', '0', 0, '0');
