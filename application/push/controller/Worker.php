@@ -24,7 +24,7 @@ class Worker extends Server
      * 图灵 appkey
      * @var string
      */
-    private $tlAppkey = '';
+    private $tlAppkey = 'bbfc225d841dacd734918f77679d5053';
 
     /**
      * 已连接客户端信息
@@ -180,7 +180,16 @@ class Worker extends Server
                 $this->sendMessageToTuling($data['content']); //群聊时图灵 登陆登出除外
                 if (false !== strpos($data['content'],'@nango')) {
                     $email = get_system_value('site_email');
-                    if (mail($email,'聊天室邮件',$data['content'])) {
+                    $message = [
+                       'to' => [
+                           'email' => $email
+                       ],
+                        'content' => [
+                            'subject' => '聊天室邮件',
+                            'body' => $data['content']
+                        ]
+                    ];
+                    if (sendEmail($message)) {
                         $mail_data = [
                             'content' => '邮件已发送',
                             'nick' => '<b style="color:red">系统：</b>',

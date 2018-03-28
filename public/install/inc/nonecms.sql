@@ -321,6 +321,20 @@ CREATE TABLE `#none#_product` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
+DROP TABLE IF EXISTS `none_chat`;
+CREATE TABLE `none_chat` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `type` varchar(10) NOT NULL DEFAULT '' COMMENT '消息类型 say:广播；prisay:私聊',
+  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',
+  `name` varchar(255) NOT NULL DEFAULT 'nango' COMMENT '用户名称',
+  `client_id` int(10) DEFAULT '0' COMMENT '发送消息客户端id',
+  `to_client_id` varchar(4) DEFAULT '' COMMENT '私聊对象客户端id',
+  `send_time` int(10) DEFAULT NULL COMMENT '发送消息时间',
+  `room_id` int(5) DEFAULT '1' COMMENT '房间id',
+  `ip` varchar(50) DEFAULT NULL COMMENT '客户端ip',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1720 DEFAULT CHARSET=utf8;
+
 -- ----------------------------
 -- Table structure for #none#_system
 -- ----------------------------
