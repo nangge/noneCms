@@ -26,10 +26,6 @@ class ComposerStaticInitc54553c651644c6e31c19d13318b91ff
         array (
             'Workerman\\' => 10,
         ),
-        'P' => 
-        array (
-            'PHPMailer\\PHPMailer\\' => 20,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -57,10 +53,6 @@ class ComposerStaticInitc54553c651644c6e31c19d13318b91ff
         array (
             0 => __DIR__ . '/..' . '/workerman/workerman',
             1 => __DIR__ . '/..' . '/workerman/workerman-for-win',
-        ),
-        'PHPMailer\\PHPMailer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
     );
 
