@@ -18,7 +18,7 @@ class Admin extends Common
     {
         $list = adminModel::where('islock', '<>', adminModel::ISLOCK_YES)->select();
 
-        foreach ($lista as &$admin) {
+        foreach ($list as &$admin) {
             $admin->name = $admin->role_id ? $admin->role->name : '';
         }
 
