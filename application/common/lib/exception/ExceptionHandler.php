@@ -8,6 +8,8 @@
 
 namespace app\common\lib\exception;
 
+use app\common\lib\log\SentryLog;
+use app\common\model\System;
 use think\exception\Handle;
 use think\facade\Request;
 use Exception;
@@ -39,6 +41,10 @@ class ExceptionHandler extends Handle
                 // 调试状态下需要显示TP默认的异常页面，因为TP的默认页面
                 // 很容易看出问题
                 return parent::render($e);
+            }else{
+                $dsn = System::get(['name'=>'site_dsn'])->value('value');
+                $log = new SentryLog($dsn);
+                $log->addLog($e);
             }
 
             $this->code = 500;

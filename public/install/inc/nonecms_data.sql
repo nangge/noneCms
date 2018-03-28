@@ -139,6 +139,7 @@ CREATE TABLE `#none#_article` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1回收站',
   `userid` int(10) unsigned NOT NULL DEFAULT '0',
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
@@ -211,6 +212,7 @@ CREATE TABLE `#none#_category` (
   `position` varchar(6) NOT NULL DEFAULT '1' COMMENT '导航出现的位置，默认1：主导航；2：底部；3：侧边',
   `outurl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链url',
   `flag` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '属性：8 百度富文本框编辑；9 Markdown编辑',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 
@@ -340,6 +342,7 @@ CREATE TABLE `#none#_product` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1回收站',
   `userid` int(10) unsigned NOT NULL DEFAULT '0',
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 
@@ -395,3 +398,4 @@ INSERT INTO `#none#_system` VALUES ('20', 'email_password', '邮箱授权码', '
 INSERT INTO `#none#_system` VALUES ('21', 'email_fromemail', '发件人邮箱', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('22', 'email_fromuser', '发件人用户名', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('23', 'email_debug', '开启调试模式', ' 0 No output  1 Commands 2 Data and commands 3 As 2 plus connection status 4 Low-level data output.', '', '0', '0', 0, '0');
+INSERT INTO `#none#_system` VALUES ('24', 'site_dsn', 'Client keys', 'Sentry日志Client keys', '', '0', '0', '', '0');

@@ -125,6 +125,7 @@ CREATE TABLE `#none#_article` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1回收站',
   `userid` int(10) unsigned NOT NULL DEFAULT '0',
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -195,6 +196,7 @@ CREATE TABLE `#none#_category` (
   `position` varchar(6) NOT NULL DEFAULT '1' COMMENT '导航出现的位置，默认1：主导航；2：底部；3：侧边',
   `outurl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链url',
   `flag` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '属性：8 百度富文本框编辑；9 Markdown编辑',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -317,6 +319,7 @@ CREATE TABLE `#none#_product` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1回收站',
   `userid` int(10) unsigned NOT NULL DEFAULT '0',
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

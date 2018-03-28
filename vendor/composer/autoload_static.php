@@ -64,6 +64,16 @@ class ComposerStaticInitc54553c651644c6e31c19d13318b91ff
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'R' => 
+        array (
+            'Raven_' => 
+            array (
+                0 => __DIR__ . '/..' . '/sentry/sentry/lib',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'Callback' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
         'CallbackBody' => __DIR__ . '/..' . '/electrolinux/phpquery/phpQuery/phpQuery/Callback.php',
@@ -91,6 +101,7 @@ class ComposerStaticInitc54553c651644c6e31c19d13318b91ff
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$classMap;
 
         }, null, ClassLoader::class);
