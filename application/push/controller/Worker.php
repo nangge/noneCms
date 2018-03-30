@@ -123,11 +123,17 @@ class Worker extends Server
     {
         switch ($data['type']) {
             case 'login':
+                $imgfile = file_get_contents($data['img']);
+                $img = "data:image/jpeg;base64,".base64_encode($imgfile);
                 self::$hasConnections[$connection->id] = [
                     'name' => $data['name'],
-                    'id' => $connection->id
+                    'id' => $connection->id,
+                    'img' => $img
                 ];
+                $data['img'] = $img;
                 $content = '欢迎 <i>' . $data['name'] . '</i> 加入聊天室！    ';
+                //生成用户图片并base64编码保存
+
                 //拼装返回的数据结构
                 $back_data = [
                     'content' => $content,
@@ -136,10 +142,12 @@ class Worker extends Server
                     'client_name' => $data['name'],
                     'type' => 'login',
                     'clients' => self::$hasConnections,
-                    'time' => date('Y-m-d H:i')
+                    'img'=>self::$hasConnections[$connection->id]['img'],
+                    'time' => date('Y-m-d H:i'),
                 ];
                 break;
             case 'prisay':
+                $data['img'] = self::$hasConnections[$connection->id]['img'];
                 $recive_user = self::$hasConnections[$data['to_client_id']]['name'];//接收者
                 $send_user = $data['name'];//发送者
                 $recive_content = '<i style="color:green">' . $send_user . '</i>对你 说：' . $data['content'];
@@ -149,24 +157,28 @@ class Worker extends Server
                     'content' => $recive_content,
                     'type' => 'say',
                     'nick' => $recive_user,
-                    'time' => date('Y-m-d H:i')
+                    'time' => date('Y-m-d H:i'),
+                    'img' => $data['img']
                 ];
                 $mycontent = [
                     'content' => $send_content,
                     'type' => 'say',
                     'nick' => $send_user,
-                    'time' => date('Y-m-d H:i')
+                    'time' => date('Y-m-d H:i'),
+                    'img' => $data['img']
                 ];
                 //写入
                 self::insert_chat($data);
                 break;
             default:
                 //拼装返回的数据结构
+                $data['img'] = self::$hasConnections[$connection->id]['img'];
                 $back_data = [
                     'content' => $data['content'],
                     'nick' => $data['name'],
                     'type' => 'say',
-                    'time' => date('Y-m-d H:i')
+                    'time' => date('Y-m-d H:i'),
+                    'img' => $data['img']
                 ];
                 //写入
                 self::insert_chat($data);

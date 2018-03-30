@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/jquery.emoji.css"/>
     <link rel="stylesheet" href="__COMMON__/plugin/emoji/lib/css/railscasts.css"/>
     <link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/index.css"/>
+	<script src="__COMMON__/js/layer.js" charset="utf-8"></script>
 	<style type="text/css">
 		.load{
 			display: block;
@@ -96,42 +97,70 @@ $(document).ready(function(){
     $("#editor").one('click',function(){
 
     	$(this).html('');
-    })
-
+    });
 
 	//连接
 	ws = new WebSocket("ws://{$Request.host}:2345");
-	var name = sessionStorage.name;
+	var index;
 	var oldHeight,newHeight;//记录可滚动区域高度
-	function connect(){
-		if(name == 'undefined' || name == 'null' || name == ''  || !name){
-			inputName();
-		}
 
+	if(sessionStorage.nick!=null&&sessionStorage.nick!=undefined){
 		var content = {
-		    content:'',
-            type:'login',
-            name:name,
-            to_client_id:'all'
-        };
-		ws.onopen = function() {
-		    ws.send(JSON.stringify(content));
+			id:sessionStorage.id,
+			type:'reconnect',
+			to_client_id:'all'
 		};
-		
-	}
-
-	//输入名称
-	function inputName(){
-		var tempName = 'nango'+Math.floor(Math.random()*10000);
-		name = prompt('输入你的名字：', tempName);
-
-		if(name != 'undefined' && name != 'null' && name != ''){
-			sessionStorage.name=name;
-		}else{
-			alert('请输入你的昵称！');
-			inputName();
+		ws.onopen = function () {
+			ws.send(JSON.stringify(content));
 		}
 	}
+
+
+	html = '<br> <input type="text" id="username" name="username" placeholder="请填写用户名" value=""><br> <input type="password" id="password" name="password" placeholder="请填写用户名" value=""><br> <input type="text" id="nick" name="nick" placeholder="请填写昵称" value=""><br>';
+	function connect(){
+		if(sessionStorage.nick==null||sessionStorage.nick==undefined){
+			 index = layer.open({
+				title:'登录|注册',
+				type:1,
+				area:['500px','300px'],
+				offset:'200px',
+				maxmin:false,
+				content:html,
+				closeBtn :0,
+				btn: ['登录', '注册'],
+				yes:function(index,layero){
+					if($('#username').val()&&$('#password').val()){
+						var content = {
+							username:$('#username').val(),
+							password:$('#password').val(),
+							type:'login',
+							to_client_id:'all'
+						};
+						ws.send(JSON.stringify(content));
+					}else{
+						alert('用户名密码必填');
+					}
+				},
+				btn2:function(index,layero){
+					if($('#username').val()&&$('#password').val()&&$('#nick').val()){
+						var content = {
+							username:$('#username').val(),
+							password:$('#password').val(),
+							nick:$('#nick').val(),
+							type:'register',
+							to_client_id:'all',
+//							img:'http://lorempixel.com/30/30/'
+						};
+						ws.send(JSON.stringify(content));
+					}else{
+						alert('用户名密码昵称必填');
+						return false;
+					}
+			    }
+			});
+		}
+	}
+
 	//发送消息
 	$(".input").keypress(function(e) {
 		//firefox enter code=13 ; chrome = 10		
@@ -149,7 +178,6 @@ $(document).ready(function(){
 			var content = {
 				'type' : type,
 				'content' : text,
-				'name' : name,
 				'to_client_id' : to_client_id,
 				'client_id' : client_id
 			};
@@ -181,41 +209,72 @@ $(document).ready(function(){
 	ws.onmessage = function(e) {
 		var data = JSON.parse(e.data);
 		var con = data.content;
+		console.log(data);
 		
 		if (data.content == null) {
 			con = '这句话说得没毛病';
 		}
-		var str = '<li>'
-                 +    '<p class="time"><span>'+ data.time +'</span>'
-                 +   '</p>';
-                 if(data.nick != name){
-                 	str +=   '<div class="main">';
-                 }else{
-                 	str +=   '<div class="main self">';
-                 }
-                 
-             str +=       '<img class="avatar" width="30" height="30" src="http://lorempixel.com/30/30/">'
-                 +       '<div class="nick">'+ data.nick +'</div>'
-                 +       '<div class="text">'+ con +'</div>'
-                 +   '</div>'
-                 +'</li>';
-		
-		if(data.type == 'login' || data.type == 'logout'){
+		if(data.type == 'login' || data.type == 'register'){
 			//将客户端client_id 存储在本地
-			sessionStorage.client_id=data.client_id;
-			//已连接服务的客户端对象
-			var client_list = {};
-			client_list = data.clients;
-			//遍历所有已连接客户端
-			html = '<option value="all" selected="selected">所有人</option>';
-			for (var key in client_list) {
-				html += '<option value="'+ client_list[key].id +'">'+ client_list[key].name +'</option>';
+			if(data.code == 0){
+				alert(data.content);
+			}else if(data.code == 1){
+				//已连接服务的客户端对象
+				var client_list = {};
+				client_list = data.clients;
+				//遍历所有已连接客户端
+				html = '<option value="all" selected="selected">所有人</option>';
+				for (var key in client_list) {
+					html += '<option value="'+ client_list[key].id +'">'+ client_list[key].user['nick'] +'</option>';
+				}
+				$('.client').html(html);
+				var str = '<li>'
+						+    '<p class="time"><span>'+ data.time +'</span>'
+						+   '</p>';
+				if(data.nick != sessionStorage.nick){
+					str +=   '<div class="main">';
+				}else{
+					str +=   '<div class="main self">';
+				}
+				str +=       '<img class="avatar" width="30" height="30" src="'+data.img+'">'
+						+       '<div class="nick">'+ data.nick +'</div>'
+						+       '<div class="text">'+ con +'</div>'
+						+   '</div>'
+						+'</li>';
+
+				$(".m-message ul").append(str);
+				//滚动到底部
+				$(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
+			}else{
+				//登录回执
+				layer.close(index);
+				sessionStorage.client_id=data.client_id;
+				sessionStorage.nick = data.user.nick;
+				sessionStorage.img = data.user.img;
+				sessionStorage.id = data.user.id;
 			}
-			$('.client').html(html);
+		}else if(data['type'] == 'relogin'){
+			layer.open(index);
 		}
-	    $(".m-message ul").append(str);
-	    //滚动到底部
-	    $(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
+		else{
+			var str = '<li>'
+					+    '<p class="time"><span>'+ data.time +'</span>'
+					+   '</p>';
+			if(data.nick != sessionStorage.nick){
+				str +=   '<div class="main">';
+			}else{
+				str +=   '<div class="main self">';
+			}
+			str +=       '<img class="avatar" width="30" height="30" src="'+data.img+'">'
+					+       '<div class="nick">'+ data.nick +'</div>'
+					+       '<div class="text">'+ con +'</div>'
+					+   '</div>'
+					+'</li>';
+
+			$(".m-message ul").append(str);
+			//滚动到底部
+			$(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
+		}
 	};	
 	if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){
 			alert('暂不支持移动端访问，请移步PC端！');
@@ -234,16 +293,16 @@ $(document).ready(function(){
 					var str = '<li><p class="load">加载更多</p></li>';
 					for (var key in message) {
 						str += '<li>'
-				                 +    '<p class="time"><span>'+ message[key].send_date +'</span>'
+				                 +    '<p class="time"><span>'+ message[key].create_time +'</span>'
 				                 +   '</p>';
-				                 if(message[key].name != name){
+				                 if(message[key].nick != sessionStorage.nick){
 				                 	str +=   '<div class="main">';
 				                 }else{
 				                 	str +=   '<div class="main self">';
 				                 }
 				                 
-				             str +=       '<img class="avatar" width="30" height="30" src="http://lorempixel.com/30/30/">'
-				                 +       '<div class="nick">'+ message[key].name +'</div>'
+				             str +=       '<img class="avatar" width="30" height="30" src="'+message[key].img+'">'
+				                 +       '<div class="nick">'+ message[key].nick +'</div>'
 				                 +       '<div class="text">'+ message[key].content +'</div>'
 				                 +   '</div>'
 				                 +'</li>';
