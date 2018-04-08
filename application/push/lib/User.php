@@ -13,13 +13,17 @@ use think\Validate;
 
 class User
 {
+    protected static $hidden = ['password'];
     //用户登录
     public static function login($username,$password){
         $user = UserModel::get(['username'=>$username,'password'=>md5($password)]);
         if(!$user){
             return [];
         }else{
-            return $user->hidden(['password']);
+            $user->accesstoken = md5(time().$user['username']);
+            $user->accesstoken_expire = time()+3600*2;
+            $user->save();
+            return $user->hidden(self::$hidden);
         }
     }
     //用户注册
@@ -38,23 +42,34 @@ class User
         }else{
             if(UserModel::get(['username'=>$data['username']])){
                 return [
-                    'code'=>2,
+                    'code'=>0,
                     'message'=>'用户已存在'
                 ];
             }
             $data['password'] = md5($data['password']);
+            $data['accesstoken'] = md5(time().$data['username']);
+            $data['accesstoken_expire'] = time()+3600*2;
             if($user = UserModel::create($data)){
                 return [
                     'code'=>1,
                     'message'=>'注册成功',
-                    'user'=>$user->hidden(['password'])
+                    'user'=>$user->hidden(self::$hidden)
                 ];
             }else{
                 return [
-                    'code'=>3,
+                    'code'=>0,
                     'message'=>'注册失败'
                 ];
             }
+        }
+    }
+
+    public static function getUserByAccessToken($accesstoken){
+        $user = UserModel::get(['accesstoken'=>$accesstoken]);
+        if($user&&$user['accesstoken_expire']>time()){
+            return $user->hidden(self::$hidden);
+        }else{
+            return [];
         }
     }
 }

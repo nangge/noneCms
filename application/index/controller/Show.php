@@ -12,14 +12,25 @@ class Show extends Common
         $cid = input('param.cid');//栏目id
         $id = input('param.id');//资源id
 
-        //根据cid来获取表模型
-        $cat_info = Category::get(['id' => $cid]);
-        $modeln = $cat_info->modeln;
-
-        //获取资源内容
-        $data = Db::name($modeln['tablename'])->find($id);
-        Db::name($modeln['tablename'])->where('id',$id)->setInc('click');//点击+1
-
+        if($cid){
+            //根据cid来获取表模型
+            $cat_info = Category::get(['id' => $cid]);
+            $modeln = $cat_info->modeln;
+            //获取资源内容
+            $data = Db::name($modeln['tablename'])->find($id);
+            if(!$data){
+                $this->error('文章不存在');
+            }
+            Db::name($modeln['tablename'])->where('id',$id)->setInc('click');//点击+1
+        }else{
+            $data = Db::name('article')->find($id);
+            if(!$data){
+                $this->error('文章不存在');
+            }
+            $cat_info = Category::get(['id' => $data['cid']]);
+            $modeln = $cat_info->modeln;
+            Db::name('article')->where('id',$id)->setInc('click');//点击+1
+        }
         //图片处理
         if(isset($data['pictureurls'])){
             $data['pictureurls'] = explode('|',$data['pictureurls']);

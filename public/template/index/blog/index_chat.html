@@ -135,6 +135,7 @@
 //							img:'http://lorempixel.com/30/30/'
 						};
 						ws.send(JSON.stringify(content));
+						return false;
 					}else{
 						alert('用户名密码昵称必填');
 						return false;
@@ -151,11 +152,11 @@
 			ws.onmessage = function (e) {
 				messageHander(e);
 			};
-			if(sessionStorage.nick==null||sessionStorage.nick==undefined){
+			if(sessionStorage.accesstoken==null||sessionStorage.accesstoken==undefined){
 				login_register_layer();
 			}else{
 				var content = {
-					id:sessionStorage.id,
+					accesstoken:sessionStorage.accesstoken,
 					type:'reconnect',
 					to_client_id:'all'
 				};
@@ -257,6 +258,7 @@
 					sessionStorage.nick = data.user.nick;
 					sessionStorage.img = data.user.img;
 					sessionStorage.id = data.user.id;
+					sessionStorage.accesstoken = data.accesstoken;
 				}
 			}else if(data['type'] == 'relogin'){
 				if(data['code'] == 1){
@@ -269,7 +271,18 @@
 							layer.close(relogin)
 						}
 					});
+				}else if(data['code'] == 3){
+					alert(data['content']);
+					relogin = layer.confirm('两次登录需要大于一分钟', {
+						closeBtn:0,
+						btn: '重新连接' ,//可以无限个按钮
+						yes:function(index,layero){
+							connect();
+							layer.close(relogin)
+						}
+					});
 				}else{
+					alert(data['content']);
 					login_register_layer();
 				}
 			}
