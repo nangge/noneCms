@@ -12,8 +12,8 @@ class Admin extends Validate {
     protected $rule =   [
         'username'  => 'require|max:25|token',
         'email' => 'email',
-        'password' => 'require|min:6',
-        'repassword'=>'require|confirm:password'
+        'repassword'=>'require|min:6',
+        'password' => 'require|min:6|confirm:repassword',
     ];
 
     protected $message  =   [
@@ -23,7 +23,7 @@ class Admin extends Validate {
         'password.min'  => '密码长度至少六位',
         'email'        => '邮箱格式错误',
         'repassword.require' => '确认密码必须',
-        'repassword.confirm' => '两次密码必须一致'
+        'password.confirm' => '两次密码必须一致'
     ];
 
 //    /**
@@ -39,6 +39,6 @@ class Admin extends Validate {
 // edit 验证场景定义
     public function sceneEdit()
     {
-        return $this->remove('password', 'require')->remove('repassword','require');
+        return $this->remove('repassword','require')->remove('password', 'require');
     }
 }

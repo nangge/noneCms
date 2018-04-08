@@ -23,7 +23,8 @@
         "electrolinux/phpquery": "^0.9.6",
         "topthink/think-worker": "^1.0",
         "workerman/workerman-for-win": "^3.5",
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+        "sentry/sentry": "^1.8"
     },
     "autoload": {
         "psr-4": {

@@ -6,5 +6,5 @@ define('APP_PATH', __DIR__ . '/application/');
 require __DIR__ . '/thinkphp/base.php';
 
 // 执行应用并响应
-\think\Container::get('app',[APP_PATH])->bind('push/Worker')->run()->send();
+\think\Container::get('app',[APP_PATH])->bind('push/worker_chat')->run()->send();
 ?>

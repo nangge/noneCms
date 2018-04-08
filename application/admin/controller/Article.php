@@ -7,6 +7,7 @@ namespace app\admin\controller;
 
 use app\common\model\Category;
 use app\common\model\Article as articleModel;
+use think\Exception;
 
 class Article extends Common
 {
@@ -181,19 +182,24 @@ class Article extends Common
 
             try {
                 \phpQuery::newDocumentFile($url);
-                $title = pq('.link_title a')->text();
+                $title = pq('.link_title')->text();
                 if (!$title) {
                     $title = pq('.list_c_t a')->text();
                 }
                 if (!$title) {
                     $title = pq('h1.csdn_top')->text();
                 }
+                $title = trim($title);
+
+                if(mb_strlen($title,'utf-8')>60){
+                    return ['status' => 0, 'msg' => '转载失败,文章标题超过60字', 'url' => ''];
+                }
+
                 $content = pq('#article_content')->text();
 
-                //如果抓取不到主内容
+//                //如果抓取不到主内容
                 if (!$content) {
                     throw new Exception("文章不存在或禁止爬虫");
-
                 }
                 $params['cid'] = $cid;
                 $params['content'] = $content;

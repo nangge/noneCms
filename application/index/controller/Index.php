@@ -1,8 +1,9 @@
 <?php
 namespace app\index\controller;
 
-use think\facade\Config;
 use think\Db;
+use think\facade\Config;
+
 use think\View;
 
 class Index extends Common
@@ -56,14 +57,9 @@ class Index extends Common
     ** 异步获取聊天记录
     **/
     public function getMessageHis(){
-        $page = input('param.page');
-        $list = Db::name('chat')
-                ->field("name,content,FROM_UNIXTIME(send_time,'%Y-%m-%d %H:%i') as send_date")
-                ->order('send_time DESC')
-                ->limit(($page-1)*10,10)
-                ->select();
-
-        exit(json_encode(array_reverse($list)));
+        $page = input('param.page',0,'intval');
+        $list = Db::name('chatrecord')->join('user','none_user.id = none_chatrecord.user_id')->where('type',0)->page($page)->limit(10)->order('none_chatrecord.create_time desc')->column('none_chatrecord.id,content,nick,img,FROM_UNIXTIME(none_chatrecord.create_time) as create_time');
+        exit(json_encode($list));
     }
 
 
