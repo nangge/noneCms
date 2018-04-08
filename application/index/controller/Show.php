@@ -19,13 +19,13 @@ class Show extends Common
             //获取资源内容
             $data = Db::name($modeln['tablename'])->find($id);
             if(!$data){
-                $this->error('文章不存在');
+                $this->redirect('/error_page/404.html','文章不存在');
             }
             Db::name($modeln['tablename'])->where('id',$id)->setInc('click');//点击+1
         }else{
             $data = Db::name('article')->find($id);
             if(!$data){
-                $this->error('文章不存在');
+                $this->redirect('error_page/404.html','文章不存在');
             }
             $cat_info = Category::get(['id' => $data['cid']]);
             $modeln = $cat_info->modeln;
