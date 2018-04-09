@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="__COMMON__/plugin/emoji/lib/css/railscasts.css"/>
 	<link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/index.css"/>
 	<script src="__COMMON__/js/layer.js" charset="utf-8"></script>
+	<link rel="stylesheet" href="/static/admin/css/bootstrap.min.css">
 	<style type="text/css">
 		.load{
 			display: block;
@@ -146,7 +147,7 @@
 
 		var oldHeight,newHeight;//记录可滚动区域高度
 
-		loginhtml = '<br> <input type="text" id="username" name="username" placeholder="请填写用户名" value=""><br> <input type="password" id="password" name="password" placeholder="请填写用户名" value=""><br> <input type="text" id="nick" name="nick" placeholder="请填写昵称" value=""><br>';
+		loginhtml = '<form role="form"> <div class ="form-group"><label  for="name">用户名</label><input type="text" class="form-control" id="username" name="username" placeholder="请填写用户名" value=""></div><div class="form-group"><label  for="name">密码</label><input type="password" class="form-control" id="password" name="password" placeholder="请填写密码" value=""></div> <div class="form-group"><label for="name">昵称</label><input type="text" id="nick" name="nick" class="form-control" placeholder="请填写昵称" value=""></div></form>';
 		function connect(){
 			ws = new WebSocket("ws://{$Request.host}:2345");
 			ws.onmessage = function (e) {
