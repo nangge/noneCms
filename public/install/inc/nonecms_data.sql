@@ -227,6 +227,39 @@ INSERT INTO `#none#_category` VALUES ('49', '关于我们', 'about', '', '0', '2
 INSERT INTO `#none#_category` VALUES ('50', '意见反馈', 'feedback', '', '0', '6', '0', '', '', '', '', 'Guestbook_index.html', '', null, '0', '0', '1', '', 0);
 INSERT INTO `#none#_category` VALUES ('51', '二级栏目', '', '', '46', '3', '0', '', '', '', '', 'List_product.html', 'Show_product.html', null, '0', '0', '1', '', 0);
 
+
+
+DROP TABLE IF EXISTS '#none#_user';
+CREATE TABLE `#none#_user` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL  DEFAULT '',
+  `password` varchar(32) NOT NULL  NOT NULL  DEFAULT '',
+  `nick` varchar(255) DEFAULT '',
+  `img` blob,
+  `create_time` int(10) NOT NULL  DEFAULT '0',
+  `update_time` int(10) NOT NULL  DEFAULT '0',
+  `ip` varchar(255) NOT NULL  DEFAULT NULL,
+  `accesstoken` varchar(32) NOT NULL  DEFAULT '',
+  `accesstoken_expire` int(10) NOT NULL  DEFAULT '0',
+  PRIMARY KEY ('id')
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- ----------------------------
+
+-- ----------------------------
+DROP TABLE IF EXISTS '#none#_chatrecord';
+CREATE TABLE `#none#_chatrecord` (
+   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) DEFAULT NULL,
+  `type` int(2) DEFAULT '0',
+  `content` text,
+  `receive_id` int(10) DEFAULT NULL,
+  `room_id` int(6) DEFAULT NULL,
+  `create_time` int(10) DEFAULT NULL,
+  `update_time` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 -- ----------------------------
 -- Table structure for #none#_comment
 -- ----------------------------
