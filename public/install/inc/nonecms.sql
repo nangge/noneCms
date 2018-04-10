@@ -125,6 +125,7 @@ CREATE TABLE `#none#_article` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1回收站',
   `userid` int(10) unsigned NOT NULL DEFAULT '0',
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -195,13 +196,40 @@ CREATE TABLE `#none#_category` (
   `position` varchar(6) NOT NULL DEFAULT '1' COMMENT '导航出现的位置，默认1：主导航；2：底部；3：侧边',
   `outurl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链url',
   `flag` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '属性：8 百度富文本框编辑；9 Markdown编辑',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of #none#_category
+
+DROP TABLE IF EXISTS `#none#_user`;
+CREATE TABLE `#none#_user` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL  DEFAULT '',
+  `password` varchar(32) NOT NULL  NOT NULL  DEFAULT '',
+  `nick` varchar(255) DEFAULT '',
+  `img` blob,
+  `create_time` int(10) NOT NULL  DEFAULT '0',
+  `update_time` int(10) NOT NULL  DEFAULT '0',
+  `ip` varchar(255) NOT NULL  DEFAULT '',
+  `accesstoken` varchar(32) NOT NULL  DEFAULT '',
+  `accesstoken_expire` int(10) NOT NULL  DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- ----------------------------
 
+-- ----------------------------
+DROP TABLE IF EXISTS `#none#_chatrecord`;
+CREATE TABLE `#none#_chatrecord` (
+   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) DEFAULT NULL,
+  `type` int(2) DEFAULT '0',
+  `content` text,
+  `receive_id` int(10) DEFAULT NULL,
+  `room_id` int(6) DEFAULT NULL,
+  `create_time` int(10) DEFAULT NULL,
+  `update_time` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- ----------------------------
 -- Table structure for #none#_comment
 -- ----------------------------
@@ -317,12 +345,13 @@ CREATE TABLE `#none#_product` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1回收站',
   `userid` int(10) unsigned NOT NULL DEFAULT '0',
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
+  `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `#none#_chat`;
-CREATE TABLE `#none#_chat` (
+CREATE TABLE `none_chat` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `type` varchar(10) NOT NULL DEFAULT '' COMMENT '消息类型 say:广播；prisay:私聊',
   `content` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',
