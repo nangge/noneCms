@@ -146,8 +146,8 @@ CREATE TABLE `#none#_article` (
 -- ----------------------------
 -- Records of #none#_article
 -- ----------------------------
-INSERT INTO `#none#_article` VALUES ('1', 'Ubuntu 15.04 静态IP网络配置\n浏览器内部工作原理\nLinux下c语言线程池的实现\njsoncpp解析\nC+', '', '', 'http://blog.csdn.net/a854073071/article/details', '', '', '', '', '', '1474191607', '0', '1', '47', '1', '0', '', '0', '0', '0');
-INSERT INTO `#none#_article` VALUES ('2', '图片上传', '', '', '', '', '', '/uploads/20161114\\583404ee60de6f311e4da6375abcb84e.jpg', '<p><img src=\"/ueditor/php/upload/image/20161113/1479018170146092.jpg\" title=\"1479018170146092.jpg\" alt=\"post3.jpg\"/></p><p>图片上传</p>', '图片上传', '1479018333', '1479115209', '1', '47', '1', '0', '', '0', '0', '0');
+INSERT INTO `#none#_article` VALUES ('1', 'Ubuntu 15.04 静态IP网络配置\n浏览器内部工作原理\nLinux下c语言线程池的实现\njsoncpp解析\nC+', '', '', 'http://blog.csdn.net/a854073071/article/details', '', '', '', '', '', '1474191607', '0', '1', '47', '1', '0', '', '0', '0', '0','0');
+INSERT INTO `#none#_article` VALUES ('2', '图片上传', '', '', '', '', '', '/uploads/20161114\\583404ee60de6f311e4da6375abcb84e.jpg', '<p><img src=\"/ueditor/php/upload/image/20161113/1479018170146092.jpg\" title=\"1479018170146092.jpg\" alt=\"post3.jpg\"/></p><p>图片上传</p>', '图片上传', '1479018333', '1479115209', '1', '47', '1', '0', '', '0', '0', '0','0');
 
 -- ----------------------------
 -- Table structure for #none#_banner
@@ -219,17 +219,17 @@ CREATE TABLE `#none#_category` (
 -- ----------------------------
 -- Records of #none#_category
 -- ----------------------------
-INSERT INTO `#none#_category` VALUES ('45', '文章模型', 'blog', '', '0', '1', '0', '', '', '', '', '', '', null, '0', '50', '1', '', 0);
-INSERT INTO `#none#_category` VALUES ('46', '产品模型', 'product', '', '0', '3', '0', '', '', '', '', '', '', null, '0', '50', '1', '', 0);
-INSERT INTO `#none#_category` VALUES ('47', '新闻', 'news', '', '0', '1', '0', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '50', '1', '', 0);
-INSERT INTO `#none#_category` VALUES ('48', '我的博客', 'blog', '', '0', '0', '1', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '0', '1', 'http://5none.com', 0);
-INSERT INTO `#none#_category` VALUES ('49', '关于我们', 'about', '', '0', '2', '0', '', '', '<p>发士大夫</p>', '', 'List_page.html', 'Show_article.html', '暗示法撒旦', '0', '0', '1', '', 0);
-INSERT INTO `#none#_category` VALUES ('50', '意见反馈', 'feedback', '', '0', '6', '0', '', '', '', '', 'Guestbook_index.html', '', null, '0', '0', '1', '', 0);
-INSERT INTO `#none#_category` VALUES ('51', '二级栏目', '', '', '46', '3', '0', '', '', '', '', 'List_product.html', 'Show_product.html', null, '0', '0', '1', '', 0);
+INSERT INTO `#none#_category` VALUES ('45', '文章模型', 'blog', '', '0', '1', '0', '', '', '', '', '', '', null, '0', '50', '1', '', 0,'0');
+INSERT INTO `#none#_category` VALUES ('46', '产品模型', 'product', '', '0', '3', '0', '', '', '', '', '', '', null, '0', '50', '1', '', 0,'0');
+INSERT INTO `#none#_category` VALUES ('47', '新闻', 'news', '', '0', '1', '0', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '50', '1', '', 0,'0');
+INSERT INTO `#none#_category` VALUES ('48', '我的博客', 'blog', '', '0', '0', '1', '', '', '', '', 'List_article.html', 'Show_article.html', null, '0', '0', '1', 'http://5none.com', 0,'0');
+INSERT INTO `#none#_category` VALUES ('49', '关于我们', 'about', '', '0', '2', '0', '', '', '<p>发士大夫</p>', '', 'List_page.html', 'Show_article.html', '暗示法撒旦', '0', '0', '1', '', 0,'0');
+INSERT INTO `#none#_category` VALUES ('50', '意见反馈', 'feedback', '', '0', '6', '0', '', '', '', '', 'Guestbook_index.html', '', null, '0', '0', '1', '', 0,'0');
+INSERT INTO `#none#_category` VALUES ('51', '二级栏目', '', '', '46', '3', '0', '', '', '', '', 'List_product.html', 'Show_product.html', null, '0', '0', '1', '', 0,'0');
 
 
 
-DROP TABLE IF EXISTS '#none#_user';
+DROP TABLE IF EXISTS `#none#_user`;
 CREATE TABLE `#none#_user` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL  DEFAULT '',
@@ -238,15 +238,15 @@ CREATE TABLE `#none#_user` (
   `img` blob,
   `create_time` int(10) NOT NULL  DEFAULT '0',
   `update_time` int(10) NOT NULL  DEFAULT '0',
-  `ip` varchar(255) NOT NULL  DEFAULT NULL,
+  `ip` varchar(255) NOT NULL  DEFAULT '',
   `accesstoken` varchar(32) NOT NULL  DEFAULT '',
   `accesstoken_expire` int(10) NOT NULL  DEFAULT '0',
-  PRIMARY KEY ('id')
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- ----------------------------
 
 -- ----------------------------
-DROP TABLE IF EXISTS '#none#_chatrecord';
+DROP TABLE IF EXISTS `#none#_chatrecord`;
 CREATE TABLE `#none#_chatrecord` (
    `id` int(10) NOT NULL AUTO_INCREMENT,
   `user_id` int(10) DEFAULT NULL,
@@ -382,10 +382,10 @@ CREATE TABLE `#none#_product` (
 -- ----------------------------
 -- Records of #none#_product
 -- ----------------------------
-INSERT INTO `#none#_product` VALUES ('29', 'webupload', '', '', '/uploads/20161124/20161124141006-thumb.jpeg', '/uploads/20161124\\8a9af5a4a608ce3088bb99123f97ae98.jpg', '<p>sfasfdasdfasdfsd</p>', '', '1.00', '0.00', 'sdf', '', '', '1479887452', '1479967806', '1', '46', '1', '0', '', '0', '0', '0');
-INSERT INTO `#none#_product` VALUES ('30', 'ces', '', 'dsd', '/uploads/20161124/20161124112437-thumb.jpeg', '/uploads/20161124\\1b1bc8747798660f36965bfd79332d4c.jpg|/uploads/20161124\\b777ed2fda015fa99cb1bf40868b35ff.jpg|/uploads/20161124\\7baca94ccf44ad9243700edc30efc4f0.jpg|/uploads/20161124\\ab77d53288704b54d43864d2dd5cf490.jpg|/uploads/20161124\\741c9adb296ade60846fb53d751eecc2.jpg|/uploads/20161124\\e6f6880ce3a3cf1c94e9ac4de7f5256a.jpg|/uploads/20161124\\dabcf8714caa18c970ac5f8609de0dd9.jpg|/uploads/20161124\\aba1bce170f09dc3e73c18e54ec7525e.jpg|/uploads/20161124\\d0228344a0f05869b0f24cdcb5b24241.jpg|/uploads/20161124\\891c56539aa96ae3134979ac90640129.jpg|/uploads/20161124\\6883d39163b8ec00196d53d05a58736a.jpg|/uploads/20161124\\72ca7423c0bed3c45bc296c97e4238ea.jpg', '<p>contentcontentcontentcontentcontentcontentcontentcontent</p>', '', '1.00', '0.00', 'sdf', '', '', '1479957877', '0', '1', '46', '1', '0', '', '0', '0', '0');
-INSERT INTO `#none#_product` VALUES ('31', 'CENTOS7 下部署RSync', '', '', '/uploads/20161124/20161124165252-thumb.jpeg', '/uploads/20161124\\b770210db9f306fb4d47251701a93912.jpg', '     ', '', '0.00', '0.00', '', '', '', '1479977262', '1479977572', '0', '46', '1', '0', '', '0', '0', '0');
-INSERT INTO `#none#_product` VALUES ('32', 'asdfs', '', '', '/uploads/20161124/20161124165515-thumb.jpeg', '/uploads/20161124\\bdfea98f884f6769d36c9405bca5534a.jpg', '<p>afas</p>', 'asf', '1.00', '0.00', 'fas', '', '', '1479977715', '0', '0', '46', '1', '0', '', '0', '0', '0');
+INSERT INTO `#none#_product` VALUES ('29', 'webupload', '', '', '/uploads/20161124/20161124141006-thumb.jpeg', '/uploads/20161124\\8a9af5a4a608ce3088bb99123f97ae98.jpg', '<p>sfasfdasdfasdfsd</p>', '', '1.00', '0.00', 'sdf', '', '', '1479887452', '1479967806', '1', '46', '1', '0', '', '0', '0', '0','0');
+INSERT INTO `#none#_product` VALUES ('30', 'ces', '', 'dsd', '/uploads/20161124/20161124112437-thumb.jpeg', '/uploads/20161124\\1b1bc8747798660f36965bfd79332d4c.jpg|/uploads/20161124\\b777ed2fda015fa99cb1bf40868b35ff.jpg|/uploads/20161124\\7baca94ccf44ad9243700edc30efc4f0.jpg|/uploads/20161124\\ab77d53288704b54d43864d2dd5cf490.jpg|/uploads/20161124\\741c9adb296ade60846fb53d751eecc2.jpg|/uploads/20161124\\e6f6880ce3a3cf1c94e9ac4de7f5256a.jpg|/uploads/20161124\\dabcf8714caa18c970ac5f8609de0dd9.jpg|/uploads/20161124\\aba1bce170f09dc3e73c18e54ec7525e.jpg|/uploads/20161124\\d0228344a0f05869b0f24cdcb5b24241.jpg|/uploads/20161124\\891c56539aa96ae3134979ac90640129.jpg|/uploads/20161124\\6883d39163b8ec00196d53d05a58736a.jpg|/uploads/20161124\\72ca7423c0bed3c45bc296c97e4238ea.jpg', '<p>contentcontentcontentcontentcontentcontentcontentcontent</p>', '', '1.00', '0.00', 'sdf', '', '', '1479957877', '0', '1', '46', '1', '0', '', '0', '0', '0','0');
+INSERT INTO `#none#_product` VALUES ('31', 'CENTOS7 下部署RSync', '', '', '/uploads/20161124/20161124165252-thumb.jpeg', '/uploads/20161124\\b770210db9f306fb4d47251701a93912.jpg', '     ', '', '0.00', '0.00', '', '', '', '1479977262', '1479977572', '0', '46', '1', '0', '', '0', '0', '0','0');
+INSERT INTO `#none#_product` VALUES ('32', 'asdfs', '', '', '/uploads/20161124/20161124165515-thumb.jpeg', '/uploads/20161124\\bdfea98f884f6769d36c9405bca5534a.jpg', '<p>afas</p>', 'asf', '1.00', '0.00', 'fas', '', '', '1479977715', '0', '0', '46', '1', '0', '', '0', '0', '0','0');
 
 
 -- ----------------------------

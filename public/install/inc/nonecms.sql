@@ -201,7 +201,7 @@ CREATE TABLE `#none#_category` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS '#none#_user';
+DROP TABLE IF EXISTS `#none#_user`;
 CREATE TABLE `#none#_user` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL  DEFAULT '',
@@ -210,15 +210,15 @@ CREATE TABLE `#none#_user` (
   `img` blob,
   `create_time` int(10) NOT NULL  DEFAULT '0',
   `update_time` int(10) NOT NULL  DEFAULT '0',
-  `ip` varchar(255) NOT NULL  DEFAULT NULL,
+  `ip` varchar(255) NOT NULL  DEFAULT '',
   `accesstoken` varchar(32) NOT NULL  DEFAULT '',
   `accesstoken_expire` int(10) NOT NULL  DEFAULT '0',
-  PRIMARY KEY ('id')
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- ----------------------------
 
 -- ----------------------------
-DROP TABLE IF EXISTS '#none#_chatrecord';
+DROP TABLE IF EXISTS `#none#_chatrecord`;
 CREATE TABLE `#none#_chatrecord` (
    `id` int(10) NOT NULL AUTO_INCREMENT,
   `user_id` int(10) DEFAULT NULL,
