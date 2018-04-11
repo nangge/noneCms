@@ -22,7 +22,7 @@ class Product extends Common
     {
         parent::initialize();
         $catgeroy = Category::where('modelid', 3)->order('id ASC')->select();
-        $this->assign('category', create_tree($catgeroy));
+        $this->assign('category', create_tree($catgeroy->toArray()));
     }
 
     /**

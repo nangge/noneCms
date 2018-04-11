@@ -350,8 +350,8 @@ CREATE TABLE `#none#_product` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS `#none#_chat`;
-CREATE TABLE `none_chat` (
+DROP TABLE IF EXISTS `none_chat`;
+CREATE TABLE `#none#_chat` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `type` varchar(10) NOT NULL DEFAULT '' COMMENT '消息类型 say:广播；prisay:私聊',
   `content` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',

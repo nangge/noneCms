@@ -21,8 +21,8 @@ CREATE TABLE `#none#_admin` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS `#none#_chat`;
-CREATE TABLE `none_chat` (
+DROP TABLE IF EXISTS `none_chat`;
+CREATE TABLE `#none#_chat` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `type` varchar(10) NOT NULL DEFAULT '' COMMENT '消息类型 say:广播；prisay:私聊',
   `content` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',
@@ -157,8 +157,8 @@ CREATE TABLE `#none#_banner` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'banner 标题',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'banner 类型 1：banner大图；2：广告',
-  `start_time` datetime DEFAULT NULL COMMENT '广告开始时间',
-  `end_time` datetime DEFAULT NULL COMMENT '广告结束时间',
+  `start_time` int(10) DEFAULT NULL COMMENT '广告开始时间',
+  `end_time` ing(10) DEFAULT NULL COMMENT '广告结束时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0：否；1：是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -272,7 +272,7 @@ CREATE TABLE `#none#_comment` (
   `email` varchar(255) DEFAULT '' COMMENT 'email',
   `qq` varchar(15) DEFAULT '' COMMENT 'qq',
   `content` varchar(255) NOT NULL COMMENT '留言内容',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `create_time` int(10) NOT NULL COMMENT '创建时间',
   `rid` int(10) DEFAULT '0' COMMENT '回复id',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '评论状态 1：已删除',
   `uid` int(10) DEFAULT '0' COMMENT '用户id',
