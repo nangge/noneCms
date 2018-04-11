@@ -158,7 +158,7 @@ CREATE TABLE `#none#_banner` (
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'banner 标题',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'banner 类型 1：banner大图；2：广告',
   `start_time` int(10) DEFAULT NULL COMMENT '广告开始时间',
-  `end_time` ing(10) DEFAULT NULL COMMENT '广告结束时间',
+  `end_time` int(10) DEFAULT NULL COMMENT '广告结束时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0：否；1：是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -166,7 +166,7 @@ CREATE TABLE `#none#_banner` (
 -- ----------------------------
 -- Records of #none#_banner
 -- ----------------------------
-INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', '', '', '0');
+INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', 1402564152, 1594125465, '0');
 
 -- ----------------------------
 -- Table structure for #none#_banner_detail
