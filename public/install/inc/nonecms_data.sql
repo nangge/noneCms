@@ -1,3 +1,18 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : centos
+Source Server Version : 50638
+Source Host           : 127.0.0.1
+Source Database       : NoneCMS
+
+Target Server Type    : MYSQL
+Target Server Version : 50638
+File Encoding         : 65001
+
+Date: 2018-09-19 14:58:57
+*/
+
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -12,28 +27,19 @@ CREATE TABLE `#none#_admin` (
   `realname` varchar(20) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `usertype` tinyint(4) NOT NULL DEFAULT '0',
-  `logintime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '登录时间',
+  `logintime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '登录时间',
   `loginip` varchar(30) NOT NULL DEFAULT '' COMMENT '登录IP',
   `islock` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '锁定状态',
   `createtime` int(10) NOT NULL DEFAULT '0' COMMENT '管理员创建时间',
   `role_id` int(10) DEFAULT '0' COMMENT '角色id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Records of #none#_admin
+-- ----------------------------
+INSERT INTO `#none#_admin` VALUES ('1', 'admin', 'e154f8031e1380355e3a645978739012', 'KFVGxU', '', '', '9', '1536921886', '192.168.1.46', '0', '0', '0');
 
-DROP TABLE IF EXISTS `none_chat`;
-CREATE TABLE `#none#_chat` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `type` varchar(10) NOT NULL DEFAULT '' COMMENT '消息类型 say:广播；prisay:私聊',
-  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',
-  `name` varchar(255) NOT NULL DEFAULT 'nango' COMMENT '用户名称',
-  `client_id` int(10) DEFAULT '0' COMMENT '发送消息客户端id',
-  `to_client_id` varchar(4) DEFAULT '' COMMENT '私聊对象客户端id',
-  `send_time` int(10) DEFAULT NULL COMMENT '发送消息时间',
-  `room_id` int(5) DEFAULT '1' COMMENT '房间id',
-  `ip` varchar(50) DEFAULT NULL COMMENT '客户端ip',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1720 DEFAULT CHARSET=utf8;
 -- ----------------------------
 -- Table structure for #none#_admin_power
 -- ----------------------------
@@ -96,7 +102,6 @@ INSERT INTO `#none#_admin_power` VALUES ('44', '留言管理', 'comment/index', 
 INSERT INTO `#none#_admin_power` VALUES ('45', '回复留言', 'comment/add', '44');
 INSERT INTO `#none#_admin_power` VALUES ('46', '删除留言', 'comment/dele', '44');
 
-
 -- ----------------------------
 -- Table structure for #none#_admin_role
 -- ----------------------------
@@ -108,7 +113,7 @@ CREATE TABLE `#none#_admin_role` (
   `createtime` int(10) DEFAULT NULL COMMENT '创建时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_admin_role
@@ -141,13 +146,11 @@ CREATE TABLE `#none#_article` (
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
   `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_article
 -- ----------------------------
-INSERT INTO `#none#_article` VALUES ('1', 'Ubuntu 15.04 静态IP网络配置\n浏览器内部工作原理\nLinux下c语言线程池的实现\njsoncpp解析\nC+', '', '', 'http://blog.csdn.net/a854073071/article/details', '', '', '', '', '', '1474191607', '0', '1', '47', '1', '0', '', '0', '0', '0','0');
-INSERT INTO `#none#_article` VALUES ('2', '图片上传', '', '', '', '', '', '/uploads/20161114\\583404ee60de6f311e4da6375abcb84e.jpg', '<p><img src=\"/ueditor/php/upload/image/20161113/1479018170146092.jpg\" title=\"1479018170146092.jpg\" alt=\"post3.jpg\"/></p><p>图片上传</p>', '图片上传', '1479018333', '1479115209', '1', '47', '1', '0', '', '0', '0', '0','0');
 
 -- ----------------------------
 -- Table structure for #none#_banner
@@ -157,8 +160,8 @@ CREATE TABLE `#none#_banner` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'banner 标题',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'banner 类型 1：banner大图；2：广告',
-  `start_time` int(10) DEFAULT NULL COMMENT '广告开始时间',
-  `end_time` int(10) DEFAULT NULL COMMENT '广告结束时间',
+  `start_time` int(11) DEFAULT NULL COMMENT '广告开始时间',
+  `end_time` int(11) DEFAULT NULL COMMENT '广告结束时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0：否；1：是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -166,7 +169,7 @@ CREATE TABLE `#none#_banner` (
 -- ----------------------------
 -- Records of #none#_banner
 -- ----------------------------
-INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', 1402564152, 1594125465, '0');
+INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', '1484512321', '1645710511', '0');
 
 -- ----------------------------
 -- Table structure for #none#_banner_detail
@@ -214,7 +217,7 @@ CREATE TABLE `#none#_category` (
   `flag` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '属性：8 百度富文本框编辑；9 Markdown编辑',
   `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_category
@@ -227,38 +230,24 @@ INSERT INTO `#none#_category` VALUES ('49', '关于我们', 'about', '', '0', '2
 INSERT INTO `#none#_category` VALUES ('50', '意见反馈', 'feedback', '', '0', '6', '0', '', '', '', '', 'Guestbook_index.html', '', null, '0', '0', '1', '', 0,'0');
 INSERT INTO `#none#_category` VALUES ('51', '二级栏目', '', '', '46', '3', '0', '', '', '', '', 'List_product.html', 'Show_product.html', null, '0', '0', '1', '', 0,'0');
 
-
-
-DROP TABLE IF EXISTS `#none#_user`;
-CREATE TABLE `#none#_user` (
+-- ----------------------------
+-- Table structure for #none#_chat
+-- ----------------------------
+DROP TABLE IF EXISTS `#none#_chat`;
+CREATE TABLE `#none#_chat` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL  DEFAULT '',
-  `password` varchar(32) NOT NULL  NOT NULL  DEFAULT '',
-  `nick` varchar(255) DEFAULT '',
-  `img` blob,
-  `create_time` int(10) NOT NULL  DEFAULT '0',
-  `update_time` int(10) NOT NULL  DEFAULT '0',
-  `ip` varchar(255) NOT NULL  DEFAULT '',
-  `accesstoken` varchar(32) NOT NULL  DEFAULT '',
-  `accesstoken_expire` int(10) NOT NULL  DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- ----------------------------
-
--- ----------------------------
-DROP TABLE IF EXISTS `#none#_chatrecord`;
-CREATE TABLE `#none#_chatrecord` (
-   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) DEFAULT NULL,
-  `type` int(2) DEFAULT '0',
-  `content` text,
+  `user_id` int(10) NOT NULL COMMENT '用户登录id',
+  `type` varchar(10) NOT NULL DEFAULT '' COMMENT '消息类型 say:广播；prisay:私聊',
   `receive_id` int(10) DEFAULT NULL,
-  `room_id` int(6) DEFAULT NULL,
-  `create_time` int(10) DEFAULT NULL,
-  `update_time` int(10) DEFAULT NULL,
+  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',
+  `name` varchar(255) NOT NULL DEFAULT 'nango' COMMENT '用户名称',
+  `client_id` int(10) DEFAULT '0' COMMENT '发送消息客户端id',
+  `to_client_id` varchar(4) DEFAULT '' COMMENT '私聊对象客户端id',
+  `send_time` int(10) DEFAULT NULL COMMENT '发送消息时间',
+  `room_id` int(5) DEFAULT '1' COMMENT '房间id',
+  `ip` varchar(50) DEFAULT NULL COMMENT '客户端ip',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for #none#_comment
@@ -272,7 +261,7 @@ CREATE TABLE `#none#_comment` (
   `email` varchar(255) DEFAULT '' COMMENT 'email',
   `qq` varchar(15) DEFAULT '' COMMENT 'qq',
   `content` varchar(255) NOT NULL COMMENT '留言内容',
-  `create_time` int(10) NOT NULL COMMENT '创建时间',
+  `create_time` int(11) NOT NULL COMMENT '创建时间',
   `rid` int(10) DEFAULT '0' COMMENT '回复id',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '评论状态 1：已删除',
   `uid` int(10) DEFAULT '0' COMMENT '用户id',
@@ -319,8 +308,11 @@ CREATE TABLE `#none#_log` (
   `username` varchar(255) DEFAULT NULL,
   `userid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Records of #none#_log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for #none#_modeln
@@ -337,10 +329,10 @@ CREATE TABLE `#none#_modeln` (
   `template_show` varchar(60) NOT NULL DEFAULT '',
   `sort` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of #none#_model
+-- Records of #none#_modeln
 -- ----------------------------
 INSERT INTO `#none#_modeln` VALUES ('1', '文章模型', '', 'article', '1', '', 'List_article.html', 'Show_article.html', '1');
 INSERT INTO `#none#_modeln` VALUES ('2', '单页模型', '', 'category', '1', '', 'List_page.html', 'Show_page.html', '2');
@@ -377,15 +369,15 @@ CREATE TABLE `#none#_product` (
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
   `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_product
 -- ----------------------------
-INSERT INTO `#none#_product` VALUES ('29', 'webupload', '', '', '/uploads/20161124/20161124141006-thumb.jpeg', '/uploads/20161124\\8a9af5a4a608ce3088bb99123f97ae98.jpg', '<p>sfasfdasdfasdfsd</p>', '', '1.00', '0.00', 'sdf', '', '', '1479887452', '1479967806', '1', '46', '1', '0', '', '0', '0', '0','0');
-INSERT INTO `#none#_product` VALUES ('30', 'ces', '', 'dsd', '/uploads/20161124/20161124112437-thumb.jpeg', '/uploads/20161124\\1b1bc8747798660f36965bfd79332d4c.jpg|/uploads/20161124\\b777ed2fda015fa99cb1bf40868b35ff.jpg|/uploads/20161124\\7baca94ccf44ad9243700edc30efc4f0.jpg|/uploads/20161124\\ab77d53288704b54d43864d2dd5cf490.jpg|/uploads/20161124\\741c9adb296ade60846fb53d751eecc2.jpg|/uploads/20161124\\e6f6880ce3a3cf1c94e9ac4de7f5256a.jpg|/uploads/20161124\\dabcf8714caa18c970ac5f8609de0dd9.jpg|/uploads/20161124\\aba1bce170f09dc3e73c18e54ec7525e.jpg|/uploads/20161124\\d0228344a0f05869b0f24cdcb5b24241.jpg|/uploads/20161124\\891c56539aa96ae3134979ac90640129.jpg|/uploads/20161124\\6883d39163b8ec00196d53d05a58736a.jpg|/uploads/20161124\\72ca7423c0bed3c45bc296c97e4238ea.jpg', '<p>contentcontentcontentcontentcontentcontentcontentcontent</p>', '', '1.00', '0.00', 'sdf', '', '', '1479957877', '0', '1', '46', '1', '0', '', '0', '0', '0','0');
-INSERT INTO `#none#_product` VALUES ('31', 'CENTOS7 下部署RSync', '', '', '/uploads/20161124/20161124165252-thumb.jpeg', '/uploads/20161124\\b770210db9f306fb4d47251701a93912.jpg', '     ', '', '0.00', '0.00', '', '', '', '1479977262', '1479977572', '0', '46', '1', '0', '', '0', '0', '0','0');
-INSERT INTO `#none#_product` VALUES ('32', 'asdfs', '', '', '/uploads/20161124/20161124165515-thumb.jpeg', '/uploads/20161124\\bdfea98f884f6769d36c9405bca5534a.jpg', '<p>afas</p>', 'asf', '1.00', '0.00', 'fas', '', '', '1479977715', '0', '0', '46', '1', '0', '', '0', '0', '0','0');
+INSERT INTO `#none#_product` VALUES ('29', 'NoneCms 增加了Markdown编辑器', '', '', '/uploads/20161219\\d57ee6aa088a79866cfa7f8d64c3546a.jpg', '/uploads/20161219\\47aacf820659b5e3bcf08e74174e7946.jpg', '<p>sfasfdasdfasdfsd</p>', '', '1.00', '0.00', 'sdf', '', '', '1479887452', '1479967806', '1', '46', '1', '0', '', '0', '0', '0','0');
+INSERT INTO `#none#_product` VALUES ('30', 'NoneCms 增加了聊天室功能，欢迎使用', '', '哈哈', '/uploads/20161219\\d764a6c9cb36617eefd1340d2b3fb69e.jpg', '/uploads/20161219\\47aacf820659b5e3bcf08e74174e7946.jpg|/uploads/20161219\\d764a6c9cb36617eefd1340d2b3fb69e.jpg', '<p>contentcontentcontentcontentcontentcontentcontentcontent</p>', '', '1.00', '0.00', 'sdf', '', '', '1479957877', '0', '1', '46', '1', '0', '', '0', '0', '0','0');
+INSERT INTO `#none#_product` VALUES ('31', 'CENTOS7 下部署RSync', '', '', '/uploads/20161219\\d57ee6aa088a79866cfa7f8d64c3546a.jpg', '/uploads/20161219\\47aacf820659b5e3bcf08e74174e7946.jpg', '     ', '', '0.00', '0.00', '', '', '', '1479977262', '1479977572', '0', '46', '1', '0', '', '0', '0', '0','0');
+INSERT INTO `#none#_product` VALUES ('32', 'NoneCms 是一款开源软件', '', '', '/uploads/20161219\\47aacf820659b5e3bcf08e74174e7946.jpg', '/uploads/20161219\\47aacf820659b5e3bcf08e74174e7946.jpg', '<p>afas</p>', 'asf', '1.00', '0.00', 'fas', '', '', '1479977715', '0', '0', '46', '1', '0', '', '0', '0', '0','0');
 
 
 -- ----------------------------
@@ -403,15 +395,15 @@ CREATE TABLE `#none#_system` (
   `value` text,
   `sort` smallint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_system
 -- ----------------------------
-INSERT INTO `#none#_system` VALUES ('1', 'site_name', '站点名称', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('2', 'site_title', '站点标题', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('3', 'site_keywords', '站点关键字', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('4', 'site_description', '站点描述', '', '', '0', '0', '#site_name#', '0');
+INSERT INTO `#none#_system` VALUES ('1', 'site_name', '站点名称', '', '', '0', '0', '我的网站', '0');
+INSERT INTO `#none#_system` VALUES ('2', 'site_title', '站点标题', '', '', '0', '0', '我的网站', '0');
+INSERT INTO `#none#_system` VALUES ('3', 'site_keywords', '站点关键字', '', '', '0', '0', '我的网站', '0');
+INSERT INTO `#none#_system` VALUES ('4', 'site_description', '站点描述', '', '', '0', '0', '我的网站', '0');
 INSERT INTO `#none#_system` VALUES ('5', 'site_address', '公司地址', '', '', '0', '0', '浙江省杭州市', '0');
 INSERT INTO `#none#_system` VALUES ('6', 'site_closed', '关闭网站', '', 'radio', '0', '0', '0', '0');
 INSERT INTO `#none#_system` VALUES ('7', 'site_icp', 'ICP备案证书号', '', '', '0', '0', '', '0');
@@ -422,7 +414,7 @@ INSERT INTO `#none#_system` VALUES ('11', 'site_email', '邮件地址', '', '', 
 INSERT INTO `#none#_system` VALUES ('12', 'display_thumbw', '缩略图宽度', '', '', '0', '0', '300', '0');
 INSERT INTO `#none#_system` VALUES ('13', 'display_thumbh', '缩略图高度', '', '', '0', '0', '300', '0');
 INSERT INTO `#none#_system` VALUES ('14', 'site_editor', '编辑器选择', '如果选择Markdown编辑器，则前台展示页面需引入editor.md相关js；具体操作流程看文章：blog.5none.com', 'radio', '0', '0', 'markdown', '0');
-INSERT INTO `#none#_system` VALUES ('15', 'site_theme', '网站主题', '', 'select', '0', '0', '#site_theme#', '0');
+INSERT INTO `#none#_system` VALUES ('15', 'site_theme', '网站主题', '', 'select', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('16', 'site_mobile_theme', '移动端主题', '', 'select', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('17', 'email_host', '邮箱服务器主机地址', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('18', 'email_port', '端口号', '', '', '0', '0', '25', '0');
@@ -430,5 +422,27 @@ INSERT INTO `#none#_system` VALUES ('19', 'email_username', '邮箱用户名', '
 INSERT INTO `#none#_system` VALUES ('20', 'email_password', '邮箱授权码', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('21', 'email_fromemail', '发件人邮箱', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('22', 'email_fromuser', '发件人用户名', '', '', '0', '0', 'default', '0');
-INSERT INTO `#none#_system` VALUES ('23', 'email_debug', '开启调试模式', ' 0 No output  1 Commands 2 Data and commands 3 As 2 plus connection status 4 Low-level data output.', '', '0', '0', 0, '0');
-INSERT INTO `#none#_system` VALUES ('24', 'site_dsn', 'Client keys', 'Sentry日志Client keys', '', '0', '0', '', '0');
+INSERT INTO `#none#_system` VALUES ('23', 'email_debug', '开启调试模式', ' 0 No output  1 Commands 2 Data and commands 3 As 2 plus connection status 4 Low-level data output.', '', '0', '0', '0', '0');
+
+-- ----------------------------
+-- Table structure for #none#_user
+-- ----------------------------
+DROP TABLE IF EXISTS `#none#_user`;
+CREATE TABLE `#none#_user` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `password` varchar(32) NOT NULL DEFAULT '',
+  `img` text,
+  `create_time` int(10) NOT NULL DEFAULT '0',
+  `update_time` int(10) NOT NULL DEFAULT '0',
+  `ip` varchar(255) NOT NULL DEFAULT '',
+  `accesstoken` varchar(32) NOT NULL DEFAULT '',
+  `accesstoken_expire` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of #none#_user
+-- ----------------------------
+INSERT INTO `#none#_user` VALUES ('1', 'nonecms', '553212320@qq.com', 'e10adc3949ba59abbe56e057f20f883e', 0x646174613A696D6167652F6A7065673B6261736536342C2F396A2F34414151536B5A4A5267414241514141415141424141442F2F67413851314A4651565250556A6F675A325174616E426C5A7942324D5334774943683163326C755A79424A536B6367536C4246527942324E6A49704C4342786457467361585235494430674D54417743762F6241454D4141514542415145424151454241514542415145424151454241514542415145424151454241514542415145424151454241514542415145424151454241514542415145424151454241514542415145424151454241662F6241454D4241514542415145424151454241514542415145424151454241514542415145424151454241514542415145424151454241514542415145424151454241514542415145424151454241514542415145424151454241662F41414245494142344148674D4249674143455145444551482F7841416641414142425145424151454241514141414141414141414141514944424155474277674A4367762F784143314541414341514D444167514442515545424141414158304241674D4142424546456945785151595455574548496E45554D6F47526F51676A5172484246564C523843517A596E4B4343516F574678675A4769556D4A7967704B6A51314E6A63344F547044524556475230684A536C4E5556565A5857466C615932526C5A6D646F6157707A6448563264336835656F4F456859614869496D4B6B704F556C5A61586D4A6D616F714F6B7061616E714B6D7173724F3074626133754C6D367773504578636248794D6E4B3074505531646258324E6E6134654C6A354F586D352B6A7036764879382F5431397666342B66722F7841416641514144415145424151454241514542414141414141414141514944424155474277674A4367762F78414331455141434151494542414D454277554542414142416E6341415149444551514649544547456B4652423246784579497967516755517047687363454A497A4E53384256696374454B46695130345358784678675A4769596E4B436B714E5459334F446B3651305246526B644953557054564656575631685A576D4E6B5A575A6E61476C7163335231646E64346558714367345346686F6549695971536B3553566C7065596D5A71696F36536C7071656F71617179733753317472653475627243773854467873664979637253303954563174665932647269342B546C3575666F36657279382F5431397666342B66722F3267414D41774541416845444551412F415032442F77434377482F425233582F4150676E39384850414466446E772F59654B766A5238636646327365442F414E767179535461543463303751394566552F45336A4B6178677732743332697933336836773066516E614F33763954316D336C75336B744C4F347337762B49663975562F465878412B4150777A2B503841346C3137346C654976326A50694A34782B49592B4F477566454C7863392F7157696638414343586C765A326569615670375062576D6A65484C722B31745031485474506968614F4D543666625770537A657868722B76542F41494B792F735361522B322F6F4F67655072727862644456666756384A5069367677353842517A4C7079363938516646336948345861374A665336793932693279582F672F77434833694C775174734C565A6F377678565961784666524453587462762B5A4C34332F734865442F4266374B33684834642B50666939465A66744A5850696D4C346D61483458763558314C54394873504533682F523950314C776272786E764A4A74536B74376277316F4C616A6678775257567471576E53323970625457734D4A664C4B7174476E6C746172435745684E2B326A586E566A6572482B464F6A374A3375344F6E477442786A76566D72744A4F2F6F5A745472317366536F75474B6E424F6C4F685470545559543932634B6A714B306B7071704B6E4A536C65304975797530342F68744271692B4E374336316D3168577831537869746F7645466E4249456379737A4B6459736F3049614F316C6B5A4557496743316C4C326D2B525774704867302B5879462B7A61747144796F676153423556754A596353655769374A397A47566D6A6942416242526432315544454E725833777431543457334B367A34725A7242744D767070622B53786552347862524C4C4244706E6B546552466653336D7070426D316B58375050434A764D7A444649563569316E734E64746B76744E61473175335969373079346E6A5552454B706534696B6D6A6A684B504D7A72736A4C5344687041674B37387169686A6162715532354B3975654D593363767453546C46744C653757736D377537626375616D716D43714B46574B6A4C6C54644F556D34714C537447536A4B4B6276306B375274625379532F314F2F774275483976442F676E352B7A5A384F6250773334393037576834772B4F576B2B492F682F384142665276422F773738552B4E7645336950786E71746D32683658465957576C517444623342316A55394F6A73467533686C3143636C644F6A764A59335650346E663278664475726547504733686E34322F74416545374C776C3853644938412B485042637476344E385961667239374E6436484E426F4F6F66384C4F305335754E4D76394D385436584B2F3262576E3053303132326D6E682B3258576C364862506258622F7742486D756543496646306C724E3467747445316154535A356A703133716C6E64616C6661584D43724735306D3475627333476E33586E4B6B6B647861584E764E453063637362704B694D6E7735385376324E76326576474773366C652B4B6641326B6135716B327133656F36686536355A617234694E315065336B6C3171453554567646446F4C75397548616153646B5A64354F596D354A39374D6F3036744655384C686C44447A584C4B6D3552584D6E474F6B6E65373565586D707150736F707530314E6536655A6C63716C43704F70694D544F6464576C436F6C7A636B6B3034745857696153556D31556C5A65357974335838347678662B48326E2F41426B2B4771654C377678546F2B677858577258552F687532757275396134314365306D73724F356E4F6D36625933537244645336694C5733764E556B7439686775376F524C5A77696158383750465867335676682F71567670312F64324E784463616462586C6C4A6154784F733970654437526258684B744C48496C3345336E517A4C497979524D6A49466A5A516637494C6A39687A396D75533173644D69384161636D6E77435735744C4E644D384F51577473317949784D385676486F4C4B736B72515147516B7649336C49544D53716B5A6366374358374D6C6E7156336670384D2F446C337146796977547A36726F6569617170676745617778785258326D7A775165576952786F594949747361434E634A38703857685372596561536358525556616D724A716235564B5633336B335A4A7057337532326578694B754778464E4E526C484574726E717555705261303559714E6C5A4B4E7233556E7A6171566B6F722F2F32513D3D, '1537327719', '1537335624', '', '5bb8a5b75598e141a6cf6b8b013bca53', '1537342824');

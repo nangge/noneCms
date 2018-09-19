@@ -8,7 +8,7 @@
 
 namespace app\push\controller;
 
-use app\common\model\Chatrecord;
+use app\common\model\Chat;
 use app\push\lib\User;
 use app\push\service\MessageService;
 use think\worker\Server;
@@ -123,7 +123,7 @@ class WorkerChat extends Server
 
         $message = [
             'content' => $res_text,
-            'nick' => '图灵机器人',
+            'username' => '图灵机器人',
             'type' => 'say',
             'time' => date('Y-m-d H:i'),
             'img' => "http://file.tuling123.com/static/2017-07-24-icon40.png"
@@ -135,7 +135,7 @@ class WorkerChat extends Server
             'type' => 0,
         ];
 
-        if (Chatrecord::create($save_data)) {
+        if (Chat::create($save_data)) {
             $this->sendMessageToAll($message);
             return true;
         } else {
@@ -165,8 +165,8 @@ class WorkerChat extends Server
         unset(self::$hasConnections[$id]);
         if ($user) {
             $message = [
-                'content' => $user['nick'] . '悄悄的走了',
-                'nick' => '<b style="color:red">系统：</b>',
+                'content' => $user['username'] . '悄悄的走了',
+                'username' => '<b style="color:red">系统：</b>',
                 'type' => 'logout',
                 'img' => '/template/index/blog/images/nango.jpg',
                 'clients' => self::$hasConnections,

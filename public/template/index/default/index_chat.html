@@ -1,369 +1,448 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>基于workerman的聊天室</title>
-	<meta name="keyword" content="workerman+TP,TP整合workerman">
-	<link href="__COMMON__/css/chat.css" rel='stylesheet' type='text/css' />
-	<script src="__PUBLIC__/js/jquery-1.7.2.js"></script>
-	<link rel="stylesheet" href="__COMMON__/plugin/emoji/lib/css/jquery.mCustomScrollbar.min.css"/>
-	<link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/jquery.emoji.css"/>
-	<link rel="stylesheet" href="__COMMON__/plugin/emoji/lib/css/railscasts.css"/>
-	<link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/index.css"/>
-	<script src="__COMMON__/js/layer.js" charset="utf-8"></script>
-	<link rel="stylesheet" href="/static/admin/css/bootstrap.min.css">
-	<style type="text/css">
-		.load{
-			display: block;
-			width: 76px;
-			height: 20px;
-			background: #000;
-			color: #fff;
-			line-height: 20px;
-			border-radius: 5px;
-			margin: 0px auto;
-			text-align: center;
-			cursor: pointer;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <title>基于workerman的聊天室</title>
+    <meta name="keyword" content="workerman+TP,TP整合workerman">
+    <link href="__COMMON__/css/chat.css" rel='stylesheet' type='text/css'/>
+    <script src="__PUBLIC__/js/jquery-1.7.2.js"></script>
+    <link rel="stylesheet" href="__COMMON__/plugin/emoji/lib/css/jquery.mCustomScrollbar.min.css"/>
+    <link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/jquery.emoji.css"/>
+    <link rel="stylesheet" href="__COMMON__/plugin/emoji/lib/css/railscasts.css"/>
+    <link rel="stylesheet" href="__COMMON__/plugin/emoji/dist/css/index.css"/>
+    <script src="__COMMON__/js/layer.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="/static/admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/admin/css/login.css">
+    <style type="text/css">
+        .load {
+            display: block;
+            width: 76px;
+            height: 20px;
+            background: #000;
+            color: #fff;
+            line-height: 20px;
+            border-radius: 5px;
+            margin: 0px auto;
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div id="chat">
-	<div class="sidebar">
-		<div class="m-card">
-			<header>
-				<img class="avatar" width="40" height="40" alt="Coffce" src="__PUBLIC__/images/nango.jpg">
-				<p class="name">nango</p>
-			</header>
-			<footer>
-				<input class="search" placeholder="search room...//TODO">
-			</footer>
-		</div>
-		<!--v-component-->
-		<div class="m-list">
-			<ul>
-				<li class="active">
-					<img class="avatar" width="30" height="30" alt="房间" src="__PUBLIC__/images/nango.jpg">
-					<p class="name">nango's room</p>
-				</li>
-			</ul>
-		</div>
-	</div>
-	<div class="main">
-		<div class="m-message">
-			<ul>
-				<li>
-					<p class="time"><span></span>
-					</p>
-					<div class="main">
-						<img class="avatar" width="30" height="30" src="__PUBLIC__/images/nango.jpg">
-						<div class="nick">nango</div>
-						<div class="text">Hello，这是一个基于Workerman的聊天室，整合了TP5.0，实现实时显示，支持私聊，非轮询。---请文明发言</div>
-					</div>
-				</li>
-			</ul>
-		</div>
-		<!--send-->
-		<div class="users">
-			在线用户
-			<select name="client" class="client">
+    <div class="sidebar">
+        <div class="m-card">
+            <header>
+                <img class="avatar" width="40" height="40" alt="Coffce" src="__PUBLIC__/images/nango.jpg">
+                <p class="name">nango</p>
+            </header>
+            <footer>
+                <input class="search" placeholder="search room...//TODO">
+            </footer>
+        </div>
+        <!--v-component-->
+        <div class="m-list">
+            <ul>
+                <li class="active">
+                    <img class="avatar" width="30" height="30" alt="房间" src="__PUBLIC__/images/nango.jpg">
+                    <p class="name">nango's room</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main">
+        <div class="m-message">
+            <ul>
+                <li>
+                    <p class="time"><span></span>
+                    </p>
+                    <div class="main">
+                        <img class="avatar" width="30" height="30" src="__PUBLIC__/images/nango.jpg">
+                        <div class="nick">nango</div>
+                        <div class="text">Hello，这是一个基于Workerman的聊天室，整合了TP5.0，实现实时显示，支持私聊，非轮询。---请文明发言</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!--send-->
+        <div class="users">
+            在线用户
+            <select name="client" class="client">
 
-			</select>
-			<input type="image" class="emoji_btn" id="btn" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAkUExURUxpcfTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAOfx6yUAAAALdFJOUwAzbVQOoYrzwdwkAoU+0gAAAM1JREFUGNN9kK0PQWEUxl8fM24iCYopwi0muuVuzGyKwATFZpJIU01RUG/RBMnHxfz+Oef9uNM84d1+23nO+zxHKVG2WWupRJkdcAwtpCK0lpbqWE01pB0QayonREMoIp7AawQrWSgGGb4pn6dSeSh68FAVXqHqy3wKrkJiDGDTg3dnp//w+WnwlwIOJauF+C7sXRVfdha4O4oIJfTbtdSxs2uqhs585A0ko8iLTMEcDE1n65A+29pYAlr72nz9dKu7GuNTcsL2fDQzB/wCPVJ69nZGb3gAAAAASUVORK5CYII=" style="margin: -2px 0 0 5px;">
-		</div>
-		<div class="m-text">
-			<div id="editor" class="input" contenteditable="true">按 Ctrl + Enter 发送</div>
-		</div>
-	</div>
+            </select>
+            <input type="image" class="emoji_btn" id="btn"
+                   src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAkUExURUxpcfTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAPTGAOfx6yUAAAALdFJOUwAzbVQOoYrzwdwkAoU+0gAAAM1JREFUGNN9kK0PQWEUxl8fM24iCYopwi0muuVuzGyKwATFZpJIU01RUG/RBMnHxfz+Oef9uNM84d1+23nO+zxHKVG2WWupRJkdcAwtpCK0lpbqWE01pB0QayonREMoIp7AawQrWSgGGb4pn6dSeSh68FAVXqHqy3wKrkJiDGDTg3dnp//w+WnwlwIOJauF+C7sXRVfdha4O4oIJfTbtdSxs2uqhs585A0ko8iLTMEcDE1n65A+29pYAlr72nz9dKu7GuNTcsL2fDQzB/wCPVJ69nZGb3gAAAAASUVORK5CYII="
+                   style="margin: -2px 0 0 5px;">
+        </div>
+        <div class="m-text">
+            <div id="editor" class="input" contenteditable="true">按 Ctrl + Enter 发送</div>
+        </div>
+    </div>
+</div>
+<!--登陆模板-->
+<div style="display: none" class="login_html">
+    <div class="login_back">
+        <div class="main_box" style="margin-top: -200px;margin-left: -270px;width: 540px;height: 400px;">
+            <div class="login_box">
+                <div class="login_logo" style="">
+                    <img src="__PUBLIC__/images/logo.png"/>
+                </div>
+
+                <div class="login_form" style="padding-top: 0px;">
+                    <form action="" method="post">
+                        <div class="form-group">
+                            <label for="j_username" class="t">用户名：</label>
+                            <input value="" placeholder="用户名" name="username" type="text"
+                                   class="form-control x319 in"
+                                   autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="j_password" class="t">密　码：</label>
+                            <input value="" name="password" type="password"
+                                   class="password form-control x319 in">
+                        </div>
+                        <div class="form-group register">
+                            <label for="confirm_password" class="t">确认密码：</label>
+                            <input value="" name="confirm_password" type="password"
+                                   class="password form-control x319 in">
+                        </div>
+                        <div class="form-group register">
+                            <label for="confirm_password" class="t">Email：</label>
+                            <input value="" name="email" type="text"
+                                   class="form-control x319 in">
+                        </div>
+                        <div class="form-group space">
+                            <label class="t"></label>　　　
+                            <button type="button"
+                                    class="login-submit btn btn-primary btn-lg">&nbsp;登&nbsp;录
+                            </button>
+                            <button type="button"
+                                    class="register-submit register btn btn-primary btn-lg">&nbsp;立即注册
+                            </button>
+                            <input type="button" value="返回登录" class="back-login register btn btn-default btn-lg">
+                        </div>
+                        <div class="form-group register-btn " style="font-size: 12px;float: right;">
+                            没有账号?&nbsp; <button type="button"
+                                    class="btn btn-success btn-small">&nbsp;立即注册
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 <script src="__COMMON__/plugin/emoji/lib/script/jquery.mousewheel-3.0.6.min.js"></script>
 <script src="__COMMON__/plugin/emoji/lib/script/jquery.mCustomScrollbar.min.js"></script>
 <script src="__COMMON__/plugin/emoji/dist/js/jquery.emoji.min.js"></script>
 <script type="text/javascript">
-	$(document).ready(function(){
-		//表情初始化
-		$("#editor").emoji({
-			button: "#btn",
-			showTab: false,
-			animation: 'slide',
-			icons: [{
-				name: "QQ表情",
-				path: "__COMMON__/plugin/emoji/dist/img/qq/",
-				maxNum: 91,
-				excludeNums: [41, 45, 54],
-				file: ".gif"
-			}]
-		});
-		$("#editor").one('click',function(){
+    $(document).ready(function () {
+        var index, ws, loadIndex;
 
-			$(this).html('');
-		});
+        //表情初始化
+        $("#editor").emoji({
+            button: "#btn",
+            showTab: false,
+            animation: 'slide',
+            icons: [{
+                name: "QQ表情",
+                path: "__COMMON__/plugin/emoji/dist/img/qq/",
+                maxNum: 91,
+                excludeNums: [41, 45, 54],
+                file: ".gif"
+            }]
+        });
+        $("#editor").one('click', function () {
 
-		//连接
-		var index;
-		function login_register_layer(){
-			index = layer.open({
-				title:'登录|注册',
-				type:1,
-				area:['500px','300px'],
-				offset:'200px',
-				maxmin:false,
-				content:loginhtml,
-				closeBtn :0,
-				btn: ['登录', '注册'],
-				yes:function(index,layero){
-					if($('#username').val()&&$('#password').val()){
-						var content = {
-							username:$('#username').val(),
-							password:$('#password').val(),
-							type:'login',
-							to_client_id:'all'
-						};
-						ws.send(JSON.stringify(content));
-					}else{
-						alert('用户名密码必填');
-					}
-				},
-				btn2:function(index,layero){
-					if($('#username').val()&&$('#password').val()&&$('#nick').val()){
-						var content = {
-							username:$('#username').val(),
-							password:$('#password').val(),
-							nick:$('#nick').val(),
-							type:'register',
-							to_client_id:'all',
-//							img:'http://lorempixel.com/30/30/'
-						};
-						ws.send(JSON.stringify(content));
-						return false;
-					}else{
-						alert('用户名密码昵称必填');
-						return false;
-					}
-				}
-			});
-		}
+            $(this).html('');
+        });
 
-		var oldHeight,newHeight;//记录可滚动区域高度
+        var oldHeight, newHeight;//记录可滚动区域高度
 
-		loginhtml = '<form role="form"> <div class ="form-group"><label  for="name">用户名</label><input type="text" class="form-control" id="username" name="username" placeholder="请填写用户名" value=""></div><div class="form-group"><label  for="name">密码</label><input type="password" class="form-control" id="password" name="password" placeholder="请填写密码" value=""></div> <div class="form-group"><label for="name">昵称</label><input type="text" id="nick" name="nick" class="form-control" placeholder="请填写昵称" value=""></div></form>';
-		function connect(){
-			ws = new WebSocket("ws://{$Request.host}:2345");
-			ws.onmessage = function (e) {
-				messageHander(e);
-			};
-			if(sessionStorage.accesstoken==null||sessionStorage.accesstoken==undefined){
-				login_register_layer();
-			}else{
-				var content = {
-					accesstoken:sessionStorage.accesstoken,
-					type:'reconnect',
-					to_client_id:'all'
-				};
-				ws.onopen = function () {
-					ws.send(JSON.stringify(content));
-				}
-			}
-		}
+        //发送消息
+        $(".input").keypress(function (e) {
+            //firefox enter code=13 ; chrome = 10
+            if (e.ctrlKey && (e.which == 13 || e.which == 10)) {
+                var text = $(".input").html();
+                var to_client_id = $(".client option:selected").val();
+                if (text == '') {
+                    alert('不能发送空内容！');
+                    return;
+                }
 
-		//发送消息
-		$(".input").keypress(function(e) {
-			//firefox enter code=13 ; chrome = 10
-			if (e.ctrlKey && (e.which == 13 || e.which == 10)){
-				var text = $(".input").html();
-				var to_client_id = $(".client option:selected").val();
-				if(text == ''){
-					alert('不能发送空内容！');
-					return;
-				}
+                var type = to_client_id == 'all' ? "say" : "prisay";
+                //发送者client_id
+                var client_id = sessionStorage.client_id;
+                var content = {
+                    'type': type,
+                    'content': text,
+                    'to_client_id': to_client_id,
+                    'client_id': client_id
+                };
 
-				var type = to_client_id == 'all'?"say":"prisay";
-				//发送者client_id
-				var client_id = sessionStorage.client_id;
-				var content = {
-					'type' : type,
-					'content' : text,
-					'to_client_id' : to_client_id,
-					'client_id' : client_id
-				};
+                ws.send(JSON.stringify(content));
+                $(".input").html('').focus();
+            }
+        });
 
-				ws.send(JSON.stringify(content));
-				$(".input").html('').focus();
-			}
-		});
+        //图灵回复
+        function tuling(text) {
+            var con = {};
+            con.content = text;
+            $.ajax({
+                url: "{:url('index/sendMessageToTuling')}",
+                datatype: 'text',
+                method: 'get',
+                data: con,
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
 
-		//图灵回复 ps：这里为了通过tp来将数据存入数据库，因此过程比较繁琐；若不存数据库，可以直接在workerman中进行回复
-		function tuling(text){
-			var con = {};
-			con.content = text;
-			$.ajax({
-				url : "{:url('index/sendMessageToTuling')}",
-				datatype : 'text',
-				method : 'get',
-				data : con,
-				success : function(data){
-					console.log(data);
-				},
-				error : function(data){
-					console.log(data);
-				}
-			});
-		}
-		//图灵回复end
-		//服务端消息返回
+        //图灵回复end
+        //服务端消息返回
 
-		function messageHander(e){
-			var data = JSON.parse(e.data);
-			var con = data.content;
-			console.log(data);
+        function messageHander(e) {
+            var data = JSON.parse(e.data);
+            var con = data.content;
+            console.log(data);
 
-			if (data.content == null) {
-				con = '这句话说得没毛病';
-			}
-			if(data.type == 'login' || data.type == 'register'||data.type == 'logout'){
-				//将客户端client_id 存储在本地
-				if(data.code == 0){
-					alert(data.content);
-				}else if(data.code == 1){
-					//已连接服务的客户端对象
-					var client_list = {};
-					client_list = data.clients;
-					//遍历所有已连接客户端
-					html = '<option value="all" selected="selected">所有人</option>';
-					for (var key in client_list) {
-						html += '<option value="'+ client_list[key].id +'">'+ client_list[key].user['nick'] +'</option>';
-					}
-					$('.client').html(html);
-					var str = '<li>'
-							+    '<p class="time"><span>'+ data.time +'</span>'
-							+   '</p>';
-					if(data.nick != sessionStorage.nick){
-						str +=   '<div class="main">';
-					}else{
-						str +=   '<div class="main self">';
-					}
-					str +=       '<img class="avatar" width="30" height="30" src="'+data.img+'">'
-							+       '<div class="nick">'+ data.nick +'</div>'
-							+       '<div class="text">'+ con +'</div>'
-							+   '</div>'
-							+'</li>';
+            if (data.content == null) {
+                con = '这句话说得没毛病';
+            }
+            if (data.type == 'login' || data.type == 'register' || data.type == 'logout') {
+                layer.close(loadIndex);
+                //将客户端client_id 存储在本地
+                if (data.code == 0) {
+                    layer.msg(data.content);
+                } else if (data.code == 1) {
+                    //已连接服务的客户端对象
+                    var client_list = {};
+                    client_list = data.clients;
+                    //遍历所有已连接客户端
+                    html = '<option value="all" selected="selected">所有人</option>';
+                    for (var key in client_list) {
+                        html += '<option value="' + client_list[key].id + '">' + client_list[key].user['username'] + '</option>';
+                    }
+                    $('.client').html(html);
+                    var str = '<li>'
+                        + '<p class="time"><span>' + data.time + '</span>'
+                        + '</p>';
+                    if (data.username != sessionStorage.username) {
+                        str += '<div class="main">';
+                    } else {
+                        str += '<div class="main self">';
+                    }
+                    str += '<img class="avatar" width="30" height="30" src="' + data.img + '">'
+                        + '<div class="nick">' + data.username + '</div>'
+                        + '<div class="text">' + con + '</div>'
+                        + '</div>'
+                        + '</li>';
 
-					$(".m-message ul").append(str);
-					//滚动到底部
-					$(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
-				}else{
-					//登录回执
-					layer.close(index);
-					sessionStorage.client_id=data.client_id;
-					sessionStorage.nick = data.user.nick;
-					sessionStorage.img = data.user.img;
-					sessionStorage.id = data.user.id;
-					sessionStorage.accesstoken = data.accesstoken;
-				}
-			}else if(data['type'] == 'relogin'){
-				if(data['code'] == 1){
-					//eg1
-					relogin = layer.confirm('长时间不操作你已经退出聊天室，请重新链接', {
-						closeBtn:0,
-						btn: '重新连接' ,//可以无限个按钮
-						yes:function(index,layero){
-							connect();
-							layer.close(relogin)
-						}
-					});
-				}else if(data['code'] == 3){
-					alert(data['content']);
-					relogin = layer.confirm('两次登录需要大于一分钟', {
-						closeBtn:0,
-						btn: '重新连接' ,//可以无限个按钮
-						yes:function(index,layero){
-							connect();
-							layer.close(relogin)
-						}
-					});
-				}else{
-					alert(data['content']);
-					login_register_layer();
-				}
-			}
-			else{
-				var str = '<li>'
-						+    '<p class="time"><span>'+ data.time +'</span>'
-						+   '</p>';
-				if(data.nick != sessionStorage.nick){
-					str +=   '<div class="main">';
-				}else{
-					str +=   '<div class="main self">';
-				}
-				str +=       '<img class="avatar" width="30" height="30" src="'+data.img+'">'
-						+       '<div class="nick">'+ data.nick +'</div>'
-						+       '<div class="text">'+ con +'</div>'
-						+   '</div>'
-						+'</li>';
+                    $(".m-message ul").append(str);
+                    //滚动到底部
+                    $(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
+                } else {
+                    //登录回执
+                    layer.close(index);
+                    sessionStorage.client_id = data.client_id;
+                    sessionStorage.username = data.user.username;
+                    sessionStorage.img = data.user.img;
+                    sessionStorage.id = data.user.id;
+                    sessionStorage.accesstoken = data.accesstoken;
+                }
+            } else if (data['type'] == 'relogin') {
+                if (data['code'] == 1) {
+                    //eg1
+                    relogin = layer.confirm('长时间不操作你已经退出聊天室，请重新链接', {
+                        closeBtn: 0,
+                        btn: '重新连接',//可以无限个按钮
+                        yes: function (index, layero) {
+                            connect();
+                            layer.close(relogin)
+                        }
+                    });
+                } else if (data['code'] == 3) {
+                    layer.msg(data['content']);
+//                    relogin = layer.confirm('两次登录需要大于一分钟', {
+//                        closeBtn: 0,
+//                        btn: '重新连接',//可以无限个按钮
+//                        yes: function (index, layero) {
+//                            connect();
+//                            layer.close(relogin)
+//                        }
+//                    });
+                } else {
+                    layer.alert(data['content'],login_register_layer);
+                }
+            }
+            else {
+                var str = '<li>'
+                    + '<p class="time"><span>' + data.time + '</span>'
+                    + '</p>';
+                if (data.username != sessionStorage.username) {
+                    str += '<div class="main">';
+                } else {
+                    str += '<div class="main self">';
+                }
+                str += '<img class="avatar" width="30" height="30" src="' + data.img + '">'
+                    + '<div class="nick">' + data.username + '</div>'
+                    + '<div class="text">' + con + '</div>'
+                    + '</div>'
+                    + '</li>';
 
-				$(".m-message ul").append(str);
-				//滚动到底部
-				$(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
-			}
-		}
-		if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){
-			alert('暂不支持移动端访问，请移步PC端！');
-			return false;
-		}
-		//异步拉取历史消息
-		var page = 1;
-		var getMess = function(){
-			$.ajax({
-				url : "{:url('index/getMessageHis')}",
-				datatype : 'json',
-				type : 'get',
-				data : {page:page},
-				success : function(data){
-					var message = JSON.parse(data);
-					var str = '<li><p class="load">加载更多</p></li>';
-					for (var key in message) {
-						str += '<li>'
-								+    '<p class="time"><span>'+ message[key].create_time +'</span>'
-								+   '</p>';
-						if(message[key].nick != sessionStorage.nick){
-							str +=   '<div class="main">';
-						}else{
-							str +=   '<div class="main self">';
-						}
+                $(".m-message ul").append(str);
+                //滚动到底部
+                $(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
+            }
+        }
 
-						str +=       '<img class="avatar" width="30" height="30" src="'+message[key].img+'">'
-								+       '<div class="nick">'+ message[key].nick +'</div>'
-								+       '<div class="text">'+ message[key].content +'</div>'
-								+   '</div>'
-								+'</li>';
-					}
-					$(".m-message ul").prepend(str);
-					if (page == 1) {
-						//滚动到底部
-						$(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
-					}else{
-						newHeight = $('.m-message ul')[0].scrollHeight;
-						$(".m-message").scrollTop(newHeight - oldHeight);
-					}
-					page++;
-				},
-				error : function(data){
-					console.log(data);
-				}
-			});
-		}
+        if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
+            alert('暂不支持移动端访问，请移步PC端！');
+            return false;
+        }
+        //异步拉取历史消息
+        var page = 1;
+        var getMess = function () {
+            $.ajax({
+                url: "{:url('index/getMessageHis')}",
+                datatype: 'json',
+                type: 'get',
+                data: {page: page},
+                success: function (data) {
+                    var message = JSON.parse(data);
+                    var str = '<li><p class="load">加载更多</p></li>';
+                    for (var key in message) {
+                        str += '<li>'
+                            + '<p class="time"><span>' + message[key].create_time + '</span>'
+                            + '</p>';
+                        if (message[key].username != sessionStorage.username) {
+                            str += '<div class="main">';
+                        } else {
+                            str += '<div class="main self">';
+                        }
 
-		getMess();
-		//建立连接
-		connect();
-		//消息翻页
-		$('ul').on('click','.load',function(){
-			oldHeight = $('.m-message ul')[0].scrollHeight;
-			$(this).parent('li').remove();
-			getMess();
-		});
+                        str += '<img class="avatar" width="30" height="30" src="' + message[key].img + '">'
+                            + '<div class="nick">' + message[key].username + '</div>'
+                            + '<div class="text">' + message[key].content + '</div>'
+                            + '</div>'
+                            + '</li>';
+                    }
+                    $(".m-message ul").prepend(str);
+                    if (page == 1) {
+                        //滚动到底部
+                        $(".m-message").scrollTop($('.m-message ul')[0].scrollHeight);
+                    } else {
+                        newHeight = $('.m-message ul')[0].scrollHeight;
+                        $(".m-message").scrollTop(newHeight - oldHeight);
+                    }
+                    page++;
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
 
-	})
+        getMess();
+        //建立连接
+        connect();
+        //登陆操作
+        function login_register_layer() {
+            index = layer.open({
+                title: false,
+                type: 1,
+                area: ['600px', '460px'],
+                maxmin: false,
+                content: $('.login_html').html(),
+                closeBtn: 0,
+            });
+        }
+
+        //登陆
+        $('body').on('click', '.login-submit', function () {
+
+            var $p = $(this).parents('form');
+            var username = $p.find("input[name='username']").val();
+            var password = $p.find("input[name='password']").val();
+            if (username && password) {
+                loadIndex = layer.load(2);
+                var content = {
+                    username: username,
+                    password: password,
+                    type: 'login',
+                    to_client_id: 'all'
+                };
+                ws.send(JSON.stringify(content));
+            } else {
+                layer.msg('用户名和密码必填');
+            }
+        });
+
+        //注册
+        $('body').on('click', '.register-submit', function () {
+
+            var $p = $(this).parents('form');
+            var username = $p.find("input[name='username']").val();
+            var password = $p.find("input[name='password']").val();
+            var confirm = $p.find("input[name='confirm_password']").val();
+            var email = $p.find("input[name='email']").val();
+            if (username && password && confirm) {
+                loadIndex = layer.load(2);
+                var content = {
+                    username: username,
+                    password: password,
+                    confirm_password: confirm,
+                    email: email,
+                    type: 'register',
+                    to_client_id: 'all'
+                };
+                ws.send(JSON.stringify(content));
+            } else {
+                layer.msg('用户名和密码必填');
+            }
+        });
+
+        $('body').on('click','.register-btn',function () {
+            $(this).hide();
+            $('.login-submit').hide();
+            $('.register').show();
+        })
+        $('body').on('click','.back-login',function () {
+            $('.register-btn,.login-submit').show();
+            $('.register').hide();
+        })
+        //登陆操作结束
+        //消息翻页
+        $('ul').on('click', '.load', function () {
+            oldHeight = $('.m-message ul')[0].scrollHeight;
+            $(this).parent('li').remove();
+            getMess();
+        });
+        function connect() {
+            ws = new WebSocket("ws://192.168.1.111:2345");
+            ws.onmessage = function (e) {
+                messageHander(e);
+            };
+            if (sessionStorage.accesstoken == null || sessionStorage.accesstoken == undefined) {
+                login_register_layer();
+            } else {
+                var content = {
+                    accesstoken: sessionStorage.accesstoken,
+                    type: 'reconnect',
+                    to_client_id: 'all'
+                };
+                ws.onopen = function () {
+                    ws.send(JSON.stringify(content));
+                }
+            }
+        }
+
+    })
 </script>
 </html>

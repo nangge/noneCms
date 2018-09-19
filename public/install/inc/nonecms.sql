@@ -1,3 +1,18 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : centos
+Source Server Version : 50638
+Source Host           : 127.0.0.1
+Source Database       : NoneCMS
+
+Target Server Type    : MYSQL
+Target Server Version : 50638
+File Encoding         : 65001
+
+Date: 2018-09-19 14:58:57
+*/
+
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -12,13 +27,18 @@ CREATE TABLE `#none#_admin` (
   `realname` varchar(20) NOT NULL DEFAULT '',
   `email` varchar(100) NOT NULL DEFAULT '',
   `usertype` tinyint(4) NOT NULL DEFAULT '0',
-  `logintime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '登录时间',
+  `logintime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '登录时间',
   `loginip` varchar(30) NOT NULL DEFAULT '' COMMENT '登录IP',
   `islock` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '锁定状态',
   `createtime` int(10) NOT NULL DEFAULT '0' COMMENT '管理员创建时间',
   `role_id` int(10) DEFAULT '0' COMMENT '角色id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of #none#_admin
+-- ----------------------------
+INSERT INTO `#none#_admin` VALUES ('1', 'admin', 'e154f8031e1380355e3a645978739012', 'KFVGxU', '', '', '9', '1536921886', '192.168.1.46', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for #none#_admin_power
@@ -82,7 +102,6 @@ INSERT INTO `#none#_admin_power` VALUES ('44', '留言管理', 'comment/index', 
 INSERT INTO `#none#_admin_power` VALUES ('45', '回复留言', 'comment/add', '44');
 INSERT INTO `#none#_admin_power` VALUES ('46', '删除留言', 'comment/dele', '44');
 
-
 -- ----------------------------
 -- Table structure for #none#_admin_role
 -- ----------------------------
@@ -94,7 +113,7 @@ CREATE TABLE `#none#_admin_role` (
   `createtime` int(10) DEFAULT NULL COMMENT '创建时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_admin_role
@@ -127,7 +146,7 @@ CREATE TABLE `#none#_article` (
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
   `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_article
@@ -141,8 +160,8 @@ CREATE TABLE `#none#_banner` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT 'banner 标题',
   `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'banner 类型 1：banner大图；2：广告',
-  `start_time` int DEFAULT NULL COMMENT '广告开始时间',
-  `end_time` int DEFAULT NULL COMMENT '广告结束时间',
+  `start_time` int(11) DEFAULT NULL COMMENT '广告开始时间',
+  `end_time` int(11) DEFAULT NULL COMMENT '广告结束时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除 0：否；1：是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -150,7 +169,7 @@ CREATE TABLE `#none#_banner` (
 -- ----------------------------
 -- Records of #none#_banner
 -- ----------------------------
-INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', 1484512321, 1645710511, '0');
+INSERT INTO `#none#_banner` VALUES ('1', '首页大图', '1', '1484512321', '1645710511', '0');
 
 -- ----------------------------
 -- Table structure for #none#_banner_detail
@@ -198,38 +217,31 @@ CREATE TABLE `#none#_category` (
   `flag` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '属性：8 百度富文本框编辑；9 Markdown编辑',
   `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Records of #none#_category
+-- ----------------------------
 
-DROP TABLE IF EXISTS `#none#_user`;
-CREATE TABLE `#none#_user` (
+-- ----------------------------
+-- Table structure for #none#_chat
+-- ----------------------------
+DROP TABLE IF EXISTS `#none#_chat`;
+CREATE TABLE `#none#_chat` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL  DEFAULT '',
-  `password` varchar(32) NOT NULL  NOT NULL  DEFAULT '',
-  `nick` varchar(255) DEFAULT '',
-  `img` blob,
-  `create_time` int(10) NOT NULL  DEFAULT '0',
-  `update_time` int(10) NOT NULL  DEFAULT '0',
-  `ip` varchar(255) NOT NULL  DEFAULT '',
-  `accesstoken` varchar(32) NOT NULL  DEFAULT '',
-  `accesstoken_expire` int(10) NOT NULL  DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- ----------------------------
-
--- ----------------------------
-DROP TABLE IF EXISTS `#none#_chatrecord`;
-CREATE TABLE `#none#_chatrecord` (
-   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) DEFAULT NULL,
-  `type` int(2) DEFAULT '0',
-  `content` text,
+  `user_id` int(10) NOT NULL COMMENT '用户登录id',
+  `type` varchar(10) NOT NULL DEFAULT '' COMMENT '消息类型 say:广播；prisay:私聊',
   `receive_id` int(10) DEFAULT NULL,
-  `room_id` int(6) DEFAULT NULL,
-  `create_time` int(10) DEFAULT NULL,
-  `update_time` int(10) DEFAULT NULL,
+  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',
+  `name` varchar(255) NOT NULL DEFAULT 'nango' COMMENT '用户名称',
+  `client_id` int(10) DEFAULT '0' COMMENT '发送消息客户端id',
+  `to_client_id` varchar(4) DEFAULT '' COMMENT '私聊对象客户端id',
+  `send_time` int(10) DEFAULT NULL COMMENT '发送消息时间',
+  `room_id` int(5) DEFAULT '1' COMMENT '房间id',
+  `ip` varchar(50) DEFAULT NULL COMMENT '客户端ip',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
 -- ----------------------------
 -- Table structure for #none#_comment
 -- ----------------------------
@@ -242,7 +254,7 @@ CREATE TABLE `#none#_comment` (
   `email` varchar(255) DEFAULT '' COMMENT 'email',
   `qq` varchar(15) DEFAULT '' COMMENT 'qq',
   `content` varchar(255) NOT NULL COMMENT '留言内容',
-  `create_time` int NOT NULL COMMENT '创建时间',
+  `create_time` int(11) NOT NULL COMMENT '创建时间',
   `rid` int(10) DEFAULT '0' COMMENT '回复id',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '评论状态 1：已删除',
   `uid` int(10) DEFAULT '0' COMMENT '用户id',
@@ -289,8 +301,11 @@ CREATE TABLE `#none#_log` (
   `username` varchar(255) DEFAULT NULL,
   `userid` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Records of #none#_log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for #none#_modeln
@@ -307,10 +322,10 @@ CREATE TABLE `#none#_modeln` (
   `template_show` varchar(60) NOT NULL DEFAULT '',
   `sort` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of #none#_model
+-- Records of #none#_modeln
 -- ----------------------------
 INSERT INTO `#none#_modeln` VALUES ('1', '文章模型', '', 'article', '1', '', 'List_article.html', 'Show_article.html', '1');
 INSERT INTO `#none#_modeln` VALUES ('2', '单页模型', '', 'category', '1', '', 'List_page.html', 'Show_page.html', '2');
@@ -347,22 +362,11 @@ CREATE TABLE `#none#_product` (
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'admin',
   `editor` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-DROP TABLE IF EXISTS `none_chat`;
-CREATE TABLE `#none#_chat` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `type` varchar(10) NOT NULL DEFAULT '' COMMENT '消息类型 say:广播；prisay:私聊',
-  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '消息内容',
-  `name` varchar(255) NOT NULL DEFAULT 'nango' COMMENT '用户名称',
-  `client_id` int(10) DEFAULT '0' COMMENT '发送消息客户端id',
-  `to_client_id` varchar(4) DEFAULT '' COMMENT '私聊对象客户端id',
-  `send_time` int(10) DEFAULT NULL COMMENT '发送消息时间',
-  `room_id` int(5) DEFAULT '1' COMMENT '房间id',
-  `ip` varchar(50) DEFAULT NULL COMMENT '客户端ip',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1720 DEFAULT CHARSET=utf8;
+-- ----------------------------
+-- Records of #none#_product
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for #none#_system
@@ -379,15 +383,15 @@ CREATE TABLE `#none#_system` (
   `value` text,
   `sort` smallint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of #none#_system
 -- ----------------------------
-INSERT INTO `#none#_system` VALUES ('1', 'site_name', '站点名称', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('2', 'site_title', '站点标题', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('3', 'site_keywords', '站点关键字', '', '', '0', '0', '#site_name#', '0');
-INSERT INTO `#none#_system` VALUES ('4', 'site_description', '站点描述', '', '', '0', '0', '#site_name#', '0');
+INSERT INTO `#none#_system` VALUES ('1', 'site_name', '站点名称', '', '', '0', '0', '我的网站', '0');
+INSERT INTO `#none#_system` VALUES ('2', 'site_title', '站点标题', '', '', '0', '0', '我的网站', '0');
+INSERT INTO `#none#_system` VALUES ('3', 'site_keywords', '站点关键字', '', '', '0', '0', '我的网站', '0');
+INSERT INTO `#none#_system` VALUES ('4', 'site_description', '站点描述', '', '', '0', '0', '我的网站', '0');
 INSERT INTO `#none#_system` VALUES ('5', 'site_address', '公司地址', '', '', '0', '0', '浙江省杭州市', '0');
 INSERT INTO `#none#_system` VALUES ('6', 'site_closed', '关闭网站', '', 'radio', '0', '0', '0', '0');
 INSERT INTO `#none#_system` VALUES ('7', 'site_icp', 'ICP备案证书号', '', '', '0', '0', '', '0');
@@ -398,7 +402,7 @@ INSERT INTO `#none#_system` VALUES ('11', 'site_email', '邮件地址', '', '', 
 INSERT INTO `#none#_system` VALUES ('12', 'display_thumbw', '缩略图宽度', '', '', '0', '0', '300', '0');
 INSERT INTO `#none#_system` VALUES ('13', 'display_thumbh', '缩略图高度', '', '', '0', '0', '300', '0');
 INSERT INTO `#none#_system` VALUES ('14', 'site_editor', '编辑器选择', '如果选择Markdown编辑器，则前台展示页面需引入editor.md相关js；具体操作流程看文章：blog.5none.com', 'radio', '0', '0', 'markdown', '0');
-INSERT INTO `#none#_system` VALUES ('15', 'site_theme', '网站主题', '', 'select', '0', '0', '#site_theme#', '0');
+INSERT INTO `#none#_system` VALUES ('15', 'site_theme', '网站主题', '', 'select', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('16', 'site_mobile_theme', '移动端主题', '', 'select', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('17', 'email_host', '邮箱服务器主机地址', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('18', 'email_port', '端口号', '', '', '0', '0', '25', '0');
@@ -406,4 +410,22 @@ INSERT INTO `#none#_system` VALUES ('19', 'email_username', '邮箱用户名', '
 INSERT INTO `#none#_system` VALUES ('20', 'email_password', '邮箱授权码', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('21', 'email_fromemail', '发件人邮箱', '', '', '0', '0', 'default', '0');
 INSERT INTO `#none#_system` VALUES ('22', 'email_fromuser', '发件人用户名', '', '', '0', '0', 'default', '0');
-INSERT INTO `#none#_system` VALUES ('23', 'email_debug', '开启调试模式', ' 0 No output  1 Commands 2 Data and commands 3 As 2 plus connection status 4 Low-level data output.', '', '0', '0', 0, '0');
+INSERT INTO `#none#_system` VALUES ('23', 'email_debug', '开启调试模式', ' 0 No output  1 Commands 2 Data and commands 3 As 2 plus connection status 4 Low-level data output.', '', '0', '0', '0', '0');
+
+-- ----------------------------
+-- Table structure for #none#_user
+-- ----------------------------
+DROP TABLE IF EXISTS `#none#_user`;
+CREATE TABLE `#none#_user` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `password` varchar(32) NOT NULL DEFAULT '',
+  `img` text,
+  `create_time` int(10) NOT NULL DEFAULT '0',
+  `update_time` int(10) NOT NULL DEFAULT '0',
+  `ip` varchar(255) NOT NULL DEFAULT '',
+  `accesstoken` varchar(32) NOT NULL DEFAULT '',
+  `accesstoken_expire` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
