@@ -425,7 +425,7 @@
             getMess();
         });
         function connect() {
-            ws = new WebSocket("ws://192.168.1.111:2345");
+            ws = new WebSocket("ws://{$Request.host}:2345");
             ws.onmessage = function (e) {
                 messageHander(e);
             };
