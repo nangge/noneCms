@@ -11,6 +11,9 @@ namespace app\push\controller;
 use app\common\model\Chatrecord;
 use app\push\lib\User;
 use app\push\service\MessageService;
+use app\push\service\TuLingRobotService;
+use phpDocumentor\Reflection\Types\Context;
+use think\facade\Log;
 use think\worker\Server;
 use Workerman\Lib\Timer;
 
@@ -30,13 +33,13 @@ class WorkerChat extends Server
     /**
      * 图灵机器人api
      **/
-    private $tlApi = 'http://www.tuling123.com/openapi/api';
+    private $tlApi = 'http://openapi.tuling123.com/openapi/api/v2';
 
     /**
      * 图灵 appkey
      * @var string
      */
-    private $tlAppkey = 'bbfc225d841dacd734918f77679d5053';
+    private $tlAppkey = '53b39db0a7be46029330ab6be51d483e';
 
     public static $hasConnections = [];
 
@@ -106,41 +109,40 @@ class WorkerChat extends Server
      * @return string
      **/
     public function sendMessageToTuling($user,$text){
-        $data = array(
-            'key' => $this->tlAppkey,
-            'info' => $text,
-            'userid' => $user['id']
-        );
-        $res = post($this->tlApi,json_encode($data,JSON_UNESCAPED_UNICODE),'',1);
-        $r = json_decode($res,true);
-        //文本类
-        if(isset($r['url'])){
-            //存在链接则发送链接
-            $res_text = $r['url'];
-        }else{
-            $res_text = $r['text'];
-        }
-
-        $message = [
-            'content' => $res_text,
-            'nick' => '图灵机器人',
-            'type' => 'say',
-            'time' => date('Y-m-d H:i'),
-            'img' => "http://file.tuling123.com/static/2017-07-24-icon40.png"
+        $data = [
+            'reqType' => 0,
+            'perception' => [
+                'inputText' => [
+                    'text'=>$text,
+                ],
+            ],
+            'userInfo' => [
+                'apiKey' => TuLingRobotService::$tlAppkey,
+                'userId' => $user['id'],
+            ]
         ];
-
-        $save_data = [
-            'user_id' => 0,
-            'content' => $res_text,
-            'type' => 0,
-        ];
-
-        if (Chatrecord::create($save_data)) {
-            $this->sendMessageToAll($message);
-            return true;
-        } else {
-            return false;
+        $res = TuLingRobotService::handleMessage(json_encode($data,JSON_UNESCAPED_UNICODE));
+        if ($res !== false) {
+            $message = [
+                'content' => $res,
+                'nick' => '图灵机器人',
+                'type' => 'say',
+                'time' => date('Y-m-d H:i'),
+                'img' => "http://file.tuling123.com/static/2017-07-24-icon40.png"
+            ];
+            $save_data = [
+                'user_id' => 0,
+                'content' => $res,
+                'type' => 0,
+            ];
+            if (Chatrecord::create($save_data)) {
+                $this->sendMessageToAll($message);
+                return true;
+            }
+            Log::error('图灵机器人接口返回错误:' . $res);
         }
+        Log::error('图灵机器人接口返回错误:' . $res);
+        return false;
     }
 
 
@@ -216,5 +218,4 @@ class WorkerChat extends Server
             }
         });
     }
-
 }

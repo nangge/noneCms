@@ -138,7 +138,6 @@ function post($url, $data = '', $cookie = '', $type = 0)
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_USERAGENT,isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'' );
-    curl_setopt($ch, CURLOPT_SAFE_UPLOAD, 0);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
     $output = curl_exec($ch);
