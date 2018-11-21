@@ -23,6 +23,7 @@ class Article extends Common
     /**
      * 显示资源列表
      *param int $id cid
+     *
      * @return \think\Response
      */
     public function index()
@@ -34,7 +35,7 @@ class Article extends Common
             ->order('flag DESC,publishtime DESC')
             ->paginate(20);
         foreach ($list as &$m) {
-            $m['name'] = $m->cid?$m->category->name:'';
+            $m['name'] = $m->cid ? $m->category->name : '';
         }
 
         // 获取分页显示
@@ -44,10 +45,10 @@ class Article extends Common
         }
 
         $this->assign([
-            'page' => $page,
-            'id' => $id,
-            'data' =>  $list,
-            'article' => new articleModel()
+            'page'    => $page,
+            'id'      => $id,
+            'data'    => $list,
+            'article' => new articleModel(),
         ]);
 
         return $this->fetch();
@@ -55,7 +56,6 @@ class Article extends Common
 
     /**
      * 添加文章
-     *
      */
     public function add()
     {
@@ -104,6 +104,27 @@ class Article extends Common
             $data = articleModel::get($id);
             $this->assign('item', $data);
             return $this->fetch();
+        }
+    }
+
+    public function saveToTemp()
+    {
+        if ($this->request->isPost()) {
+            $params = input('post.');
+
+            $result = $this->validate($params, 'app\admin\validate\Article');
+
+            if (true !== $result) {
+                return ['status' => 0, 'msg' => $result, 'url' => ''];
+            }
+
+            $article = new articleModel;
+            $params['status'] = 2;
+            if ($article->data($params, true)->save()) {
+                return ['status' => 1, 'msg' => '添加成功', 'url' => url('article/index', ['id' => $params['cid']])];
+            } else {
+                return ['status' => 0, 'msg' => '添加失败', 'url' => ''];
+            }
         }
     }
 
@@ -191,13 +212,13 @@ class Article extends Common
                 }
                 $title = trim($title);
 
-                if(mb_strlen($title,'utf-8')>60){
+                if (mb_strlen($title, 'utf-8') > 60) {
                     return ['status' => 0, 'msg' => '转载失败,文章标题超过60字', 'url' => ''];
                 }
 
                 $content = pq('#article_content')->text();
 
-//                //如果抓取不到主内容
+                //                //如果抓取不到主内容
                 if (!$content) {
                     throw new Exception("文章不存在或禁止爬虫");
                 }
@@ -208,7 +229,7 @@ class Article extends Common
                 $params['description'] = trim(strip_tags($content));
                 $params['copyfrom'] = $url;
                 $article = new articleModel();
-                if ($article->data($params,true)->save()) {
+                if ($article->data($params, true)->save()) {
                     return ['status' => 1, 'msg' => '转载成功', 'url' => url('article/index', ['id' => $cid])];
                 } else {
                     return ['status' => 0, 'msg' => '转载失败', 'url' => ''];
