@@ -21,13 +21,16 @@ use think\facade\Cache;
 use think\facade\Config;
 use think\facade\Cookie;
 use think\facade\Debug;
+use think\facade\Env;
 use think\facade\Hook;
 use think\facade\Lang;
 use think\facade\Log;
 use think\facade\Request;
+use think\facade\Route;
 use think\facade\Session;
 use think\facade\Url;
 use think\Response;
+use think\route\RuleItem;
 
 if (!function_exists('abort')) {
     /**
@@ -67,7 +70,7 @@ if (!function_exists('app')) {
      * @param string    $name 类名或标识 默认获取当前应用实例
      * @param array     $args 参数
      * @param bool      $newInstance    是否每次创建新的实例
-     * @return object
+     * @return mixed|\think\App
      */
     function app($name = 'think\App', $args = [], $newInstance = false)
     {
@@ -98,7 +101,7 @@ if (!function_exists('bind')) {
      */
     function bind($abstract, $concrete = null)
     {
-        return Container::getInstance()->bind($abstract, $concrete);
+        return Container::getInstance()->bindTo($abstract, $concrete);
     }
 }
 
@@ -127,19 +130,19 @@ if (!function_exists('cache')) {
         } elseif (is_null($value)) {
             // 删除缓存
             return Cache::rm($name);
-        } else {
-            // 缓存数据
-            if (is_array($options)) {
-                $expire = isset($options['expire']) ? $options['expire'] : null; //修复查询缓存无法设置过期时间
-            } else {
-                $expire = is_numeric($options) ? $options : null; //默认快捷缓存设置过期时间
-            }
+        }
 
-            if (is_null($tag)) {
-                return Cache::set($name, $value, $expire);
-            } else {
-                return Cache::tag($tag)->set($name, $value, $expire);
-            }
+        // 缓存数据
+        if (is_array($options)) {
+            $expire = isset($options['expire']) ? $options['expire'] : null; //修复查询缓存无法设置过期时间
+        } else {
+            $expire = is_numeric($options) ? $options : null; //默认快捷缓存设置过期时间
+        }
+
+        if (is_null($tag)) {
+            return Cache::set($name, $value, $expire);
+        } else {
+            return Cache::tag($tag)->set($name, $value, $expire);
         }
     }
 }
@@ -301,6 +304,21 @@ if (!function_exists('debug')) {
     }
 }
 
+if (!function_exists('download')) {
+    /**
+     * 获取\think\response\Download对象实例
+     * @param string  $filename 要下载的文件
+     * @param string  $name 显示文件名
+     * @param bool    $content 是否为内容
+     * @param integer $expire 有效期（秒）
+     * @return \think\response\Download
+     */
+    function download($filename, $name = '', $content = false, $expire = 360, $openinBrower = false)
+    {
+        return Response::create($filename, 'download')->name($name)->isContent($content)->expire($expire)->openinBrower($openinBrower);
+    }
+}
+
 if (!function_exists('dump')) {
     /**
      * 浏览器友好的变量输出
@@ -312,6 +330,20 @@ if (!function_exists('dump')) {
     function dump($var, $echo = true, $label = null)
     {
         return Debug::dump($var, $echo, $label);
+    }
+}
+
+if (!function_exists('env')) {
+    /**
+     * 获取环境变量值
+     * @access public
+     * @param  string    $name 环境变量名（支持二级 .号分割）
+     * @param  string    $default  默认值
+     * @return mixed
+     */
+    function env($name = null, $default = null)
+    {
+        return Env::get($name, $default);
     }
 }
 
@@ -353,7 +385,7 @@ if (!function_exists('input')) {
      * @param string    $filter 过滤方法
      * @return mixed
      */
-    function input($key = '', $default = null, $filter = null)
+    function input($key = '', $default = null, $filter = '')
     {
         if (0 === strpos($key, '?')) {
             $key = substr($key, 1);
@@ -507,6 +539,21 @@ if (!function_exists('response')) {
     }
 }
 
+if (!function_exists('route')) {
+    /**
+     * 路由注册
+     * @param  string    $rule       路由规则
+     * @param  mixed     $route      路由地址
+     * @param  array     $option     路由参数
+     * @param  array     $pattern    变量规则
+     * @return RuleItem
+     */
+    function route($rule, $route, $option = [], $pattern = [])
+    {
+        return Route::rule($rule, $route, '*', $option, $pattern);
+    }
+}
+
 if (!function_exists('session')) {
     /**
      * Session管理
@@ -621,11 +668,12 @@ if (!function_exists('view')) {
      * @param string    $template 模板文件
      * @param array     $vars 模板变量
      * @param integer   $code 状态码
+     * @param callable  $filter 内容过滤
      * @return \think\response\View
      */
-    function view($template = '', $vars = [], $code = 200)
+    function view($template = '', $vars = [], $code = 200, $filter = null)
     {
-        return Response::create($template, 'view', $code)->assign($vars);
+        return Response::create($template, 'view', $code)->assign($vars)->filter($filter);
     }
 }
 
@@ -654,5 +702,19 @@ if (!function_exists('xml')) {
     function xml($data = [], $code = 200, $header = [], $options = [])
     {
         return Response::create($data, 'xml', $code, $header, $options);
+    }
+}
+
+if (!function_exists('yaconf')) {
+    /**
+     * 获取yaconf配置
+     *
+     * @param  string    $name 配置参数名
+     * @param  mixed     $default   默认值
+     * @return mixed
+     */
+    function yaconf($name, $default = null)
+    {
+        return Config::yaconf($name, $default);
     }
 }

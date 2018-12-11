@@ -26,6 +26,12 @@ class View
     protected $data = [];
 
     /**
+     * 内容过滤
+     * @var mixed
+     */
+    protected $filter;
+
+    /**
      * 全局模板变量
      * @var array
      */
@@ -45,6 +51,11 @@ class View
         return $this;
     }
 
+    public static function __make(Config $config)
+    {
+        return (new static())->init($config->pull('template'));
+    }
+
     /**
      * 模板变量静态赋值
      * @access public
@@ -61,6 +72,17 @@ class View
         }
 
         return $this;
+    }
+
+    /**
+     * 清理模板变量
+     * @access public
+     * @return void
+     */
+    public function clear()
+    {
+        self::$var  = [];
+        $this->data = [];
     }
 
     /**
@@ -96,13 +118,11 @@ class View
             $type = !empty($options['type']) ? $options['type'] : 'Think';
         }
 
-        $class = false !== strpos($type, '\\') ? $type : '\\think\\view\\driver\\' . ucfirst($type);
-
         if (isset($options['type'])) {
             unset($options['type']);
         }
 
-        $this->engine = new $class($options);
+        $this->engine = Loader::factory($type, '\\think\\view\\driver\\', $options);
 
         return $this;
     }
@@ -130,6 +150,18 @@ class View
     public function exists($name)
     {
         return $this->engine->exists($name);
+    }
+
+    /**
+     * 视图过滤
+     * @access public
+     * @param Callable  $filter 过滤方法或闭包
+     * @return $this
+     */
+    public function filter($filter)
+    {
+        $this->filter = $filter;
+        return $this;
     }
 
     /**
@@ -163,8 +195,9 @@ class View
         // 获取并清空缓存
         $content = ob_get_clean();
 
-        // 内容过滤标签
-        Container::get('hook')->listen('view_filter', $content);
+        if ($this->filter) {
+            $content = call_user_func_array($this->filter, [$content]);
+        }
 
         return $content;
     }

@@ -22,6 +22,12 @@ class Response
     protected $data;
 
     /**
+     * 应用对象实例
+     * @var App
+     */
+    protected $app;
+
+    /**
      * 当前contentType
      * @var string
      */
@@ -38,6 +44,12 @@ class Response
      * @var integer
      */
     protected $code = 200;
+
+    /**
+     * 是否允许请求缓存
+     * @var bool
+     */
+    protected $allowCache = true;
 
     /**
      * 输出参数
@@ -76,6 +88,7 @@ class Response
         $this->contentType($this->contentType, $this->charset);
 
         $this->code   = $code;
+        $this->app    = Container::get('app');
         $this->header = array_merge($this->header, $header);
     }
 
@@ -91,15 +104,13 @@ class Response
      */
     public static function create($data = '', $type = '', $code = 200, array $header = [], $options = [])
     {
-        $type = empty($type) ? 'null' : strtolower($type);
-
-        $class = false !== strpos($type, '\\') ? $type : '\\think\\response\\' . ucfirst($type);
+        $class = false !== strpos($type, '\\') ? $type : '\\think\\response\\' . ucfirst(strtolower($type));
 
         if (class_exists($class)) {
             return new $class($data, $code, $header, $options);
-        } else {
-            return new static($data, $code, $header, $options);
         }
+
+        return new static($data, $code, $header, $options);
     }
 
     /**
@@ -111,24 +122,24 @@ class Response
     public function send()
     {
         // 监听response_send
-        Container::get('hook')->listen('response_send', $this);
+        $this->app['hook']->listen('response_send', $this);
 
         // 处理输出数据
         $data = $this->getContent();
 
         // Trace调试注入
-        if (Container::get('env')->get('app_trace', Container::get('app')->config('app.app_trace'))) {
-            Container::get('debug')->inject($this, $data);
+        if ('cli' != PHP_SAPI && $this->app['env']->get('app_trace', $this->app->config('app.app_trace'))) {
+            $this->app['debug']->inject($this, $data);
         }
 
-        if (200 == $this->code) {
-            $cache = Container::get('request')->getCache();
+        if (200 == $this->code && $this->allowCache) {
+            $cache = $this->app['request']->getCache();
             if ($cache) {
                 $this->header['Cache-Control'] = 'max-age=' . $cache[1] . ',must-revalidate';
                 $this->header['Last-Modified'] = gmdate('D, d M Y H:i:s') . ' GMT';
                 $this->header['Expires']       = gmdate('D, d M Y H:i:s', $_SERVER['REQUEST_TIME'] + $cache[1]) . ' GMT';
 
-                Container::get('cache')->tag($cache[2])->set($cache[0], [$data, $this->header], $cache[1]);
+                $this->app['cache']->tag($cache[2])->set($cache[0], [$data, $this->header], $cache[1]);
             }
         }
 
@@ -141,7 +152,7 @@ class Response
             }
         }
 
-        echo $data;
+        $this->sendData($data);
 
         if (function_exists('fastcgi_finish_request')) {
             // 提高页面响应
@@ -149,11 +160,11 @@ class Response
         }
 
         // 监听response_end
-        Container::get('hook')->listen('response_end', $this);
+        $this->app['hook']->listen('response_end', $this);
 
         // 清空当次请求有效的数据
         if (!($this instanceof RedirectResponse)) {
-            Container::get('session')->flush();
+            $this->app['session']->flush();
         }
     }
 
@@ -166,6 +177,17 @@ class Response
     protected function output($data)
     {
         return $data;
+    }
+
+    /**
+     * 输出数据
+     * @access protected
+     * @param string $data 要处理的数据
+     * @return void
+     */
+    protected function sendData($data)
+    {
+        echo $data;
     }
 
     /**
@@ -190,6 +212,19 @@ class Response
     public function data($data)
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * 是否允许请求缓存
+     * @access public
+     * @param  bool $cache 允许请求缓存
+     * @return $this
+     */
+    public function allowCache($cache)
+    {
+        $this->allowCache = $cache;
 
         return $this;
     }
@@ -288,12 +323,25 @@ class Response
     /**
      * 页面缓存控制
      * @access public
-     * @param  string $cache 状态码
+     * @param  string $cache 缓存设置
      * @return $this
      */
     public function cacheControl($cache)
     {
         $this->header['Cache-control'] = $cache;
+
+        return $this;
+    }
+
+    /**
+     * 设置页面不做任何缓存
+     * @access public
+     * @return $this
+     */
+    public function noCache()
+    {
+        $this->header['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0';
+        $this->header['Pragma']        = 'no-cache';
 
         return $this;
     }
@@ -322,9 +370,9 @@ class Response
     {
         if (!empty($name)) {
             return isset($this->header[$name]) ? $this->header[$name] : null;
-        } else {
-            return $this->header;
         }
+
+        return $this->header;
     }
 
     /**
@@ -369,5 +417,13 @@ class Response
     public function getCode()
     {
         return $this->code;
+    }
+
+    public function __debugInfo()
+    {
+        $data = get_object_vars($this);
+        unset($data['app']);
+
+        return $data;
     }
 }

@@ -19,6 +19,12 @@ use think\exception\ThrowableError;
 class Error
 {
     /**
+     * 配置参数
+     * @var array
+     */
+    protected static $exceptionHandler;
+
+    /**
      * 注册异常处理
      * @access public
      * @return void
@@ -66,9 +72,9 @@ class Error
         if (error_reporting() & $errno) {
             // 将错误信息托管至 think\exception\ErrorException
             throw $exception;
-        } else {
-            self::getExceptionHandler()->report($exception);
         }
+
+        self::getExceptionHandler()->report($exception);
     }
 
     /**
@@ -101,6 +107,18 @@ class Error
     }
 
     /**
+     * 设置异常处理类
+     *
+     * @access public
+     * @param  mixed $handle
+     * @return void
+     */
+    public static function setExceptionHandler($handle)
+    {
+        self::$exceptionHandler = $handle;
+    }
+
+    /**
      * Get an instance of the exception handler.
      *
      * @access public
@@ -112,7 +130,8 @@ class Error
 
         if (!$handle) {
             // 异常处理handle
-            $class = Container::get('config')->get('exception_handle');
+            $class = self::$exceptionHandler;
+
             if ($class && is_string($class) && class_exists($class) && is_subclass_of($class, "\\think\\exception\\Handle")) {
                 $handle = new $class;
             } else {
