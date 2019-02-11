@@ -35,6 +35,8 @@ abstract class Relation
     protected $localKey;
     // 基础查询
     protected $baseQuery;
+    // 是否为自关联
+    protected $selfRelation;
 
     /**
      * 获取关联的所属模型
@@ -54,6 +56,28 @@ abstract class Relation
     public function getModel()
     {
         return $this->query->getModel();
+    }
+
+    /**
+     * 设置当前关联为自关联
+     * @access public
+     * @param  bool $self 是否自关联
+     * @return $this
+     */
+    public function selfRelation($self = true)
+    {
+        $this->selfRelation = $self;
+        return $this;
+    }
+
+    /**
+     * 当前关联是否为自关联
+     * @access public
+     * @return bool
+     */
+    public function isSelfRelation()
+    {
+        return $this->selfRelation;
     }
 
     /**
@@ -95,12 +119,27 @@ abstract class Relation
 
     protected function getQueryWhere(&$where, $relation)
     {
-        foreach ($where as $key => $val) {
+        foreach ($where as $key => &$val) {
             if (is_string($key)) {
                 $where[] = [false === strpos($key, '.') ? $relation . '.' . $key : $key, '=', $val];
                 unset($where[$key]);
+            } elseif (isset($val[0]) && false === strpos($val[0], '.')) {
+                $val[0] = $relation . '.' . $val[0];
             }
         }
+    }
+
+    /**
+     * 删除记录
+     * @access public
+     * @param  mixed $data 表达式 true 表示强制删除
+     * @return int
+     * @throws Exception
+     * @throws PDOException
+     */
+    public function delete($data = null)
+    {
+        return $this->query->delete($data);
     }
 
     /**
@@ -119,7 +158,7 @@ abstract class Relation
 
             $result = call_user_func_array([$this->query->getModel(), $method], $args);
 
-            return $result === $this->query ? $this : $result;
+            return $result === $this->query && !in_array(strtolower($method), ['fetchsql', 'fetchpdo']) ? $this : $result;
         } else {
             throw new Exception('method not exists:' . __CLASS__ . '->' . $method);
         }

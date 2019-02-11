@@ -56,14 +56,22 @@ class Sqlite extends Builder
 
     /**
      * 字段和表名处理
-     * @access protected
-     * @param  Query     $query        查询对象
-     * @param  string    $key
+     * @access public
+     * @param  Query     $query     查询对象
+     * @param  mixed     $key       字段名
+     * @param  bool      $strict   严格检测
      * @return string
      */
-    protected function parseKey(Query $query, $key)
+    public function parseKey(Query $query, $key, $strict = false)
     {
+        if (is_numeric($key)) {
+            return $key;
+        } elseif ($key instanceof Expression) {
+            return $key->getValue();
+        }
+
         $key = trim($key);
+
         if (strpos($key, '.')) {
             list($table, $key) = explode('.', $key, 2);
 
@@ -71,6 +79,7 @@ class Sqlite extends Builder
 
             if ('__TABLE__' == $table) {
                 $table = $query->getOptions('table');
+                $table = is_array($table) ? array_shift($table) : $table;
             }
 
             if (isset($alias[$table])) {

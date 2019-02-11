@@ -53,7 +53,7 @@ trait Conversion
      * @param  bool  $override 是否覆盖
      * @return $this
      */
-    public function append($append = [], $override = false)
+    public function append(array $append = [], $override = false)
     {
         $this->append = $override ? $append : array_merge($this->append, $append);
 
@@ -102,7 +102,7 @@ trait Conversion
      * @param  bool  $override 是否覆盖
      * @return $this
      */
-    public function hidden($hidden = [], $override = false)
+    public function hidden(array $hidden = [], $override = false)
     {
         $this->hidden = $override ? $hidden : array_merge($this->hidden, $hidden);
 
@@ -116,7 +116,7 @@ trait Conversion
      * @param  bool  $override 是否覆盖
      * @return $this
      */
-    public function visible($visible = [], $override = false)
+    public function visible(array $visible = [], $override = false)
     {
         $this->visible = $override ? $visible : array_merge($this->visible, $visible);
 
@@ -167,12 +167,24 @@ trait Conversion
             foreach ($this->append as $key => $name) {
                 if (is_array($name)) {
                     // 追加关联对象属性
-                    $relation   = $this->getAttr($key);
+                    $relation = $this->getRelation($key);
+
+                    if (!$relation) {
+                        $relation = $this->getAttr($key);
+                        $relation->visible($name);
+                    }
+
                     $item[$key] = $relation->append($name)->toArray();
                 } elseif (strpos($name, '.')) {
                     list($key, $attr) = explode('.', $name);
                     // 追加关联对象属性
-                    $relation   = $this->getAttr($key);
+                    $relation = $this->getRelation($key);
+
+                    if (!$relation) {
+                        $relation = $this->getAttr($key);
+                        $relation->visible([$attr]);
+                    }
+
                     $item[$key] = $relation->append([$attr])->toArray();
                 } else {
                     $value = $this->getAttr($name, $item);
@@ -223,13 +235,15 @@ trait Conversion
      * 转换数据集为数据集对象
      * @access public
      * @param  array|Collection $collection 数据集
+     * @param  string           $resultSetType 数据集类
      * @return Collection
      */
-    public function toCollection($collection)
+    public function toCollection($collection, $resultSetType = null)
     {
-        if ($this->resultSetType && false !== strpos($this->resultSetType, '\\')) {
-            $class      = $this->resultSetType;
-            $collection = new $class($collection);
+        $resultSetType = $resultSetType ?: $this->resultSetType;
+
+        if ($resultSetType && false !== strpos($resultSetType, '\\')) {
+            $collection = new $resultSetType($collection);
         } else {
             $collection = new ModelCollection($collection);
         }

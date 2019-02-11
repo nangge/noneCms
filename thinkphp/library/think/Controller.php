@@ -31,12 +31,6 @@ class Controller
     protected $request;
 
     /**
-     * 应用实例
-     * @var \think\App
-     */
-    protected $app;
-
-    /**
      * 验证失败是否抛出异常
      * @var bool
      */
@@ -49,39 +43,73 @@ class Controller
     protected $batchValidate = false;
 
     /**
-     * 前置操作方法列表
+     * 前置操作方法列表（即将废弃）
      * @var array $beforeActionList
      */
     protected $beforeActionList = [];
 
     /**
+     * 控制器中间件
+     * @var array
+     */
+    protected $middleware = [];
+
+    /**
      * 构造方法
      * @access public
      */
-    public function __construct()
+    public function __construct(App $app = null)
     {
-        $this->request = Container::get('request');
-        $this->app     = Container::get('app');
-        $this->view    = Container::get('view')->init(
-            $this->app['config']->pull('template')
-        );
+        $this->app     = $app ?: Container::get('app');
+        $this->request = $this->app['request'];
+        $this->view    = $this->app['view'];
 
         // 控制器初始化
         $this->initialize();
 
-        // 前置操作方法
-        if ($this->beforeActionList) {
-            foreach ($this->beforeActionList as $method => $options) {
-                is_numeric($method) ?
-                $this->beforeAction($options) :
-                $this->beforeAction($method, $options);
-            }
+        $this->registerMiddleware();
+
+        // 前置操作方法 即将废弃
+        foreach ((array) $this->beforeActionList as $method => $options) {
+            is_numeric($method) ?
+            $this->beforeAction($options) :
+            $this->beforeAction($method, $options);
         }
     }
 
     // 初始化
     protected function initialize()
     {}
+
+    // 注册控制器中间件
+    public function registerMiddleware()
+    {
+        foreach ($this->middleware as $key => $val) {
+            if (!is_int($key)) {
+                $only = $except = null;
+
+                if (isset($val['only'])) {
+                    $only = array_map(function ($item) {
+                        return strtolower($item);
+                    }, $val['only']);
+                } elseif (isset($val['except'])) {
+                    $except = array_map(function ($item) {
+                        return strtolower($item);
+                    }, $val['except']);
+                }
+
+                if (isset($only) && !in_array($this->request->action(), $only)) {
+                    continue;
+                } elseif (isset($except) && in_array($this->request->action(), $except)) {
+                    continue;
+                } else {
+                    $val = $key;
+                }
+            }
+
+            $this->app['middleware']->controller($val);
+        }
+    }
 
     /**
      * 前置操作
@@ -95,14 +123,24 @@ class Controller
             if (is_string($options['only'])) {
                 $options['only'] = explode(',', $options['only']);
             }
-            if (!in_array($this->request->action(), $options['only'])) {
+
+            $only = array_map(function ($val) {
+                return strtolower($val);
+            }, $options['only']);
+
+            if (!in_array($this->request->action(), $only)) {
                 return;
             }
         } elseif (isset($options['except'])) {
             if (is_string($options['except'])) {
                 $options['except'] = explode(',', $options['except']);
             }
-            if (in_array($this->request->action(), $options['except'])) {
+
+            $except = array_map(function ($val) {
+                return strtolower($val);
+            }, $options['except']);
+
+            if (in_array($this->request->action(), $except)) {
                 return;
             }
         }
@@ -115,13 +153,12 @@ class Controller
      * @access protected
      * @param  string $template 模板文件名
      * @param  array  $vars     模板输出变量
-     * @param  array  $replace  模板替换
      * @param  array  $config   模板参数
      * @return mixed
      */
-    protected function fetch($template = '', $vars = [], $replace = [], $config = [])
+    protected function fetch($template = '', $vars = [], $config = [])
     {
-        return $this->view->fetch($template, $vars, $replace, $config);
+        return $this->view->fetch($template, $vars, $config);
     }
 
     /**
@@ -129,13 +166,12 @@ class Controller
      * @access protected
      * @param  string $content 模板内容
      * @param  array  $vars    模板输出变量
-     * @param  array  $replace 替换内容
      * @param  array  $config  模板参数
      * @return mixed
      */
-    protected function display($content = '', $vars = [], $replace = [], $config = [])
+    protected function display($content = '', $vars = [], $config = [])
     {
-        return $this->view->display($content, $vars, $replace, $config);
+        return $this->view->display($content, $vars, $config);
     }
 
     /**
@@ -148,6 +184,19 @@ class Controller
     protected function assign($name, $value = '')
     {
         $this->view->assign($name, $value);
+
+        return $this;
+    }
+
+    /**
+     * 视图过滤
+     * @access protected
+     * @param  Callable $filter 过滤方法或闭包
+     * @return $this
+     */
+    protected function filter($filter)
+    {
+        $this->view->filter($filter);
 
         return $this;
     }
@@ -221,11 +270,18 @@ class Controller
         if (!$v->check($data)) {
             if ($this->failException) {
                 throw new ValidateException($v->getError());
-            } else {
-                return $v->getError();
             }
-        } else {
-            return true;
+            return $v->getError();
         }
+
+        return true;
+    }
+
+    public function __debugInfo()
+    {
+        $data = get_object_vars($this);
+        unset($data['app'], $data['request']);
+
+        return $data;
     }
 }

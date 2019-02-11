@@ -11,14 +11,14 @@
 
 namespace think\response;
 
-use think\Container;
 use think\Response;
 
 class View extends Response
 {
     // 输出参数
-    protected $options     = [];
-    protected $vars        = [];
+    protected $options = [];
+    protected $vars    = [];
+    protected $filter;
     protected $contentType = 'text/html';
 
     /**
@@ -30,9 +30,8 @@ class View extends Response
     protected function output($data)
     {
         // 渲染模板输出
-        $config = Container::get('config');
-        return Container::get('view')
-            ->init($config->pull('template'))
+        return $this->app['view']
+            ->filter($this->filter)
             ->fetch($data, $this->vars);
     }
 
@@ -62,11 +61,22 @@ class View extends Response
     {
         if (is_array($name)) {
             $this->vars = array_merge($this->vars, $name);
-            return $this;
         } else {
             $this->vars[$name] = $value;
         }
 
+        return $this;
+    }
+
+    /**
+     * 视图内容过滤
+     * @access public
+     * @param callable $filter
+     * @return $this
+     */
+    public function filter($filter)
+    {
+        $this->filter = $filter;
         return $this;
     }
 
@@ -78,9 +88,7 @@ class View extends Response
      */
     public function exists($name)
     {
-        return Container::get('view')
-            ->init(Container::get('config')->pull('template'))
-            ->exists($name);
+        return $this->app['view']->exists($name);
     }
 
 }

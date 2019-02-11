@@ -32,6 +32,17 @@ class Hook
     private static $portal = 'run';
 
     /**
+     * 应用对象
+     * @var App
+     */
+    protected $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
      * 指定入口方法名称
      * @access public
      * @param  string  $name     方法名
@@ -116,9 +127,9 @@ class Hook
         if (empty($tag)) {
             //获取全部的插件信息
             return $this->tags;
-        } else {
-            return array_key_exists($tag, $this->tags) ? $this->tags[$tag] : [];
         }
+
+        return array_key_exists($tag, $this->tags) ? $this->tags[$tag] : [];
     }
 
     /**
@@ -137,10 +148,7 @@ class Hook
         foreach ($tags as $key => $name) {
             $results[$key] = $this->execTag($name, $tag, $params);
 
-            if (false === $results[$key]) {
-                // 如果返回false 则中断行为执行
-                break;
-            } elseif (!is_null($results[$key]) && $once) {
+            if (false === $results[$key] || (!is_null($results[$key]) && $once)) {
                 break;
             }
         }
@@ -166,7 +174,7 @@ class Hook
             $method = [$class, self::$portal];
         }
 
-        return Container::getInstance()->invoke($method, [$params]);
+        return $this->app->invoke($method, [$params]);
     }
 
     /**
@@ -179,16 +187,12 @@ class Hook
      */
     protected function execTag($class, $tag = '', $params = null)
     {
-        $app = Container::get('app');
-
-        $app->isDebug() && $app['debug']->remark('behavior_start', 'time');
-
         $method = Loader::parseName($tag, 1, false);
 
         if ($class instanceof \Closure) {
             $call  = $class;
             $class = 'Closure';
-        } elseif (strpos($class, '::')) {
+        } elseif (is_array($class) || strpos($class, '::')) {
             $call = $class;
         } else {
             $obj = Container::get($class);
@@ -201,15 +205,16 @@ class Hook
             $class = $class . '->' . $method;
         }
 
-        $result = Container::getInstance()->invoke($call, [$params]);
-
-        if ($app->isDebug()) {
-            $debug = $app['debug'];
-            $debug->remark('behavior_end', 'time');
-            $app->log('[ BEHAVIOR ] Run ' . $class . ' @' . $tag . ' [ RunTime:' . $debug->getRangeTime('behavior_start', 'behavior_end') . 's ]');
-        }
+        $result = $this->app->invoke($call, [$params]);
 
         return $result;
     }
 
+    public function __debugInfo()
+    {
+        $data = get_object_vars($this);
+        unset($data['app']);
+
+        return $data;
+    }
 }

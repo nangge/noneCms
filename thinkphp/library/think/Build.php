@@ -135,7 +135,7 @@ class Build
 
         // 创建子目录和文件
         foreach ($list as $path => $file) {
-            $modulePath = $this->basePath . $module . '/';
+            $modulePath = $this->basePath . $module . DIRECTORY_SEPARATOR;
             if ('__dir__' == $path) {
                 // 生成子目录
                 foreach ($file as $dir) {
@@ -187,28 +187,31 @@ class Build
      * @param  string $layer  控制器层目录名
      * @return string
      */
-    public function buildRoute($alias = false, $layer = '')
+    public function buildRoute($suffix = false, $layer = '')
     {
         $namespace = $this->app->getNameSpace();
-        $modules   = glob($this->basePath . '*', GLOB_ONLYDIR);
         $content   = '<?php ' . PHP_EOL . '//根据 Annotation 自动生成的路由规则';
 
         if (!$layer) {
             $layer = $this->app->config('app.url_controller_layer');
         }
 
-        foreach ($modules as $module) {
-            $module = basename($module);
+        if ($this->app->config('app.app_multi_module')) {
+            $modules = glob($this->basePath . '*', GLOB_ONLYDIR);
 
-            if (in_array($module, $this->app->config('app.deny_module_list'))) {
-                continue;
+            foreach ($modules as $module) {
+                $module = basename($module);
+
+                if (in_array($module, $this->app->config('app.deny_module_list'))) {
+                    continue;
+                }
+
+                $path = $this->basePath . $module . DIRECTORY_SEPARATOR . $layer . DIRECTORY_SEPARATOR;
+                $content .= $this->buildDirRoute($path, $namespace, $module, $suffix, $layer);
             }
-
-            $controllers = glob($this->basePath . $module . '/' . $layer . '/*.php');
-
-            foreach ($controllers as $controller) {
-                $content .= $this->getControllerRoute($namespace, $module, basename($controller, '.php'), $alias, $layer);
-            }
+        } else {
+            $path = $this->basePath . $layer . DIRECTORY_SEPARATOR;
+            $content .= $this->buildDirRoute($path, $namespace, '', $suffix, $layer);
         }
 
         $filename = $this->app->getRuntimePath() . 'build_route.php';
@@ -218,33 +221,71 @@ class Build
     }
 
     /**
-     * 生成控制器类的路由规则
+     * 生成子目录控制器类的路由规则
      * @access protected
+     * @param  string $path  控制器目录
      * @param  string $namespace 应用命名空间
      * @param  string $module 模块
-     * @param  string $controller 控制器名
      * @param  bool   $suffix 类库后缀
      * @param  string $layer 控制器层目录名
      * @return string
      */
-    protected function getControllerRoute($namespace, $module, $controller, $alias = false, $layer = '')
+    protected function buildDirRoute($path, $namespace, $module, $suffix, $layer)
     {
-        $class   = new \ReflectionClass($namespace . '\\' . $module . '\\' . $layer . '\\' . $controller);
+        $content     = '';
+        $controllers = glob($path . '*.php');
+
+        foreach ($controllers as $controller) {
+            $controller = basename($controller, '.php');
+
+            $class = new \ReflectionClass($namespace . '\\' . ($module ? $module . '\\' : '') . $layer . '\\' . $controller);
+
+            if (strpos($layer, '\\')) {
+                // 多级控制器
+                $level      = str_replace(DIRECTORY_SEPARATOR, '.', substr($layer, 11));
+                $controller = $level . '.' . $controller;
+                $length     = strlen(strstr($layer, '\\', true));
+            } else {
+                $length = strlen($layer);
+            }
+
+            if ($suffix) {
+                $controller = substr($controller, 0, -$length);
+            }
+
+            $content .= $this->getControllerRoute($class, $module, $controller);
+        }
+
+        $subDir = glob($path . '*', GLOB_ONLYDIR);
+
+        foreach ($subDir as $dir) {
+            $content .= $this->buildDirRoute($dir . DIRECTORY_SEPARATOR, $namespace, $module, $suffix, $layer . '\\' . basename($dir));
+        }
+
+        return $content;
+    }
+
+    /**
+     * 生成控制器类的路由规则
+     * @access protected
+     * @param  string $class        控制器完整类名
+     * @param  string $module       模块名
+     * @param  string $controller   控制器名
+     * @return string
+     */
+    protected function getControllerRoute($class, $module, $controller)
+    {
         $content = '';
         $comment = $class->getDocComment();
 
-        if ($alias) {
-            $controller = substr($controller, 0, -10);
-        }
-
         if (false !== strpos($comment, '@route(')) {
             $comment = $this->parseRouteComment($comment);
-            $route   = $module . '/' . $controller;
-            $comment = preg_replace('/route\(\s?([\'\"][\-\_\/\:\<\>\?\$\[\]\w]+[\'\"])\s?\)/is', 'Route::resourece(\1,\'' . $route . '\')', $comment);
+            $route   = ($module ? $module . '/' : '') . $controller;
+            $comment = preg_replace('/route\(\s?([\'\"][\-\_\/\:\<\>\?\$\[\]\w]+[\'\"])\s?\)/is', 'Route::resource(\1,\'' . $route . '\')', $comment);
             $content .= PHP_EOL . $comment;
         } elseif (false !== strpos($comment, '@alias(')) {
             $comment = $this->parseRouteComment($comment, '@alias(');
-            $route   = $module . '/' . $controller;
+            $route   = ($module ? $module . '/' : '') . $controller;
             $comment = preg_replace('/alias\(\s?([\'\"][\-\_\/\w]+[\'\"])\s?\)/is', 'Route::alias(\1,\'' . $route . '\')', $comment);
             $content .= PHP_EOL . $comment;
         }
@@ -273,8 +314,14 @@ class Build
         $comment = substr($comment, 3, -2);
         $comment = explode(PHP_EOL, substr(strstr(trim($comment), $tag), 1));
         $comment = array_map(function ($item) {return trim(trim($item), ' \t*');}, $comment);
-        $key     = array_search('', $comment);
-        $comment = implode(PHP_EOL . "\t", array_slice($comment, 0, $key)) . ';';
+
+        if (count($comment) > 1) {
+            $key     = array_search('', $comment);
+            $comment = array_slice($comment, 0, false === $key ? 1 : $key);
+        }
+
+        $comment = implode(PHP_EOL . "\t", $comment) . ';';
+
         if (strpos($comment, '{')) {
             $comment = preg_replace_callback('/\{\s?.*?\s?\}/s', function ($matches) {
                 return false !== strpos($matches[0], '"') ? '[' . substr(var_export(json_decode($matches[0], true), true), 7, -1) . ']' : $matches[0];
@@ -303,7 +350,7 @@ class Build
                 $action = substr($action, 0, -strlen($suffix));
             }
 
-            $route   = $module . '/' . $controller . '/' . $action;
+            $route   = ($module ? $module . '/' : '') . $controller . '/' . $action;
             $comment = preg_replace('/route\s?\(\s?([\'\"][\-\_\/\:\<\>\?\$\[\]\w]+[\'\"])\s?\,?\s?[\'\"]?(\w+?)[\'\"]?\s?\)/is', 'Route::\2(\1,\'' . $route . '\')', $comment);
             $comment = preg_replace('/route\s?\(\s?([\'\"][\-\_\/\:\<\>\?\$\[\]\w]+[\'\"])\s?\)/is', 'Route::rule(\1,\'' . $route . '\')', $comment);
 
@@ -339,7 +386,7 @@ class Build
      */
     protected function buildCommon($module)
     {
-        $filename = $this->app->getConfigPath() . ($module ? $module . DIRECTORY_SEPARATOR : '') . 'config.php';
+        $filename = $this->app->getConfigPath() . ($module ? $module . DIRECTORY_SEPARATOR : '') . 'app.php';
         $this->checkDirBuild(dirname($filename));
 
         if (!is_file($filename)) {

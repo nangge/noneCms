@@ -1,30 +1,26 @@
 <?php
 // +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK IT ]
+// | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-namespace think\log\driver;
+namespace think\route\dispatch;
 
-/**
- * 模拟测试输出
- */
-class Test
+use think\Response;
+use think\route\Dispatch;
+
+class View extends Dispatch
 {
-    /**
-     * 日志写入接口
-     * @access public
-     * @param  array $log 日志信息
-     * @return bool
-     */
-    public function save(array $log = [])
+    public function exec()
     {
-        return true;
-    }
+        // 渲染模板输出
+        $vars = array_merge($this->request->param(), $this->param);
 
+        return Response::create($this->dispatch, 'view')->assign($vars);
+    }
 }
