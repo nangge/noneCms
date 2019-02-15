@@ -252,3 +252,30 @@ function sendEmail($content){
     $mail = new \app\common\lib\email\Email($config);
     return $mail->create($content)->setRecipient()->attachment()->body()->send();
 }
+
+/**
+ * @param $code
+ * @param string $msg
+ * @param array $data
+ * @param bool $replace 为兼容之前的返回格式，这里加上该参数
+ */
+function raise($code, $msg = '', $data = [], $replace = false)
+{
+    if ($replace === false) {
+        exit(json_encode([
+            'status' => $code,
+            'msg'  => $msg,
+            'data' => $data,
+        ])) ;
+    }
+    $res = [
+        'status' => $code,
+        'msg' => $msg,
+    ];
+    if (is_array($data) && !empty($data)) {
+        foreach ($data as $key => $item) {
+            $res[$key] = $item;
+        }
+        exit(json_encode($res));
+    }
+}
