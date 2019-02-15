@@ -5,10 +5,9 @@
 
 namespace app\admin\controller;
 
-use app\admin\service\grab\CSDN;
+use app\admin\service\grab\GrabFactory;
 use app\common\model\Category;
 use app\common\model\Article as articleModel;
-use think\Exception;
 
 class Article extends Common
 {
@@ -195,8 +194,8 @@ class Article extends Common
             if (!$cid) {
                 raise(9012, '请选择分类');
             }
-            $csdn = new CSDN($url);
-            $params = $csdn->parse();
+            $grab = GrabFactory::get($url);
+            $params = $grab->parse();
             $params['cid'] = $cid;
             $article = new articleModel();
             if ($article->data($params, true)->save()) {
