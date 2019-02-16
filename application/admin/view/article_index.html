@@ -52,7 +52,7 @@
                             <td align="center"><a href="{:url('article/index',['id' => $vo.cid])}">{$vo.name}</a></td>
                             <td align="center">{$vo.publishtime|date="Y-m-d"}</td>
                             <td align="center">
-                            <a href="javascript:;" class="topit btn" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="{:$article::FLAG_TOP == $vo.flag"}取消置顶{else/}置 顶{/if}</a>
+                            <a href="javascript:;" class="topit btn" data-flag="{$vo.flag}" data-id="{$vo.id}">{if condition="$article::FLAG_TOP == $vo.flag"}取消置顶{else/}置 顶{/if}</a>
                                 <a href="{:url('article/edit',['id' => $vo.id])}" class="btn btn-info">编 辑</a>
                                 <a class="del btn btn-danger" data-id="{$vo.id}">删 除</a>
                             </td>
