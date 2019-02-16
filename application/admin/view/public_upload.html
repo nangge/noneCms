@@ -81,16 +81,18 @@ $(function () {
             beforeSend: function() {
                 $tip.html("上传中...").show();
             },
+            data:{
+                act:'add'
+            },
             success: function(data) {
                 if(data.status == 1){    
                     $tip.hide();                   
                     var img = data.path;
                     var picture_html= '<div class="picture_item"><img src="'+ img +'" width="110" height="110"><div class="upload_success"></div><div class="index_picture">设为封面</div><div class="layui-layer-ico picture_del"></div><input type="hidden" name="pic_url[]" value="'+ img +'" /></div>';
                     $('#images_area').append(picture_html);
-                }else {
-                    $tip.html(data.error);   
-                }           
-
+                } else {
+                    $tip.html(data.msg);
+                }
             },
             error:function(xhr){
                 layer.msg("上传失败"+xhr+",请重新选择上传");
@@ -102,15 +104,25 @@ $(function () {
     $('#images_area').on('click','.picture_del',function () {
         var $this = $(this);
         var img = $this.next().val();
-        $this.parent().remove();
-        /*$.post("{:url('main/upload')}",{path:img,act:'del'},function(data){
-            if(data.status == 1){
-                layer.msg(data.msg);
-                $this.parent().remove();
-            }else{
-                layer.msg(data.msg);
+        $.ajax(uploadUrl, {
+            dataType:  'json',
+            data:{
+                act:'del',
+                path:img
+            },
+            type: 'post',
+            success: function(data) {
+                if(data.status == 1){
+                    layer.msg(data.msg);
+                    $this.parent().remove();
+                } else {
+                    layer.msg(data.msg)
+                }
+            },
+            error:function(xhr){
+                layer.msg("删除失败"+xhr+",请重新删除");
             }
-        },'json');*/        
+        });
     });
 
     //设为封面

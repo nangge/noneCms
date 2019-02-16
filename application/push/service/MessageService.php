@@ -9,16 +9,13 @@
 namespace app\push\service;
 
 
-use app\common\model\Chat;
 use app\push\controller\WorkerChat;
-//use app\push\lib\User;
-use app\common\model\User;
+use app\push\lib\User;
 use app\common\model\Chatrecord;
 
 class MessageService
 {
-    public function parseMessage($connect_id, $data)
-    {
+    public function parseMessage($connect_id,$data){
         switch ($data['type']) {
             case 'login':
                 $user = User::login($data['username'], $data['password']);
@@ -33,7 +30,7 @@ class MessageService
                         'id' => $connect_id,
                         'user' => [
                             'id' => $user['id'],
-                            'username' => $user['username'],
+                            'nick' => $user['nick'],
                             'img' => $user['img']
                         ]
                     ];
@@ -41,8 +38,8 @@ class MessageService
                     WorkerChat::$hasLogin[$user['accesstoken']]['lastlogin_time'] = time();
 
                     $result['message'] = [
-                        'content' => $user['username'] . '加入了聊天室',
-                        'username' => '<b style="color:red">系统：</b>',
+                        'content' => $user['nick'] . '加入了聊天室',
+                        'nick' => '<b style="color:red">系统：</b>',
                         'type' => 'login',
                         'clients' => WorkerChat::$hasConnections,
                         'client_id' => $connect_id,
@@ -54,10 +51,10 @@ class MessageService
                         'content' => '登录成功',
                         'user' => [
                             'id' => $user['id'],
-                            'username' => $user['username'],
+                            'nick' => $user['nick'],
                             'img' => $user['img']
                         ],
-                        'accesstoken' => $user['accesstoken'],
+                        'accesstoken'=>$user['accesstoken'],
                         'img' => $user['img'],
                         'code' => 2,
                         'type' => 'login',
@@ -66,8 +63,8 @@ class MessageService
                 }
                 break;
             case 'register':
-                $img = file_get_contents('http://placeimg.com/30/30');
-                $data['img'] = 'data:image/jpeg;base64,' . base64_encode($img);
+                $img = file_get_contents('http://lorempixel.com/30/30/');
+                $data['img'] = 'data:image/jpeg;base64,'.base64_encode($img);
                 $res = User::register($data);
                 if ($res['code'] == 1) {
                     $user = $res['user'];
@@ -75,7 +72,7 @@ class MessageService
                         'id' => $connect_id,
                         'user' => [
                             'id' => $user['id'],
-                            'username' => $user['username'],
+                            'nick' => $user['nick'],
                             'img' => $user['img']
                         ]
                     ];
@@ -83,8 +80,8 @@ class MessageService
                     WorkerChat::$hasLogin[$user['accesstoken']]['lastlogin_time'] = time();
 
                     $result['message'] = [
-                        'content' => $user['username'] . '加入了聊天室',
-                        'username' => '<b style="color:red">系统：</b>',
+                        'content' => $user['nick'] . '加入了聊天室',
+                        'nick' => '<b style="color:red">系统：</b>',
                         'type' => 'register',
                         'clients' => WorkerChat::$hasConnections,
                         'img' => '/template/index/blog/images/nango.jpg',
@@ -96,7 +93,7 @@ class MessageService
                         'content' => '注册成功',
                         'user' => [
                             'id' => $user['id'],
-                            'username' => $user['username'],
+                            'nick' => $user['nick'],
                             'img' => $user['img']
                         ],
                         'img' => $user['img'],
@@ -126,7 +123,7 @@ class MessageService
                     if (empty($recive_user)) {
                         $result['message'] = [
                             'content' => '对方已经退出了房间',
-                            'username' => '<b style="color:red">系统：</b>',
+                            'nick' => '<b style="color:red">系统：</b>',
                             'type' => 'prisay',
                             'clients' => WorkerChat::$hasConnections,
                             'img' => '/template/index/blog/images/nango.jpg',
@@ -134,11 +131,11 @@ class MessageService
                             'code' => 1
                         ];
                     } else {
-                        $recive_content = '<i style="color:green">' . $user['username'] . '</i>对你 说：' . $data['content'];
-                        $send_content = '你对<i style="color:green">' . $recive_user['username'] . '</i> 说：' . $data['content'];
+                        $recive_content = '<i style="color:green">' . $user['nick'] . '</i>对你 说：' . $data['content'];
+                        $send_content = '你对<i style="color:green">' . $recive_user['nick'] . '</i> 说：' . $data['content'];
                         $result['message'] = [
                             'content' => $send_content,
-                            'username' => $user['username'],
+                            'nick' => $user['nick'],
                             'type' => 'prisay',
                             'img' => $user['img'],
                             'time' => date('Y-m-d H:i'),
@@ -146,7 +143,7 @@ class MessageService
                         ];
                         $result['send_message'] = [
                             'content' => $recive_content,
-                            'username' => $recive_user['username'],
+                            'nick' => $recive_user['nick'],
                             'type' => 'prisay',
                             'img' => $recive_user['img'],
                             'time' => date('Y-m-d H:i'),
@@ -158,7 +155,7 @@ class MessageService
                             'type' => 1,
                             'receive_id' => $recive_user['id'],
                         ];
-                        Chat::create($save_data);
+                        Chatrecord::create($save_data);
                     }
                 }
                 break;
@@ -171,31 +168,31 @@ class MessageService
                         'code' => 0
                     ];
                 } else {
+
                     $alter_time = WorkerChat::LOGIN_TIME_ALTER + 1;
-                    if (isset(WorkerChat::$hasLogin[$user['accesstoken']])) {
+                    if(isset(WorkerChat::$hasLogin[$user['accesstoken']])){
                         $alter_time = time() - WorkerChat::$hasLogin[$user['accesstoken']]['lastlogin_time'];
                     }
-                    //$alter_time < WorkerChat::LOGIN_TIME_ALTER
-                    if (false) {
+                    if($alter_time < WorkerChat::LOGIN_TIME_ALTER){
                         $result['back_message'] = [
                             'content' => '用户重新登录异常，一分钟内不允许连续登陆',
                             'type' => 'relogin',
                             'code' => 3
                         ];
-                    } else {
+                    }else{
                         WorkerChat::$hasLogin[$user['accesstoken']]['lastlogin_time'] = time();
 
                         WorkerChat::$hasConnections[$connect_id] = [
                             'id' => $connect_id,
                             'user' => [
                                 'id' => $user['id'],
-                                'username' => $user['username'],
+                                'nick' => $user['nick'],
                                 'img' => $user['img']
                             ]
                         ];
                         $result['message'] = [
-                            'content' => $user['username'] . '加入了聊天室',
-                            'username' => '<b style="color:red">系统：</b>',
+                            'content' => $user['nick'] . '加入了聊天室',
+                            'nick' => '<b style="color:red">系统：</b>',
                             'type' => 'login',
                             'clients' => WorkerChat::$hasConnections,
                             'client_id' => $connect_id,
@@ -207,7 +204,7 @@ class MessageService
                             'content' => '登录成功',
                             'user' => [
                                 'id' => $user['id'],
-                                'username' => $user['username'],
+                                'nick' => $user['nick'],
                                 'img' => $user['img']
                             ],
                             'accesstoken' => $user['accesstoken'],
@@ -223,7 +220,7 @@ class MessageService
                 $user = WorkerChat::$hasConnections[$connect_id]['user'];
                 $result['message'] = [
                     'content' => $data['content'],
-                    'username' => $user['username'],
+                    'nick' => $user['nick'],
                     'type' => 'say',
                     'time' => date('Y-m-d H:i'),
                     'img' => $user['img']
@@ -233,7 +230,7 @@ class MessageService
                     'content' => $data['content'],
                     'type' => 0,
                 ];
-                Chat::create($save_data);
+                Chatrecord::create($save_data);
                 break;
         }
         return $result;

@@ -58,14 +58,7 @@ class Index extends Common
     **/
     public function getMessageHis(){
         $page = input('param.page',0,'intval');
-        $list = Db::name('chat')
-            ->alias('c')
-            ->join('user u','u.id = c.user_id')
-            ->where('type',0)
-            ->page($page)
-            ->limit(10)
-            ->order('c.send_time desc')
-            ->column('c.id,content,username,img,FROM_UNIXTIME(c.send_time) as create_time');
+        $list = Db::name('chatrecord')->join('user','none_user.id = none_chatrecord.user_id')->where('type',0)->page($page)->limit(10)->order('none_chatrecord.create_time desc')->column('none_chatrecord.id,content,nick,img,FROM_UNIXTIME(none_chatrecord.create_time) as create_time');
         exit(json_encode($list));
     }
 

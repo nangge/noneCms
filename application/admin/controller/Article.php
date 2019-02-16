@@ -5,9 +5,9 @@
 
 namespace app\admin\controller;
 
+use app\admin\service\grab\GrabFactory;
 use app\common\model\Category;
 use app\common\model\Article as articleModel;
-use think\Exception;
 
 class Article extends Common
 {
@@ -23,6 +23,7 @@ class Article extends Common
     /**
      * 显示资源列表
      *param int $id cid
+     *
      * @return \think\Response
      */
     public function index()
@@ -34,7 +35,7 @@ class Article extends Common
             ->order('flag DESC,publishtime DESC')
             ->paginate(20);
         foreach ($list as &$m) {
-            $m['name'] = $m->cid?$m->category->name:'';
+            $m['name'] = $m->cid ? $m->category->name : '';
         }
 
         // 获取分页显示
@@ -44,10 +45,10 @@ class Article extends Common
         }
 
         $this->assign([
-            'page' => $page,
-            'id' => $id,
-            'data' =>  $list,
-            'article' => new articleModel()
+            'page'    => $page,
+            'id'      => $id,
+            'data'    => $list,
+            'article' => new articleModel(),
         ]);
 
         return $this->fetch();
@@ -55,7 +56,6 @@ class Article extends Common
 
     /**
      * 添加文章
-     *
      */
     public function add()
     {
@@ -104,6 +104,27 @@ class Article extends Common
             $data = articleModel::get($id);
             $this->assign('item', $data);
             return $this->fetch();
+        }
+    }
+
+    public function saveToTemp()
+    {
+        if ($this->request->isPost()) {
+            $params = input('post.');
+
+            $result = $this->validate($params, 'app\admin\validate\Article');
+
+            if (true !== $result) {
+                return ['status' => 0, 'msg' => $result, 'url' => ''];
+            }
+
+            $article = new articleModel;
+            $params['status'] = 2;
+            if ($article->data($params, true)->save()) {
+                return ['status' => 1, 'msg' => '添加成功', 'url' => url('article/index', ['id' => $params['cid']])];
+            } else {
+                return ['status' => 0, 'msg' => '添加失败', 'url' => ''];
+            }
         }
     }
 
@@ -170,57 +191,20 @@ class Article extends Common
         if (request()->isAjax()) {
             $url = input('post.url');
             $cid = input('post.cid');
-
-            if (!$url || !substr_count($url, 'csdn')) {
-                exit(json_encode(['status' => 0, 'msg' => '请输入csdn博客文章地址', 'url' => '']));
-            }
-
             if (!$cid) {
-                exit(json_encode(['status' => 0, 'msg' => '请先选择分类', 'url' => '']));
+                raise(9012, '请选择分类');
             }
-
-
-            try {
-                \phpQuery::newDocumentFile($url);
-                $title = pq('.link_title')->text();
-                if (!$title) {
-                    $title = pq('.list_c_t a')->text();
-                }
-                if (!$title) {
-                    $title = pq('h1.csdn_top')->text();
-                }
-                $title = trim($title);
-
-                if(mb_strlen($title,'utf-8')>60){
-                    return ['status' => 0, 'msg' => '转载失败,文章标题超过60字', 'url' => ''];
-                }
-
-                $content = pq('#article_content')->text();
-
-//                //如果抓取不到主内容
-                if (!$content) {
-                    throw new Exception("文章不存在或禁止爬虫");
-                }
-                $params['cid'] = $cid;
-                $params['content'] = $content;
-                $params['title'] = $title;
-                $params['publishtime'] = '';
-                $params['description'] = trim(strip_tags($content));
-                $params['copyfrom'] = $url;
-                $article = new articleModel();
-                if ($article->data($params,true)->save()) {
-                    return ['status' => 1, 'msg' => '转载成功', 'url' => url('article/index', ['id' => $cid])];
-                } else {
-                    return ['status' => 0, 'msg' => '转载失败', 'url' => ''];
-                }
-            } catch (Exception $e) {
-                return ['status' => 0, 'msg' => '添加失败：' . $e->getMessage(), 'url' => ''];
+            $grab = GrabFactory::get($url);
+            $params = $grab->parse();
+            $params['cid'] = $cid;
+            $article = new articleModel();
+            if ($article->data($params, true)->save()) {
+                raise(1, '转载成功', ['url' => url('article/index', ['id' => $cid])], true);
+            } else {
+                raise(9000, '服务器繁忙，请重试');
             }
         } else {
             return $this->fetch();
         }
-
     }
-
-
 }

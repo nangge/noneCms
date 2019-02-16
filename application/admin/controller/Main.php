@@ -63,33 +63,39 @@ class Main extends Common
      */
     public function upload()
     {
-        if (!input('?param.act')) {
+        $act = input('act');
+        if ($act === 'add') {
             $file = request()->file('pic_url');
-
             $info = $file
                 ->validate(['size'=> 1024*1024*2,'ext'=>['jpg', 'png', 'jpeg', 'gif', 'bmp']])
                 ->move(Env::get('root_path') . 'public/uploads');
-
             if ($info) {
                 // 成功上传后 获取上传信息
                 $save_name = $info->getSaveName();
                 $realpath =  __ROOT__.'/uploads/' . $save_name;
-                exit(json_encode(['status' => 1, 'path' => $realpath, 'save_name' => $save_name]));
+                exit(json_encode(['status' => 1, 'path' => $realpath, 'save_name' => $save_name, 'param' => input('?param.act')]));
             } else {
                 // 上传失败获取错误信息
-                exit(json_encode(['status' => 0, 'error' => $file->getError()]));
+                exit(json_encode(['status' => 0, 'msg' => $file->getError()]));
             }
-        } else {
-            //删除图片
-            $img_dir = input('param.path');
-            $real_path = str_replace(Env::get('root_path'),'',$img_dir);
-            $path = str_replace(['/..\/','/../'],'/',Env::get('root_path').$real_path);
+        }
+        // 删除图片
+        if ($act === 'del') {
+            $img_dir = input('path');
+            if (substr($img_dir,0,9) !== '/uploads/') {
+                exit(json_encode(['status' => 0, 'msg' => '文件路径不合法']));
+            }
+            if (strpos($img_dir, '../') || strpos($img_dir, './')) {
+                exit(json_encode(['status' => 0, 'msg' => '文件路径不合法']));
+            }
+            $path = str_replace(['/..\/','/../'],'/',Env::get('root_path') . 'public' . $img_dir);
             if (@unlink($path)) {
                 exit(json_encode(['status' => 1, 'msg' => '删除成功']));
             } else {
-                exit(json_encode(['status' => 0, 'msg' => '删除失败']));
+                exit(json_encode(['status' => 0, 'msg' => '删除失败' ,'path' => $path, 'real_path' => $img_dir, 'env' => Env::get('root_path')]));
             }
         }
+        exit(json_encode(['status' => 0, 'msg' => '操作不合法']));
     }
 
     /**

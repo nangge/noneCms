@@ -138,7 +138,6 @@ function post($url, $data = '', $cookie = '', $type = 0)
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_USERAGENT,isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'' );
-    curl_setopt($ch, CURLOPT_SAFE_UPLOAD, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
     $output = curl_exec($ch);
@@ -252,4 +251,31 @@ function sendEmail($content){
     $config = \app\common\model\System::getConfigByType('email');
     $mail = new \app\common\lib\email\Email($config);
     return $mail->create($content)->setRecipient()->attachment()->body()->send();
+}
+
+/**
+ * @param $code
+ * @param string $msg
+ * @param array $data
+ * @param bool $replace 为兼容之前的返回格式，这里加上该参数
+ */
+function raise($code, $msg = '', $data = [], $replace = false)
+{
+    if ($replace === false) {
+        exit(json_encode([
+            'status' => $code,
+            'msg'  => $msg,
+            'data' => $data,
+        ])) ;
+    }
+    $res = [
+        'status' => $code,
+        'msg' => $msg,
+    ];
+    if (is_array($data) && !empty($data)) {
+        foreach ($data as $key => $item) {
+            $res[$key] = $item;
+        }
+        exit(json_encode($res));
+    }
 }
