@@ -26,6 +26,10 @@ class ComposerStaticInitc54553c651644c6e31c19d13318b91ff
         array (
             'Workerman\\' => 10,
         ),
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -53,6 +57,20 @@ class ComposerStaticInitc54553c651644c6e31c19d13318b91ff
         array (
             0 => __DIR__ . '/..' . '/workerman/workerman',
             1 => __DIR__ . '/..' . '/workerman/workerman-for-win',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'R' => 
+        array (
+            'Raven_' => 
+            array (
+                0 => __DIR__ . '/..' . '/sentry/sentry/lib',
+            ),
         ),
     );
 
@@ -83,6 +101,7 @@ class ComposerStaticInitc54553c651644c6e31c19d13318b91ff
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitc54553c651644c6e31c19d13318b91ff::$classMap;
 
         }, null, ClassLoader::class);
