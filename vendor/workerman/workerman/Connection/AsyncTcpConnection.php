@@ -189,7 +189,7 @@ class AsyncTcpConnection extends TcpConnection
                 STREAM_CLIENT_ASYNC_CONNECT);
         }
         // If failed attempt to emit onError callback.
-        if (!$this->_socket) {
+        if (!$this->_socket || !is_resource($this->_socket)) {
             $this->emitError(WORKERMAN_CONNECT_FAIL, $errstr);
             if ($this->_status === self::STATUS_CLOSING) {
                 $this->destroy();
@@ -318,6 +318,9 @@ class AsyncTcpConnection extends TcpConnection
             // SSL handshake.
             if ($this->transport === 'ssl') {
                 $this->_sslHandshakeCompleted = $this->doSslHandshake($this->_socket);
+                if ($this->_sslHandshakeCompleted === false) {
+                    return;
+                }
             } else {
                 // There are some data waiting to send.
                 if ($this->_sendBuffer) {

@@ -33,7 +33,7 @@ class Worker
      *
      * @var string
      */
-    const VERSION = '3.5.18';
+    const VERSION = '3.5.20';
 
     /**
      * Status starting.
@@ -498,11 +498,13 @@ class Worker
     {
         static::checkSapiEnv();
         static::init();
+        static::lock();
         static::parseCommand();
         static::daemonize();
         static::initWorkers();
         static::installSignal();
         static::saveMasterPid();
+        static::unlock();
         static::displayUI();
         static::forkWorkers();
         static::resetStd();
@@ -576,6 +578,31 @@ class Worker
     }
 
     /**
+     * Lock.
+     *
+     * @return void
+     */
+    protected static function lock()
+    {
+        $fd = fopen(static::$_startFile, 'r');
+        if (!$fd || !flock($fd, LOCK_EX)) {
+            static::log("Workerman[".static::$_startFile."] already running");
+            exit;
+        }
+    }
+
+    /**
+     * Unlock.
+     *
+     * @return void
+     */
+    protected static function unlock()
+    {
+        $fd = fopen(static::$_startFile, 'r');
+        $fd && flock($fd, LOCK_UN);
+    }
+
+    /**
      * Init All worker instances.
      *
      * @return void
@@ -639,6 +666,14 @@ class Worker
     public static function getEventLoop()
     {
         return static::$globalEvent;
+    }
+    
+    /**
+     * Get main socket resource
+     * @return resource
+     */
+    public function getMainSocket(){
+        return $this->_mainSocket;
     }
 
     /**
@@ -1178,6 +1213,7 @@ class Worker
         if (static::$_OS !== OS_TYPE_LINUX) {
             return;
         }
+
         static::$_masterPid = posix_getpid();
         if (false === file_put_contents(static::$pidFile, static::$_masterPid)) {
             throw new Exception('can not save pid to ' . static::$pidFile);
@@ -1298,7 +1334,7 @@ class Worker
             if(count(static::$_workers) > 1)
             {
                 static::safeEcho("@@@ Error: multi workers init in one php file are not support @@@\r\n");
-                static::safeEcho("@@@ Please visit http://wiki.workerman.net/Multi_woker_for_win @@@\r\n");
+                static::safeEcho("@@@ See http://doc.workerman.net/faq/multi-woker-for-windows.html @@@\r\n");
             }
             elseif(count(static::$_workers) <= 0)
             {
